@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lkm-gestao-v9';
+const CACHE_NAME = 'lkm-gestao-v10';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
@@ -50,6 +50,10 @@ self.addEventListener('activate', function (event) {
 
 // Fetch: Network-First com fallback para Cache
 self.addEventListener('fetch', function (event) {
+    // Ignorar requisições cross-origin
+    if (!event.request.url.startsWith(self.location.origin)) {
+        return;
+    }
     event.respondWith(
         fetch(event.request)
             .then(function (response) {
