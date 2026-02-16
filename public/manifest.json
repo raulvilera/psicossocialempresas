@@ -1,11 +1,19 @@
 {
+    "id": "/",
     "name": "Gestão de Ocorrências LKM",
     "short_name": "LKM Gestão",
     "description": "Plataforma de Gestão de Ocorrências - EE Lydia Kitz Moreira",
-    "start_url": "/",
+    "start_url": "/?utm_source=pwa",
+    "scope": "/",
     "display": "standalone",
+    "display_override": [
+        "standalone",
+        "fullscreen",
+        "minimal-ui"
+    ],
     "background_color": "#001a35",
     "theme_color": "#002b5c",
+    "orientation": "portrait-primary",
     "icons": [
         {
             "src": "pwa-192x192.png",
