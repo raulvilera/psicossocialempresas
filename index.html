@@ -45,30 +45,10 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
-          .then(reg => {
-            console.log('SW: Registrado!', reg.scope);
-            reg.onupdatefound = () => {
-              const installingWorker = reg.installing;
-              installingWorker.onstatechange = () => {
-                console.log('SW State:', installingWorker.state);
-              };
-            };
-          })
-          .catch(err => {
-            console.error('SW: Erro no registro:', err);
-          });
+          .then(reg => console.log('SW: Ativo'))
+          .catch(err => console.error('SW: Erro', err));
       });
     }
-
-    // Monitoramento do evento de instalação
-    window.addEventListener('beforeinstallprompt', (e) => {
-      console.log('PWA: Prompt de instalação capturado!');
-      window.deferredPrompt = e;
-    });
-
-    window.addEventListener('appinstalled', (evt) => {
-      console.log('PWA: Aplicativo instalado com sucesso!');
-    });
   </script>
 </body>
 

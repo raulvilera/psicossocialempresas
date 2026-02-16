@@ -21,9 +21,5 @@ self.addEventListener('activate', (event) => {
     return self.clients.claim();
 });
 
-// O handler de fetch é OBRIGATÓRIO para o PWA ser instalável.
-// Mesmo que não salve nada no cache agora, o navegador exige que ele exista.
-self.addEventListener('fetch', (event) => {
-    // Apenas repassa a requisição para a rede
-    event.respondWith(fetch(event.request));
-});
+// Handler de fetch obrigatório para PWA ser instalável
+self.addEventListener('fetch', () => { });
