@@ -22,4 +22,6 @@ self.addEventListener('activate', (event) => {
 });
 
 // Handler de fetch obrigatório para PWA ser instalável
-self.addEventListener('fetch', () => { });
+self.addEventListener('fetch', (event) => {
+    event.respondWith(fetch(event.request));
+});
