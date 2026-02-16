@@ -3,7 +3,7 @@
     "name": "Gestão de Ocorrências LKM",
     "short_name": "LKM Gestão",
     "description": "Plataforma de Gestão de Ocorrências e Controle Escolar",
-    "start_url": ".",
+    "start_url": "/",
     "scope": "/",
     "display": "standalone",
     "background_color": "#001a35",

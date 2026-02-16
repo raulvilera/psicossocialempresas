@@ -16,7 +16,7 @@
     ],
     "rewrites": [
         {
-            "source": "/((?!pwa-.*|sw.js|manifest.json|assets/|index.css).*)",
+            "source": "/(.*)",
             "destination": "/index.html"
         }
     ]
