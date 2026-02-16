@@ -47,10 +47,31 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then(reg => console.log('SW: Ativo'))
-          .catch(err => console.error('SW: Erro', err));
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then(reg => {
+            console.log('[PWA] Service Worker registrado com sucesso!', reg);
+            console.log('[PWA] Escopo:', reg.scope);
+
+            // Verificar se já está ativo
+            if (reg.active) {
+              console.log('[PWA] Service Worker já está ativo');
+            }
+
+            // Forçar atualização
+            reg.update();
+          })
+          .catch(err => {
+            console.error('[PWA] Falha ao registrar Service Worker:', err);
+          });
       });
+
+      // Capturar evento de instalação (se aparecer)
+      window.addEventListener('beforeinstallprompt', (e) => {
+        console.log('[PWA] Banner de instalação disponível!');
+        // Não prevenir o comportamento padrão - deixar o Chrome mostrar o banner
+      });
+    } else {
+      console.warn('[PWA] Service Workers não são suportados neste navegador');
     }
   </script>
 </body>

@@ -1,55 +1,81 @@
-const CACHE_NAME = 'lkm-gestao-v8';
+const CACHE_NAME = 'lkm-gestao-v9';
+const ASSETS_TO_CACHE = [
+    '/',
+    '/index.html',
+    '/manifest.json',
+    '/pwa-192x192.png',
+    '/pwa-512x512.png'
+];
 
-// Instalação: Cachear apenas o básico
+// Instalação: Cachear recursos essenciais
 self.addEventListener('install', function (event) {
-    self.skipWaiting();
-});
-
-// Ativação: Limpeza de caches antigos
-self.addEventListener('activate', function (event) {
+    console.log('[SW] Instalando Service Worker...');
     event.waitUntil(
-        caches.keys().then(function (cacheNames) {
-            return Promise.all(
-                cacheNames.map(function (cacheName) {
-                    if (cacheName !== CACHE_NAME) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
+        caches.open(CACHE_NAME)
+            .then(function (cache) {
+                console.log('[SW] Cache aberto, adicionando recursos...');
+                return cache.addAll(ASSETS_TO_CACHE);
+            })
+            .then(function () {
+                console.log('[SW] Recursos cacheados com sucesso!');
+                return self.skipWaiting();
+            })
+            .catch(function (error) {
+                console.error('[SW] Erro ao cachear recursos:', error);
+            })
     );
-    return self.clients.claim();
 });
 
-// Fetch: Tenta buscar no cache, se não houver, busca na rede e guarda no cache (Dynamic Caching)
+// Ativação: Limpar caches antigos
+self.addEventListener('activate', function (event) {
+    console.log('[SW] Ativando Service Worker...');
+    event.waitUntil(
+        caches.keys()
+            .then(function (cacheNames) {
+                return Promise.all(
+                    cacheNames.map(function (cacheName) {
+                        if (cacheName !== CACHE_NAME) {
+                            console.log('[SW] Removendo cache antigo:', cacheName);
+                            return caches.delete(cacheName);
+                        }
+                    })
+                );
+            })
+            .then(function () {
+                console.log('[SW] Controle de clientes assumido');
+                return self.clients.claim();
+            })
+    );
+});
+
+// Fetch: Network-First com fallback para Cache
 self.addEventListener('fetch', function (event) {
-    // Não cachear solicitações de APIs externas ou de outros domínios se preferir
-    if (event.request.url.indexOf('http') !== 0) return;
-
     event.respondWith(
-        caches.match(event.request).then(function (response) {
-            // Retorna o cache se encontrar
-            if (response) {
-                return response;
-            }
-
-            // Se não houver no cache, faz o fetch na rede
-            return fetch(event.request).then(function (networkResponse) {
-                // Valida se a resposta é válida
-                if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-                    return networkResponse;
+        fetch(event.request)
+            .then(function (response) {
+                // Se a resposta é válida, cachear e retornar
+                if (response && response.status === 200) {
+                    var responseToCache = response.clone();
+                    caches.open(CACHE_NAME)
+                        .then(function (cache) {
+                            cache.put(event.request, responseToCache);
+                        });
                 }
-
-                // Clona a resposta para guardar no cache
-                var responseToCache = networkResponse.clone();
-                caches.open(CACHE_NAME).then(function (cache) {
-                    cache.put(event.request, responseToCache);
-                });
-
-                return networkResponse;
-            }).catch(function () {
-                // Se falhar a rede e não houver cache, você pode retornar uma página offline aqui
-            });
-        })
+                return response;
+            })
+            .catch(function () {
+                // Se falhar a rede, tentar o cache
+                return caches.match(event.request)
+                    .then(function (response) {
+                        if (response) {
+                            console.log('[SW] Servindo do cache:', event.request.url);
+                            return response;
+                        }
+                        // Se não houver cache, retornar resposta offline básica
+                        if (event.request.mode === 'navigate') {
+                            return caches.match('/index.html');
+                        }
+                    });
+            })
     );
 });
