@@ -2,33 +2,34 @@
     "id": "/",
     "name": "Gestão de Ocorrências LKM",
     "short_name": "LKM Gestão",
-    "description": "Plataforma de Gestão de Ocorrências - EE Lydia Kitz Moreira",
-    "start_url": "/?utm_source=pwa",
+    "description": "Plataforma de Gestão de Ocorrências e Controle Escolar",
+    "start_url": "/",
     "scope": "/",
     "display": "standalone",
-    "display_override": [
-        "standalone",
-        "fullscreen",
-        "minimal-ui"
-    ],
     "background_color": "#001a35",
     "theme_color": "#002b5c",
     "orientation": "portrait-primary",
+    "dir": "ltr",
+    "lang": "pt-BR",
+    "categories": [
+        "education",
+        "productivity"
+    ],
     "icons": [
         {
-            "src": "pwa-192x192.png",
+            "src": "/pwa-192x192.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "pwa-512x512.png",
+            "src": "/pwa-512x512.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "pwa-192x192.png",
+            "src": "/pwa-192x192.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "maskable"
