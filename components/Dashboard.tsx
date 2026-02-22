@@ -342,7 +342,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, incidents, students, classe
       </nav>
 
       <main className="max-w-[1700px] mx-auto mt-6 sm:mt-8 px-4 sm:px-6 space-y-8 sm:space-y-10">
-        {activeTab === 'registros' ? (
+        {activeTab === 'registros' && (
           <>
             <div className="bg-white rounded-[32px] shadow-2xl overflow-hidden border border-white/10">
               <div className="bg-[#004a99] py-3 text-center border-b border-white/10">
@@ -577,7 +577,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, incidents, students, classe
           </>
         )}
 
-        {activeTab === 'estatisticas' ? (
+        {activeTab === 'estatisticas' && (
           <div className="animate-fade-in space-y-8 pb-10">
             {/* Dashboard Estatístico */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
