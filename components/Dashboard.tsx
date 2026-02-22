@@ -37,6 +37,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, incidents, students, classe
   const [isUpdatingStatus, setIsUpdatingStatus] = useState<Incident | null>(null);
   const [newStatus, setNewStatus] = useState<Incident['status']>('Pendente');
   const [feedback, setFeedback] = useState('');
+  const [activeTab, setActiveTab] = useState<'registros' | 'estatisticas'>('registros');
 
   // Estados para Gerenciamento de Professores
   const [showProfessorsModal, setShowProfessorsModal] = useState(false);
@@ -228,6 +229,67 @@ const Dashboard: React.FC<DashboardProps> = ({ user, incidents, students, classe
     );
   }, [incidents, searchTerm]);
 
+  // Lógica de Estatísticas
+  const stats = useMemo(() => {
+    const classCount: Record<string, number> = {};
+    const studentCount: Record<string, { count: number, turma: string }> = {};
+    const typeCount: Record<string, number> = {};
+
+    incidents.forEach(inc => {
+      // Top Turmas
+      if (inc.classRoom) {
+        classCount[inc.classRoom] = (classCount[inc.classRoom] || 0) + 1;
+      }
+
+      // Top Alunos
+      if (inc.studentName) {
+        if (!studentCount[inc.studentName]) {
+          studentCount[inc.studentName] = { count: 0, turma: inc.classRoom || 'N/A' };
+        }
+        studentCount[inc.studentName].count++;
+      }
+
+      // Top Tipos
+      if (inc.category) {
+        typeCount[inc.category] = (typeCount[inc.category] || 0) + 1;
+      }
+    });
+
+    const topClasses = Object.entries(classCount)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+
+    const topStudents = Object.entries(studentCount)
+      .sort((a, b) => b[1].count - a[1].count)
+      .slice(0, 5);
+
+    const topTypes = Object.entries(typeCount)
+      .sort((a, b) => b[1] - a[1]);
+
+    return { topClasses, topStudents, topTypes };
+  }, [incidents]);
+
+  const pedagogicalGuide = {
+    'OCORRÊNCIA DISCIPLINAR': [
+      'Advertência verbal ou escrita',
+      'Convocação dos pais ou responsáveis para mediação',
+      'Encaminhamento para o Conselho de Escola',
+      'Suspensão temporária (casos graves)'
+    ],
+    'OCORRÊNCIA PEDAGÓGICA': [
+      'Reforço escolar ou recuperação paralela',
+      'Acompanhamento psicopedagógico',
+      'Adaptação de atividades curriculares',
+      'Criação de plano de estudo individualizado'
+    ],
+    'MEDIDA EDUCATIVA': [
+      'Monitoria voluntária por período determinado',
+      'Escrita de reflexão crítica sobre o ocorrido',
+      'Serviço de apoio à organização da biblioteca/escola',
+      'Apresentação de trabalho sobre cidadania'
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-[#001a35] font-sans pb-12 overflow-x-hidden">
       <header className="bg-[#002b5c] text-white px-4 sm:px-8 py-3 flex flex-col sm:flex-row justify-between items-center border-b border-white/10 sticky top-0 z-[50] shadow-xl gap-2 sm:gap-0">
@@ -263,237 +325,358 @@ const Dashboard: React.FC<DashboardProps> = ({ user, incidents, students, classe
         </div>
       </header>
 
+      {/* Navegação de Abas Principal */}
+      <nav className="max-w-[1700px] mx-auto mt-6 px-4 sm:px-6 flex gap-4">
+        <button
+          onClick={() => setActiveTab('registros')}
+          className={`flex-1 sm:flex-none px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-wider transition-all shadow-lg ${activeTab === 'registros' ? 'bg-teal-500 text-white border-b-4 border-teal-700' : 'bg-white/10 text-white/40 hover:bg-white/20'}`}
+        >
+          📄 Registros e Lançamentos
+        </button>
+        <button
+          onClick={() => setActiveTab('estatisticas')}
+          className={`flex-1 sm:flex-none px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-wider transition-all shadow-lg ${activeTab === 'estatisticas' ? 'bg-orange-500 text-white border-b-4 border-orange-700 animate-pulse' : 'bg-white/10 text-white/40 hover:bg-white/20'}`}
+        >
+          📊 Dashboard Analytics
+        </button>
+      </nav>
+
       <main className="max-w-[1700px] mx-auto mt-6 sm:mt-8 px-4 sm:px-6 space-y-8 sm:space-y-10">
-        <div className="bg-white rounded-[32px] shadow-2xl overflow-hidden border border-white/10">
-          <div className="bg-[#004a99] py-3 text-center border-b border-white/10">
-            <h2 className="text-white font-black text-[10px] sm:text-xs uppercase tracking-widest">EFETUAR NOVO REGISTRO ADMINISTRATIVO</h2>
-          </div>
+        {activeTab === 'registros' ? (
+          <>
+            <div className="bg-white rounded-[32px] shadow-2xl overflow-hidden border border-white/10">
+              <div className="bg-[#004a99] py-3 text-center border-b border-white/10">
+                <h2 className="text-white font-black text-[10px] sm:text-xs uppercase tracking-widest">EFETUAR NOVO REGISTRO ADMINISTRATIVO</h2>
+              </div>
 
-          <div className="p-6 sm:p-10 bg-gradient-to-br from-[#115e59] via-[#14b8a6] to-[#ea580c]">
-            <form onSubmit={handleSave} className="space-y-6 sm:space-y-8">
-              <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-end">
-                <div className="flex flex-col gap-2 w-full lg:w-48">
-                  <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">TURMA / SÉRIE</label>
-                  <select
-                    value={classRoom}
-                    onChange={e => { setClassRoom(e.target.value); setStudentName(''); }}
-                    className="h-12 sm:h-14 border border-gray-200 rounded-2xl px-5 text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-blue-500 outline-none shadow-sm cursor-pointer w-full"
-                  >
-                    <option value="">Selecione...</option>
-                    {classes.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2 w-full lg:flex-1">
-                  <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">NOME DO ALUNO</label>
-                  <select
-                    value={studentName}
-                    onChange={e => setStudentName(e.target.value)}
-                    disabled={!classRoom}
-                    className="h-12 sm:h-14 border border-gray-200 rounded-2xl px-5 text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-blue-500 outline-none shadow-sm disabled:opacity-50 cursor-pointer w-full"
-                  >
-                    <option value="">Selecione o Aluno...</option>
-                    {students.filter(s => s.turma === classRoom).map(s => <option key={s.ra} value={s.nome}>{s.nome}</option>)}
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2 w-full lg:w-64">
-                  <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">REGISTRO DO ALUNO (RA)</label>
-                  <div className="h-12 sm:h-14 flex items-center px-6 bg-white/20 rounded-2xl font-black text-white text-xs border border-white/20 shadow-inner backdrop-blur-sm w-full">
-                    {ra}
+              <div className="p-6 sm:p-10 bg-gradient-to-br from-[#115e59] via-[#14b8a6] to-[#ea580c]">
+                <form onSubmit={handleSave} className="space-y-6 sm:space-y-8">
+                  <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-end">
+                    <div className="flex flex-col gap-2 w-full lg:w-48">
+                      <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">TURMA / SÉRIE</label>
+                      <select
+                        value={classRoom}
+                        onChange={e => { setClassRoom(e.target.value); setStudentName(''); }}
+                        className="h-12 sm:h-14 border border-gray-200 rounded-2xl px-5 text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-blue-500 outline-none shadow-sm cursor-pointer w-full"
+                      >
+                        <option value="">Selecione...</option>
+                        {classes.map(t => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-2 w-full lg:flex-1">
+                      <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">NOME DO ALUNO</label>
+                      <select
+                        value={studentName}
+                        onChange={e => setStudentName(e.target.value)}
+                        disabled={!classRoom}
+                        className="h-12 sm:h-14 border border-gray-200 rounded-2xl px-5 text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-blue-500 outline-none shadow-sm disabled:opacity-50 cursor-pointer w-full"
+                      >
+                        <option value="">Selecione o Aluno...</option>
+                        {students.filter(s => s.turma === classRoom).map(s => <option key={s.ra} value={s.nome}>{s.nome}</option>)}
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-2 w-full lg:w-64">
+                      <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">REGISTRO DO ALUNO (RA)</label>
+                      <div className="h-12 sm:h-14 flex items-center px-6 bg-white/20 rounded-2xl font-black text-white text-xs border border-white/20 shadow-inner backdrop-blur-sm w-full">
+                        {ra}
+                      </div>
+                    </div>
                   </div>
-                </div>
+
+                  <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-end">
+                    <div className="flex flex-col gap-2 w-full lg:flex-1">
+                      <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">RESPONSÁVEL PELO REGISTRO</label>
+                      <input
+                        type="text"
+                        value={professorName}
+                        onChange={e => setProfessorName(e.target.value)}
+                        placeholder="Nome do Gestor ou Professor"
+                        className="h-12 sm:h-14 border border-gray-200 rounded-2xl px-5 text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-blue-500 outline-none shadow-sm uppercase w-full"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2 w-full lg:w-80">
+                      <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">CATEGORIA DA MEDIDA</label>
+                      <select
+                        value={classification}
+                        onChange={e => setClassification(e.target.value)}
+                        className="h-12 sm:h-14 border border-gray-200 rounded-2xl px-5 text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-blue-500 outline-none shadow-sm cursor-pointer w-full"
+                      >
+                        <option value="">Selecione...</option>
+                        <option value="OCORRÊNCIA DISCIPLINAR">OCORRÊNCIA DISCIPLINAR</option>
+                        <option value="OCORRÊNCIA PEDAGÓGICA">OCORRÊNCIA PEDAGÓGICA</option>
+                        <option value="MEDIDA EDUCATIVA">MEDIDA EDUCATIVA</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col gap-2 cursor-pointer" onClick={() => triggerPicker(regDateRef)}>
+                      <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1 cursor-pointer">DATA DO REGISTRO</label>
+                      <input
+                        ref={regDateRef}
+                        type="date"
+                        value={registerDate}
+                        onChange={e => setRegisterDate(e.target.value)}
+                        className="h-12 sm:h-14 border border-gray-200 rounded-2xl px-5 text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-blue-500 outline-none shadow-sm cursor-pointer w-full"
+                      />
+                    </div>
+
+                    {classification === 'MEDIDA EDUCATIVA' && (
+                      <div className="flex flex-col gap-2 cursor-pointer animate-fade-in" onClick={() => triggerPicker(retDateRef)}>
+                        <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1 cursor-pointer">DATA DE RETORNO (PÓS-MEDIDA)</label>
+                        <input
+                          ref={retDateRef}
+                          type="date"
+                          value={returnDate}
+                          onChange={e => setReturnDate(e.target.value)}
+                          className="h-12 sm:h-14 border border-orange-300 rounded-2xl px-5 text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-orange-500 outline-none shadow-sm cursor-pointer w-full"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">DESCRIÇÃO</label>
+                    <textarea
+                      rows={5}
+                      value={description}
+                      onChange={e => setDescription(e.target.value)}
+                      className="w-full p-6 border border-gray-200 rounded-[28px] text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-blue-500 outline-none shadow-sm uppercase placeholder:text-gray-300"
+                      placeholder="Relatório detalhado da ocorrência e medidas tomadas..."
+                    ></textarea>
+                  </div>
+
+                  <div className="flex justify-center pt-4">
+                    <button
+                      type="submit"
+                      disabled={isSaving}
+                      className="w-full sm:w-auto px-10 sm:px-20 py-5 sm:py-6 bg-gradient-to-r from-[#004a99] to-[#14b8a6] hover:scale-[1.02] text-white font-black text-[10px] sm:text-xs uppercase tracking-[0.25em] rounded-2xl shadow-xl transition-all border-b-8 border-blue-900 active:translate-y-1 active:border-b-0"
+                    >
+                      {isSaving ? 'PROCESSANDO...' : 'FINALIZAR E SALVAR REGISTRO'}
+                    </button>
+                  </div>
+                </form>
               </div>
+            </div>
 
-              <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-end">
-                <div className="flex flex-col gap-2 w-full lg:flex-1">
-                  <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">RESPONSÁVEL PELO REGISTRO</label>
-                  <input
-                    type="text"
-                    value={professorName}
-                    onChange={e => setProfessorName(e.target.value)}
-                    placeholder="Nome do Gestor ou Professor"
-                    className="h-12 sm:h-14 border border-gray-200 rounded-2xl px-5 text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-blue-500 outline-none shadow-sm uppercase w-full"
-                  />
+            <section className="bg-white rounded-[32px] shadow-2xl overflow-hidden border border-gray-100">
+              <div className="px-6 sm:px-10 py-6 bg-[#002b5c] text-white flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex flex-col">
+                    <h3 className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest">Painel de Registros (Últimos 30 dias)</h3>
+                    <button
+                      onClick={() => setShowPermanentSearch(true)}
+                      className="text-[9px] text-teal-400 font-black uppercase text-left hover:underline flex items-center gap-1 group"
+                    >
+                      Ir para Histórico Permanente
+                      <svg className="w-2.5 h-2.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                  <span className="bg-teal-500 text-white text-[8px] sm:text-[9px] px-3 py-1 rounded-full font-black uppercase whitespace-nowrap">{history.length} Recentes</span>
                 </div>
-                <div className="flex flex-col gap-2 w-full lg:w-80">
-                  <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">CATEGORIA DA MEDIDA</label>
-                  <select
-                    value={classification}
-                    onChange={e => setClassification(e.target.value)}
-                    className="h-12 sm:h-14 border border-gray-200 rounded-2xl px-5 text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-blue-500 outline-none shadow-sm cursor-pointer w-full"
-                  >
-                    <option value="">Selecione...</option>
-                    <option value="OCORRÊNCIA DISCIPLINAR">OCORRÊNCIA DISCIPLINAR</option>
-                    <option value="OCORRÊNCIA PEDAGÓGICA">OCORRÊNCIA PEDAGÓGICA</option>
-                    <option value="MEDIDA EDUCATIVA">MEDIDA EDUCATIVA</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex flex-col gap-2 cursor-pointer" onClick={() => triggerPicker(regDateRef)}>
-                  <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1 cursor-pointer">DATA DO REGISTRO</label>
-                  <input
-                    ref={regDateRef}
-                    type="date"
-                    value={registerDate}
-                    onChange={e => setRegisterDate(e.target.value)}
-                    className="h-12 sm:h-14 border border-gray-200 rounded-2xl px-5 text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-blue-500 outline-none shadow-sm cursor-pointer w-full"
-                  />
-                </div>
-
-                {classification === 'MEDIDA EDUCATIVA' && (
-                  <div className="flex flex-col gap-2 cursor-pointer animate-fade-in" onClick={() => triggerPicker(retDateRef)}>
-                    <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1 cursor-pointer">DATA DE RETORNO (PÓS-MEDIDA)</label>
+                <div className="flex items-center gap-3 w-full md:w-auto">
+                  <div className="relative w-full md:w-64">
                     <input
-                      ref={retDateRef}
-                      type="date"
-                      value={returnDate}
-                      onChange={e => setReturnDate(e.target.value)}
-                      className="h-12 sm:h-14 border border-orange-300 rounded-2xl px-5 text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-orange-500 outline-none shadow-sm cursor-pointer w-full"
+                      type="text"
+                      value={searchTerm}
+                      onChange={e => setSearchTerm(e.target.value)}
+                      placeholder="Filtrar recentes..."
+                      className="w-full pl-10 pr-6 py-2 rounded-xl bg-white/10 border border-white/20 text-[9px] sm:text-[10px] text-white outline-none"
                     />
+                    <svg className="w-4 h-4 absolute left-3 top-2.5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                   </div>
-                )}
+                  <button
+                    onClick={onOpenSearch}
+                    className="bg-teal-500 hover:bg-teal-600 text-white p-2.5 rounded-xl transition-all shadow-lg flex items-center gap-2"
+                    title="Busca Profunda na Planilha"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    <span className="text-[10px] font-black uppercase hidden sm:inline">Busca Permanente</span>
+                  </button>
+                </div>
               </div>
 
-              <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-black text-white uppercase tracking-widest ml-1">DESCRIÇÃO</label>
-                <textarea
-                  rows={5}
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
-                  className="w-full p-6 border border-gray-200 rounded-[28px] text-xs font-bold !text-black bg-white focus:ring-2 focus:ring-blue-500 outline-none shadow-sm uppercase placeholder:text-gray-300"
-                  placeholder="Relatório detalhado da ocorrência e medidas tomadas..."
-                ></textarea>
+              <div className="overflow-x-auto custom-scrollbar bg-gray-50/30">
+                <table className="w-full text-left text-[10px] min-w-[1200px]">
+                  <thead className="bg-[#f8fafc] border-b text-black sticky top-0 z-10">
+                    <tr>
+                      <th className="p-4 font-black uppercase">Data</th>
+                      <th className="p-4 font-black uppercase">Status</th>
+                      <th className="p-4 font-black uppercase">Aluno</th>
+                      <th className="p-4 font-black uppercase">Turma</th>
+                      <th className="p-4 font-black uppercase">Tipo</th>
+                      <th className="p-4 font-black uppercase">Responsável</th>
+                      <th className="p-4 font-black uppercase">Relato</th>
+                      <th className="p-4 text-center font-black uppercase">Documento</th>
+                      <th className="p-4 text-center font-black uppercase">Ação</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 bg-white">
+                    {history.length > 0 ? history.map(inc => (
+                      <tr key={inc.id} className="hover:bg-blue-50/40 transition-all">
+                        <td className="p-4 font-black text-gray-500">{inc.date}</td>
+                        <td className="p-4">
+                          <div className="flex flex-col gap-1">
+                            <StatusBadge status={inc.status} size="small" />
+                            {inc.lastViewedAt && (
+                              <span className="text-[7px] font-bold text-teal-600 uppercase">Visualizado</span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex flex-col">
+                            <span className="font-black text-[#002b5c] uppercase">{inc.studentName}</span>
+                            <span className="text-[8px] font-bold text-gray-400">RA: {inc.ra}</span>
+                          </div>
+                        </td>
+                        <td className="p-4 font-bold text-blue-600">{inc.classRoom}</td>
+                        <td className="p-4 whitespace-nowrap">
+                          <span className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase ${inc.category === 'MEDIDA EDUCATIVA' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
+                            {inc.category}
+                          </span>
+                        </td>
+                        <td className="p-4 font-black text-[#002b5c] uppercase truncate max-w-[150px]">{inc.professorName}</td>
+                        <td className="p-4 max-sm truncate text-gray-600 italic">
+                          <div>{inc.description}</div>
+                          {inc.managementFeedback && (
+                            <div className="mt-2 p-2 bg-teal-50 border-l-2 border-teal-500 text-teal-800 font-bold text-[8px]">
+                              DEVOLUTIVA: {inc.managementFeedback}
+                            </div>
+                          )}
+                        </td>
+                        <td className="p-4">
+                          <div className="flex justify-center gap-2">
+                            <button onClick={() => generateIncidentPDF(inc, 'view')} className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg></button>
+                            <button onClick={() => generateIncidentPDF(inc, 'download')} className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-600 hover:text-white transition-all"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg></button>
+                          </div>
+                        </td>
+                        <td className="p-4 text-center">
+                          <div className="flex justify-center gap-2">
+                            <button
+                              onClick={() => openUpdateModal(inc)}
+                              className="p-2 bg-teal-50 text-teal-600 rounded-lg hover:bg-teal-600 hover:text-white transition-all"
+                              title="Atualizar Status / Devolutiva"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                            </button>
+                            {(!inc.authorEmail || inc.authorEmail === user.email) && (
+                              <button onClick={() => onDelete(inc.id)} className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all" title="Excluir registro"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    )) : (
+                      <tr><td colSpan={9} className="p-20 text-center text-gray-300 font-black uppercase text-xs tracking-widest">Nenhum registro recente encontrado</td></tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
+            </section>
+          </>
+        )}
 
-              <div className="flex justify-center pt-4">
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="w-full sm:w-auto px-10 sm:px-20 py-5 sm:py-6 bg-gradient-to-r from-[#004a99] to-[#14b8a6] hover:scale-[1.02] text-white font-black text-[10px] sm:text-xs uppercase tracking-[0.25em] rounded-2xl shadow-xl transition-all border-b-8 border-blue-900 active:translate-y-1 active:border-b-0"
-                >
-                  {isSaving ? 'PROCESSANDO...' : 'FINALIZAR E SALVAR REGISTRO'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <section className="bg-white rounded-[32px] shadow-2xl overflow-hidden border border-gray-100">
-          <div className="px-6 sm:px-10 py-6 bg-[#002b5c] text-white flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-4">
-              <div className="flex flex-col">
-                <h3 className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest">Painel de Registros (Últimos 30 dias)</h3>
-                <button
-                  onClick={() => setShowPermanentSearch(true)}
-                  className="text-[9px] text-teal-400 font-black uppercase text-left hover:underline flex items-center gap-1 group"
-                >
-                  Ir para Histórico Permanente
-                  <svg className="w-2.5 h-2.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
-              <span className="bg-teal-500 text-white text-[8px] sm:text-[9px] px-3 py-1 rounded-full font-black uppercase whitespace-nowrap">{history.length} Recentes</span>
-            </div>
-            <div className="flex items-center gap-3 w-full md:w-auto">
-              <div className="relative w-full md:w-64">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
-                  placeholder="Filtrar recentes..."
-                  className="w-full pl-10 pr-6 py-2 rounded-xl bg-white/10 border border-white/20 text-[9px] sm:text-[10px] text-white outline-none"
-                />
-                <svg className="w-4 h-4 absolute left-3 top-2.5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-              </div>
-              <button
-                onClick={onOpenSearch}
-                className="bg-teal-500 hover:bg-teal-600 text-white p-2.5 rounded-xl transition-all shadow-lg flex items-center gap-2"
-                title="Busca Profunda na Planilha"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                <span className="text-[10px] font-black uppercase hidden sm:inline">Busca Permanente</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="overflow-x-auto custom-scrollbar bg-gray-50/30">
-            <table className="w-full text-left text-[10px] min-w-[1200px]">
-              <thead className="bg-[#f8fafc] border-b text-black sticky top-0 z-10">
-                <tr>
-                  <th className="p-4 font-black uppercase">Data</th>
-                  <th className="p-4 font-black uppercase">Status</th>
-                  <th className="p-4 font-black uppercase">Aluno</th>
-                  <th className="p-4 font-black uppercase">Turma</th>
-                  <th className="p-4 font-black uppercase">Tipo</th>
-                  <th className="p-4 font-black uppercase">Responsável</th>
-                  <th className="p-4 font-black uppercase">Relato</th>
-                  <th className="p-4 text-center font-black uppercase">Documento</th>
-                  <th className="p-4 text-center font-black uppercase">Ação</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 bg-white">
-                {history.length > 0 ? history.map(inc => (
-                  <tr key={inc.id} className="hover:bg-blue-50/40 transition-all">
-                    <td className="p-4 font-black text-gray-500">{inc.date}</td>
-                    <td className="p-4">
-                      <div className="flex flex-col gap-1">
-                        <StatusBadge status={inc.status} size="small" />
-                        {inc.lastViewedAt && (
-                          <span className="text-[7px] font-bold text-teal-600 uppercase">Visualizado</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="p-4">
+        {activeTab === 'estatisticas' ? (
+          <div className="animate-fade-in space-y-8 pb-10">
+            {/* Dashboard Estatístico */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Card Top Turmas */}
+              <div className="bg-white rounded-[40px] shadow-2xl overflow-hidden border border-white/10 flex flex-col">
+                <div className="bg-[#002b5c] p-6 text-center border-b-4 border-teal-500">
+                  <h3 className="text-white font-black text-xs uppercase tracking-widest">🏆 Turmas c/ mais Ocorrências</h3>
+                </div>
+                <div className="p-8 flex-1 flex flex-col gap-4">
+                  {stats.topClasses.length > 0 ? stats.topClasses.map(([turma, count], idx) => (
+                    <div key={turma} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border-l-8 border-teal-500">
                       <div className="flex flex-col">
-                        <span className="font-black text-[#002b5c] uppercase">{inc.studentName}</span>
-                        <span className="text-[8px] font-bold text-gray-400">RA: {inc.ra}</span>
+                        <span className="text-[11px] font-black text-[#002b5c]">{idx + 1}º - {turma}</span>
+                        <span className="text-[8px] font-bold text-gray-400 uppercase">Ambiente Escolar</span>
                       </div>
-                    </td>
-                    <td className="p-4 font-bold text-blue-600">{inc.classRoom}</td>
-                    <td className="p-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase ${inc.category === 'MEDIDA EDUCATIVA' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
-                        {inc.category}
-                      </span>
-                    </td>
-                    <td className="p-4 font-black text-[#002b5c] uppercase truncate max-w-[150px]">{inc.professorName}</td>
-                    <td className="p-4 max-sm truncate text-gray-600 italic">
-                      <div>{inc.description}</div>
-                      {inc.managementFeedback && (
-                        <div className="mt-2 p-2 bg-teal-50 border-l-2 border-teal-500 text-teal-800 font-bold text-[8px]">
-                          DEVOLUTIVA: {inc.managementFeedback}
-                        </div>
-                      )}
-                    </td>
-                    <td className="p-4">
-                      <div className="flex justify-center gap-2">
-                        <button onClick={() => generateIncidentPDF(inc, 'view')} className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg></button>
-                        <button onClick={() => generateIncidentPDF(inc, 'download')} className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-600 hover:text-white transition-all"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg></button>
+                      <span className="bg-teal-100 text-teal-600 px-4 py-2 rounded-xl font-black text-[12px]">{count}</span>
+                    </div>
+                  )) : (
+                    <p className="text-center text-gray-300 font-bold uppercase text-[10px] py-10">Dados insuficientes</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Card Top Alunos */}
+              <div className="bg-white rounded-[40px] shadow-2xl overflow-hidden border border-white/10 flex flex-col">
+                <div className="bg-[#002b5c] p-6 text-center border-b-4 border-orange-500">
+                  <h3 className="text-white font-black text-xs uppercase tracking-widest">👤 Alunos em Foco</h3>
+                </div>
+                <div className="p-8 flex-1 flex flex-col gap-4">
+                  {stats.topStudents.length > 0 ? stats.topStudents.map(([nome, data], idx) => (
+                    <div key={nome} className="flex items-start justify-between p-4 bg-gray-50 rounded-2xl border-l-8 border-orange-500">
+                      <div className="flex flex-col">
+                        <span className="text-[11px] font-black text-[#002b5c] uppercase truncate max-w-[150px]">{nome}</span>
+                        <span className="text-[8px] font-bold text-gray-400 uppercase">Turma: {data.turma}</span>
                       </div>
-                    </td>
-                    <td className="p-4 text-center">
-                      <div className="flex justify-center gap-2">
-                        <button
-                          onClick={() => openUpdateModal(inc)}
-                          className="p-2 bg-teal-50 text-teal-600 rounded-lg hover:bg-teal-600 hover:text-white transition-all"
-                          title="Atualizar Status / Devolutiva"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                        </button>
-                        {(!inc.authorEmail || inc.authorEmail === user.email) && (
-                          <button onClick={() => onDelete(inc.id)} className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all" title="Excluir registro"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
-                        )}
+                      <span className="bg-orange-100 text-orange-600 px-4 py-2 rounded-xl font-black text-[12px]">{data.count}</span>
+                    </div>
+                  )) : (
+                    <p className="text-center text-gray-300 font-bold uppercase text-[10px] py-10">Dados insuficientes</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Tipos de Ocorrência */}
+              <div className="bg-white rounded-[40px] shadow-2xl overflow-hidden border border-white/10 flex flex-col">
+                <div className="bg-[#002b5c] p-6 text-center border-b-4 border-blue-500">
+                  <h3 className="text-white font-black text-xs uppercase tracking-widest">📝 Tipos mais Comuns</h3>
+                </div>
+                <div className="p-8 flex-1 flex flex-col gap-4">
+                  {stats.topTypes.length > 0 ? stats.topTypes.map(([type, count]) => (
+                    <div key={type} className="flex flex-col gap-2 p-4 bg-gray-50 rounded-2xl">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[9px] font-black text-[#002b5c] uppercase">{type}</span>
+                        <span className="text-[10px] font-black text-blue-600">{count} unidades</span>
                       </div>
-                    </td>
-                  </tr>
-                )) : (
-                  <tr><td colSpan={9} className="p-20 text-center text-gray-300 font-black uppercase text-xs tracking-widest">Nenhum registro recente encontrado</td></tr>
-                )}
-              </tbody>
-            </table>
+                      <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+                        <div
+                          className="bg-blue-500 h-full"
+                          style={{ width: `${(count / incidents.length) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  )) : (
+                    <p className="text-center text-gray-300 font-bold uppercase text-[10px] py-10">Nenhum dado cadastrado</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Guia de Medidas Pedagógicas */}
+            <div className="bg-white rounded-[40px] shadow-2xl overflow-hidden border border-white/10">
+              <div className="bg-gradient-to-r from-[#002b5c] to-[#004a99] p-8 text-center border-b-4 border-teal-500">
+                <h2 className="text-white font-black text-sm uppercase tracking-widest">📚 Guia Estratégico de Medidas Pedagógicas</h2>
+                <p className="text-teal-400 text-[10px] font-bold mt-2 uppercase">Ações sugeridas conforme o Regimento Escolar e tipo de ocorrência</p>
+              </div>
+              <div className="p-10 grid grid-cols-1 md:grid-cols-3 gap-10">
+                {Object.entries(pedagogicalGuide).map(([type, measures]) => (
+                  <div key={type} className="space-y-6">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-3 h-3 rounded-full ${type.includes('DISCIPLINAR') ? 'bg-red-500' : type.includes('PEDAGÓGICA') ? 'bg-blue-500' : 'bg-teal-500'} animate-pulse`}></div>
+                      <h4 className="text-[12px] font-black text-[#002b5c] uppercase tracking-tighter">{type}</h4>
+                    </div>
+                    <ul className="space-y-4">
+                      {measures.map((m, i) => (
+                        <li key={i} className="flex gap-4 items-start group">
+                          <span className="text-orange-500 font-black text-xs">0{i + 1}</span>
+                          <p className="text-[11px] font-bold text-gray-600 uppercase leading-relaxed group-hover:text-black transition-colors">{m}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+              <div className="bg-gray-50 p-6 text-center border-t border-gray-100 italic text-[10px] font-bold text-gray-400 uppercase">
+                * Estas medidas são sugestões e devem ser validadas pela coordenação de acordo com a gravidade e reincidência do caso.
+              </div>
+            </div>
           </div>
-        </section>
+        )}
       </main>
 
       {/* Modal de Atualização de Status e Devolutiva */}
