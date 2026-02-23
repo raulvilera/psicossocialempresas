@@ -115,11 +115,22 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         // VALIDAÇÃO DE WHITELIST: Verifica no banco de dados
         // E-mails de gestão são isentos da verificação de whitelist
         if (!MANAGEMENT_EMAILS.includes(displayEmail)) {
-          const { data: authorized, error: authCheckError } = await (window as any).supabase
+          // Gera as duas variantes de e-mail institucional para verificação
+          const emailBase = displayEmail.split('@')[0];
+          const profVariant = `${emailBase}@prof.educacao.sp.gov.br`;
+          const professorVariant = `${emailBase}@professor.educacao.sp.gov.br`;
+
+          console.log('🔍 [LOGIN] Verificando autorização para:', profVariant, 'ou', professorVariant);
+
+          const { data: authorized, error: authCheckError } = await supabase
             .from('authorized_professors')
             .select('email')
-            .eq('email', displayEmail.toLowerCase().trim())
-            .single();
+            .or(`email.eq.${profVariant},email.eq.${professorVariant}`)
+            .maybeSingle();
+
+          if (authCheckError) {
+            console.error('⚠️ [LOGIN] Erro ao consultar authorized_professors:', authCheckError);
+          }
 
           if (!authorized && !isProfessorRegistered(displayEmail)) {
             console.error('❌ [LOGIN] E-mail não autorizado no banco:', displayEmail);
@@ -179,11 +190,16 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         // VALIDAÇÃO DE WHITELIST: Verifica no banco de dados
         // E-mails de gestão são isentos da verificação de whitelist
         if (!MANAGEMENT_EMAILS.includes(lowerEmail)) {
-          const { data: authorized } = await (window as any).supabase
+          // Gera as duas variantes de e-mail institucional para verificação
+          const emailBase = lowerEmail.split('@')[0];
+          const profVariant = `${emailBase}@prof.educacao.sp.gov.br`;
+          const professorVariant = `${emailBase}@professor.educacao.sp.gov.br`;
+
+          const { data: authorized } = await supabase
             .from('authorized_professors')
             .select('email')
-            .eq('email', lowerEmail)
-            .single();
+            .or(`email.eq.${profVariant},email.eq.${professorVariant}`)
+            .maybeSingle();
 
           if (!authorized && !isProfessorRegistered(lowerEmail)) {
             console.error('❌ [CADASTRO] E-mail não autorizado:', lowerEmail);
