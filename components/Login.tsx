@@ -34,15 +34,6 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     'alinecardoso1@professor.educacao.sp.gov.br': 'aline.gestao@prof.educacao.sp.gov.br'
   };
 
-  // E-mails de gestão permitidos
-  const MANAGEMENT_EMAILS = [
-    'gestao@escola.com',
-    'cadastroslkm@gmail.com',
-    'vilera@prof.educacao.sp.gov.br',
-    'alinecardoso1@prof.educacao.sp.gov.br',
-    'alinecardoso1@professor.educacao.sp.gov.br',
-    'aline.gestao@prof.educacao.sp.gov.br'
-  ];
 
   const resolveEmailAlias = (email: string): string => {
     const lowerEmail = email.toLowerCase().trim();
@@ -51,10 +42,13 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   const validateInstitutionalEmail = (email: string) => {
     const lowerEmail = email.toLowerCase().trim();
-    // E-mails de gestão são sempre válidos
-    if (MANAGEMENT_EMAILS.includes(lowerEmail)) {
+    // E-mails permitidos: institucionais ou os de gestão específicos que não são @prof (como o do gmail)
+    const SPECIAL_MANAGEMENT = ['gestao@escola.com', 'cadastroslkm@gmail.com'];
+
+    if (SPECIAL_MANAGEMENT.includes(lowerEmail)) {
       return true;
     }
+
     // Outros e-mails devem ser institucionais
     return lowerEmail.endsWith('@prof.educacao.sp.gov.br') ||
       lowerEmail.endsWith('@professor.educacao.sp.gov.br');
@@ -114,37 +108,32 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       if (data.user) {
         console.log('✅ [LOGIN] Login bem-sucedido! Usuário:', data.user.email);
 
-        // VALIDAÇÃO DE WHITELIST: Verifica no banco de dados
-        // E-mails de gestão são isentos da verificação de whitelist
-        if (!MANAGEMENT_EMAILS.includes(displayEmail)) {
-          // Gera as duas variantes de e-mail institucional para verificação
-          const emailBase = displayEmail.split('@')[0];
-          const profVariant = `${emailBase}@prof.educacao.sp.gov.br`;
-          const professorVariant = `${emailBase}@professor.educacao.sp.gov.br`;
+        // Busca o role e autorização no banco de dados
+        const emailBase = displayEmail.split('@')[0];
+        const { data: authData, error: authCheckError } = await supabase
+          .from('authorized_professors')
+          .select('role')
+          .or(`email.eq.${emailBase}@prof.educacao.sp.gov.br,email.eq.${emailBase}@professor.educacao.sp.gov.br`)
+          .maybeSingle();
 
-          console.log('🔍 [LOGIN] Verificando autorização para:', profVariant, 'ou', professorVariant);
-
-          const { data: authorized, error: authCheckError } = await supabase
-            .from('authorized_professors')
-            .select('email')
-            .or(`email.eq.${profVariant},email.eq.${professorVariant}`)
-            .maybeSingle();
-
-          if (authCheckError) {
-            console.error('⚠️ [LOGIN] Erro ao consultar authorized_professors:', authCheckError);
-          }
-
-          if (!authorized && !isProfessorRegistered(displayEmail)) {
-            console.error('❌ [LOGIN] E-mail não autorizado no banco:', displayEmail);
-            await supabase.auth.signOut();
-            throw new Error('ACESSO NEGADO: SEU E-MAIL NÃO ESTÁ AUTORIZADO NA PLATAFORMA. CONTATE A GESTÃO.');
-          }
+        if (authCheckError) {
+          console.error('⚠️ [LOGIN] Erro ao consultar authorized_professors:', authCheckError);
         }
 
-        console.log('✅ [LOGIN] Acesso autorizado!');
-        // Define role baseado no email que o usuário digitou (display), não no email real
-        const role = MANAGEMENT_EMAILS.includes(displayEmail) ? 'gestor' : 'professor';
-        onLogin({ email: displayEmail, role }); // Usa o email de display para manter a experiência
+        // Se encontrou no banco, usa o role de lá. Senão, verifica se está no DB local.
+        if (authData) {
+          console.log('✅ [LOGIN] Acesso autorizado via Banco de Dados! Role:', authData.role);
+          onLogin({ email: displayEmail, role: authData.role as 'gestor' | 'professor' }); // Usa o email de display para manter a experiência
+        } else if (isProfessorRegistered(displayEmail)) {
+          // Fallback para usuários que estão na lista local mas ainda não no banco (Professor por padrão)
+          console.log('✅ [LOGIN] Acesso autorizado via Lista Local! Role: professor');
+          onLogin({ email: displayEmail, role: 'professor' });
+        } else {
+          // Apenas bloqueia se não estiver em NENHUMA das listas
+          console.error('❌ [LOGIN] E-mail não autorizado em nenhuma lista:', displayEmail);
+          await supabase.auth.signOut();
+          throw new Error('ACESSO NEGADO: SEU E-MAIL NÃO ESTÁ AUTORIZADO NA PLATAFORMA. CONTATE A GESTÃO.');
+        }
       }
 
     } catch (err: any) {
@@ -189,32 +178,31 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       }
 
       if (data.user) {
-        // VALIDAÇÃO DE WHITELIST: Verifica no banco de dados
-        // E-mails de gestão são isentos da verificação de whitelist
-        if (!MANAGEMENT_EMAILS.includes(lowerEmail)) {
-          // Gera as duas variantes de e-mail institucional para verificação
-          const emailBase = lowerEmail.split('@')[0];
-          const profVariant = `${emailBase}@prof.educacao.sp.gov.br`;
-          const professorVariant = `${emailBase}@professor.educacao.sp.gov.br`;
+        // Busca o role e autorização no banco de dados
+        const emailBase = lowerEmail.split('@')[0];
+        const { data: authData } = await supabase
+          .from('authorized_professors')
+          .select('role')
+          .or(`email.eq.${emailBase}@prof.educacao.sp.gov.br,email.eq.${emailBase}@professor.educacao.sp.gov.br`)
+          .maybeSingle();
 
-          const { data: authorized } = await supabase
-            .from('authorized_professors')
-            .select('email')
-            .or(`email.eq.${profVariant},email.eq.${professorVariant}`)
-            .maybeSingle();
+        let userRole: 'gestor' | 'professor' | null = null;
+        if (authData) {
+          userRole = authData.role as 'gestor' | 'professor';
+        } else if (isProfessorRegistered(lowerEmail)) {
+          userRole = 'professor';
+        }
 
-          if (!authorized && !isProfessorRegistered(lowerEmail)) {
-            console.error('❌ [CADASTRO] E-mail não autorizado:', lowerEmail);
-            await supabase.auth.signOut();
-            throw new Error('ACESSO NEGADO: SEU E-MAIL NÃO ESTÁ AUTORIZADO. CONTATE A GESTÃO.');
-          }
+        if (!userRole) {
+          console.error('❌ [CADASTRO] E-mail não autorizado:', lowerEmail);
+          await supabase.auth.signOut();
+          throw new Error('ACESSO NEGADO: SEU E-MAIL NÃO ESTÁ AUTORIZADO. CONTATE A GESTÃO.');
         }
 
         // Com confirmação de e-mail desabilitada, o login é automático
-        console.log('✅ [CADASTRO] Usuário criado e autenticado automaticamente');
+        console.log('✅ [CADASTRO] Usuário criado e autenticado automaticamente. Role:', userRole);
         setMessage('CADASTRO REALIZADO! ENTRANDO NO SISTEMA...');
-        const role = MANAGEMENT_EMAILS.includes(lowerEmail) ? 'gestor' : 'professor';
-        setTimeout(() => onLogin({ email: data.user!.email!, role }), 1000);
+        setTimeout(() => onLogin({ email: data.user!.email!, role: userRole! }), 1000);
       }
 
     } catch (err: any) {
@@ -239,9 +227,18 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       }
 
       // Verifica se o professor está cadastrado antes de enviar reset
-      // E-mails de gestão são isentos da verificação de whitelist
-      if (!MANAGEMENT_EMAILS.includes(lowerEmail) && !isProfessorRegistered(lowerEmail)) {
-        throw new Error('E-MAIL NÃO CADASTRADO NO SISTEMA. CONTATE A GESTÃO.');
+      if (!isProfessorRegistered(lowerEmail)) {
+        // Verifica se está no banco de dados se não estiver na lista local
+        const emailBase = lowerEmail.split('@')[0];
+        const { data: authorized } = await supabase
+          .from('authorized_professors')
+          .select('email')
+          .or(`email.eq.${emailBase}@prof.educacao.sp.gov.br,email.eq.${emailBase}@professor.educacao.sp.gov.br`)
+          .maybeSingle();
+
+        if (!authorized) {
+          throw new Error('E-MAIL NÃO CADASTRADO NO SISTEMA. CONTATE A GESTÃO.');
+        }
       }
 
       console.log('🔄 [RESET] Enviando redefinição de senha para:', authEmail);
