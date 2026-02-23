@@ -12,6 +12,8 @@ export const PROFESSORS_DB: ProfessorData[] = [
     { email: 'vilera@prof.educacao.sp.gov.br', nome: 'RAUL VILERA - GESTÃO' },
     { email: 'cadastroslkm@gmail.com', nome: 'CADASTROS LKM - GESTÃO' },
     { email: 'alinecardoso1@prof.educacao.sp.gov.br', nome: 'ALINE CARDOSO - GESTÃO' },
+    { email: 'alinecardoso1@professor.educacao.sp.gov.br', nome: 'ALINE CARDOSO - GESTÃO' },
+    { email: 'aline.gestao@prof.educacao.sp.gov.br', nome: 'ALINE CARDOSO - GESTÃO' },
 
     // Lista Completa Baseada na Imagem Oficial
     { email: 'luth@professor.educacao.sp.gov.br', nome: 'ALEX LUTH PEREIRA MARANHÃO' },

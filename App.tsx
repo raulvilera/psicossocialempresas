@@ -16,7 +16,9 @@ const MANAGEMENT_EMAILS = [
   'gestao@escola.com',
   'cadastroslkm@gmail.com',
   'vilera@prof.educacao.sp.gov.br',
-  'alinecardoso1@prof.educacao.sp.gov.br'
+  'alinecardoso1@prof.educacao.sp.gov.br',
+  'alinecardoso1@professor.educacao.sp.gov.br',
+  'aline.gestao@prof.educacao.sp.gov.br'
 ];
 
 // E-mail com acesso dual (gestor + professor)
@@ -83,9 +85,12 @@ const App: React.FC = () => {
                   setView('dashboard');
                 } else {
                   console.warn('⚠️ [APP] Usuário não autorizado:', email);
-                  await supabase.auth.signOut();
-                  setUser(null);
-                  setView('login');
+                  // Pequeno delay para evitar loop de estado
+                  setTimeout(async () => {
+                    await supabase.auth.signOut();
+                    setUser(null);
+                    setView('login');
+                  }, 500);
                 }
               }
             } else if (event === 'SIGNED_OUT') {
