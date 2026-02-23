@@ -177,12 +177,24 @@ export const PROFESSORS_DB: ProfessorData[] = [
 ];
 
 /**
+ * Normaliza o e-mail institucional para o formato base para comparação
+ */
+const normalizeInstitutionalEmail = (email: string): string => {
+    const [user, domain] = email.toLowerCase().trim().split('@');
+    if (domain === 'prof.educacao.sp.gov.br' || domain === 'professor.educacao.sp.gov.br') {
+        return `${user}@prof.educacao.sp.gov.br`;
+    }
+    return email.toLowerCase().trim();
+};
+
+/**
  * Verifica se o e-mail está registrado no sistema
  * IMPORTANTE: Apenas e-mails cadastrados em PROFESSORS_DB podem acessar a plataforma
+ * Agora aceita automaticamente ambas as variantes (@prof e @professor)
  */
 export const isProfessorRegistered = (email: string): boolean => {
-    const lowerEmail = email.toLowerCase().trim();
-    return PROFESSORS_DB.some(p => p.email.toLowerCase() === lowerEmail);
+    const normalizedTarget = normalizeInstitutionalEmail(email);
+    return PROFESSORS_DB.some(p => normalizeInstitutionalEmail(p.email) === normalizedTarget);
 };
 
 /**
@@ -190,8 +202,10 @@ export const isProfessorRegistered = (email: string): boolean => {
  * Se não encontrar no banco, tenta extrair do próprio e-mail
  */
 export const getProfessorNameFromEmail = (email: string): string => {
-    // Busca no banco de dados de professores
-    const professor = PROFESSORS_DB.find(p => p.email.toLowerCase() === email.toLowerCase());
+    const normalizedTarget = normalizeInstitutionalEmail(email);
+
+    // Busca no banco de dados de professores usando e-mail normalizado
+    const professor = PROFESSORS_DB.find(p => normalizeInstitutionalEmail(p.email) === normalizedTarget);
 
     if (professor) {
         return professor.nome;

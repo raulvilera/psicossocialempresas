@@ -79,7 +79,21 @@ const App: React.FC = () => {
 
               if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
                 const email = session.user.email!.toLowerCase();
-                if (isProfessorRegistered(email)) {
+
+                // Verifica autorização (Local + DB)
+                let isAuthorized = isProfessorRegistered(email) || MANAGEMENT_EMAILS.includes(email);
+
+                if (!isAuthorized) {
+                  const emailBase = email.split('@')[0];
+                  const { data: authorized } = await supabase
+                    .from('authorized_professors')
+                    .select('email')
+                    .or(`email.eq.${emailBase}@prof.educacao.sp.gov.br,email.eq.${emailBase}@professor.educacao.sp.gov.br`)
+                    .maybeSingle();
+                  if (authorized) isAuthorized = true;
+                }
+
+                if (isAuthorized) {
                   const role = MANAGEMENT_EMAILS.includes(email) ? 'gestor' : 'professor';
                   setUser({ email, role });
                   setView('dashboard');
@@ -103,7 +117,21 @@ const App: React.FC = () => {
             const { data: { session } } = await supabase.auth.getSession();
             if (session?.user) {
               const email = session.user.email!.toLowerCase();
-              if (isProfessorRegistered(email)) {
+
+              // Verifica autorização (Local + DB)
+              let isAuthorized = isProfessorRegistered(email) || MANAGEMENT_EMAILS.includes(email);
+
+              if (!isAuthorized) {
+                const emailBase = email.split('@')[0];
+                const { data: authorized } = await supabase
+                  .from('authorized_professors')
+                  .select('email')
+                  .or(`email.eq.${emailBase}@prof.educacao.sp.gov.br,email.eq.${emailBase}@professor.educacao.sp.gov.br`)
+                  .maybeSingle();
+                if (authorized) isAuthorized = true;
+              }
+
+              if (isAuthorized) {
                 const role = MANAGEMENT_EMAILS.includes(email) ? 'gestor' : 'professor';
                 setUser({ email, role });
                 setView('dashboard');
