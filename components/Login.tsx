@@ -67,6 +67,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     setMessage('');
     setIsLoading(true);
 
+    const loginTimeout = setTimeout(() => {
+      setIsLoading(false);
+      setError('TEMPO LIMITE EXCEDIDO. VERIFIQUE SUA CONEXÃO OU TENTE NOVAMENTE.');
+    }, 15000); // 15 segundos de timeout
+
     try {
       const lowerEmail = email.toLowerCase().trim();
       const displayEmail = lowerEmail; // Email que o usuário digitou (para exibição)
@@ -82,63 +87,59 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       }
 
       console.log('✅ [LOGIN] E-mail validado como institucional');
-      console.log('🔗 [LOGIN] Conectando ao Supabase...');
+      console.log('🔗 [LOGIN] Conectando ao Supabase Auth...');
 
       const { data, error: authError } = await supabase.auth.signInWithPassword({
         email: authEmail, // Usa o email real para autenticação
         password
       });
 
-      console.log('📊 [LOGIN] Resposta do Supabase:', {
-        hasData: !!data,
-        hasUser: !!data?.user,
-        hasError: !!authError,
-        errorMessage: authError?.message,
-        errorStatus: authError?.status
-      });
-
       if (authError) {
-        console.error('❌ [LOGIN] Erro de autenticação:', authError);
+        console.error('❌ [LOGIN] Erro de autenticação Supabase:', authError);
         if (authError.message.includes('Invalid login credentials')) {
-          throw new Error('CREDENCIAIS INVÁLIDAS. VERIFIQUE SEUS DADOS OU SE JÁ CONFIRMOU SEU E-MAIL NO LINK ENVIADO (VERIFIQUE TAMBÉM A PASTA DE SPAM).');
+          throw new Error('CREDENCIAIS INVÁLIDAS. VERIFIQUE SEUS DADOS OU SE JÁ CONFIRMOU SEU E-MAIL NO LINK ENVIADO.');
         }
         throw new Error(authError.message.toUpperCase());
       }
 
-      if (data.user) {
-        console.log('✅ [LOGIN] Login bem-sucedido! Usuário:', data.user.email);
+      if (!data.user) {
+        throw new Error('FALHA AO OBTER DADOS DO USUÁRIO APÓS LOGIN.');
+      }
 
-        // Busca o role e autorização no banco de dados
-        const emailBase = displayEmail.split('@')[0];
-        const { data: authData, error: authCheckError } = await supabase
-          .from('authorized_professors')
-          .select('role')
-          .or(`email.eq.${emailBase}@prof.educacao.sp.gov.br,email.eq.${emailBase}@professor.educacao.sp.gov.br`)
-          .maybeSingle();
+      console.log('✅ [LOGIN] Autenticado! Buscando autorização no banco para:', displayEmail);
 
-        if (authCheckError) {
-          console.error('⚠️ [LOGIN] Erro ao consultar authorized_professors:', authCheckError);
-        }
+      // Busca o role e autorização no banco de dados
+      const emailBase = displayEmail.split('@')[0];
+      const { data: authData, error: authCheckError } = await supabase
+        .from('authorized_professors')
+        .select('role')
+        .or(`email.eq.${emailBase}@prof.educacao.sp.gov.br,email.eq.${emailBase}@professor.educacao.sp.gov.br`)
+        .maybeSingle();
 
-        // Se encontrou no banco, usa o role de lá. Senão, verifica se está no DB local.
-        if (authData) {
-          console.log('✅ [LOGIN] Acesso autorizado via Banco de Dados! Role:', authData.role);
-          onLogin({ email: displayEmail, role: authData.role as 'gestor' | 'professor' }); // Usa o email de display para manter a experiência
-        } else if (isProfessorRegistered(displayEmail)) {
-          // Fallback para usuários que estão na lista local mas ainda não no banco (Professor por padrão)
-          console.log('✅ [LOGIN] Acesso autorizado via Lista Local! Role: professor');
-          onLogin({ email: displayEmail, role: 'professor' });
-        } else {
-          // Apenas bloqueia se não estiver em NENHUMA das listas
-          console.error('❌ [LOGIN] E-mail não autorizado em nenhuma lista:', displayEmail);
-          await supabase.auth.signOut();
-          throw new Error('ACESSO NEGADO: SEU E-MAIL NÃO ESTÁ AUTORIZADO NA PLATAFORMA. CONTATE A GESTÃO.');
-        }
+      if (authCheckError) {
+        console.error('⚠️ [LOGIN] Erro ao consultar authorized_professors:', authCheckError);
+        // Não jogamos erro aqui ainda, tentamos o fallback local
+      }
+
+      clearTimeout(loginTimeout);
+
+      // Se encontrou no banco, usa o role de lá. Senão, verifica se está no DB local.
+      if (authData) {
+        console.log('✅ [LOGIN] Acesso autorizado via Banco de Dados! Role:', authData.role);
+        onLogin({ email: displayEmail, role: authData.role as 'gestor' | 'professor' });
+      } else if (isProfessorRegistered(displayEmail)) {
+        console.log('✅ [LOGIN] Acesso autorizado via Lista Local! Role: professor');
+        onLogin({ email: displayEmail, role: 'professor' });
+      } else {
+        console.error('❌ [LOGIN] E-mail não autorizado:', displayEmail);
+        await supabase.auth.signOut();
+        throw new Error('ACESSO NEGADO: SEU E-MAIL NÃO ESTÁ AUTORIZADO NA PLATAFORMA.');
       }
 
     } catch (err: any) {
+      clearTimeout(loginTimeout);
       console.error('❌ [LOGIN] Erro capturado:', err);
-      setError(err.message.toUpperCase());
+      setError(err.message.toUpperCase() || 'ERRO DESCONHECIDO AO TENTAR ENTRAR.');
     } finally {
       setIsLoading(false);
     }
