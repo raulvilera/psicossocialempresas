@@ -49,50 +49,58 @@ const App: React.FC = () => {
             setView('resetPassword');
           }
 
-          // 3. Listener de mudanças de estado (Auth)
+          // Função auxiliar para buscar role com timeout e fallback
+          const fetchRoleSafe = async (email: string) => {
+            const emailBase = email.toLowerCase().split('@')[0];
+            const query = supabase
+              .from('authorized_professors')
+              .select('role')
+              .or(`email.eq.${emailBase}@prof.educacao.sp.gov.br,email.eq.${emailBase}@professor.educacao.sp.gov.br`)
+              .maybeSingle();
+
+            const timeoutPromise = new Promise((_, reject) =>
+              setTimeout(() => reject(new Error('TIMEOUT_DB')), 4000)
+            );
+
+            try {
+              const result: any = await Promise.race([query, timeoutPromise]);
+              let role = result.data?.role || null;
+
+              if (!role && isProfessorRegistered(email)) {
+                role = 'professor';
+              }
+              return role;
+            } catch (e) {
+              console.warn('⚠️ [APP] Fallback ativado para role:', email);
+              return isProfessorRegistered(email) ? 'professor' : null;
+            }
+          };
+
+          // 3. Monitor de autenticação
           const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-            console.log('🔔 [AUTH] Evento:', event, 'Sessão:', !!session);
+            console.log(`[APP] Auth Event: ${event}`);
 
             if (event === 'PASSWORD_RECOVERY') {
               isDuringRecovery = true;
-              console.log('🔐 [APP] Redirecionando para tela de redefinição...');
               setView('resetPassword');
               return;
             }
 
             if (session?.user) {
               if (isDuringRecovery) {
-                console.log('🛡️ [APP] Bloqueio de Segurança: Ignorando redirect para Dashboard durante recuperação');
                 setView('resetPassword');
                 return;
               }
 
-              if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
-                const email = session.user.email!.toLowerCase();
-
-                // Busca o role e autorização no banco de dados (Acesso Dinâmico)
-                const emailBase = email.split('@')[0];
-                const { data: authData } = await supabase
-                  .from('authorized_professors')
-                  .select('role')
-                  .or(`email.eq.${emailBase}@prof.educacao.sp.gov.br,email.eq.${emailBase}@professor.educacao.sp.gov.br`)
-                  .maybeSingle();
-
-                let userRole: 'gestor' | 'professor' | null = null;
-                if (authData) {
-                  userRole = authData.role as 'gestor' | 'professor';
-                } else if (isProfessorRegistered(email)) {
-                  userRole = 'professor';
-                }
-
-                if (userRole) {
-                  setUser({ email, role: userRole });
-                  setView('dashboard');
-                } else {
-                  console.warn('⚠️ [APP] Usuário não autorizado:', email);
-                  setUser({ email, role: 'professor' }); // Seta um user temporário para evitar loop
-                  setView('unauthorized');
-                }
+              const role = await fetchRoleSafe(session.user.email!);
+              if (role) {
+                setUser({ email: session.user.email!.toLowerCase(), role: role as any });
+                setView('dashboard');
+              } else {
+                console.error('❌ [APP] Usuário não autorizado:', session.user.email);
+                await supabase.auth.signOut();
+                setUser(null);
+                setView('login');
               }
             } else if (event === 'SIGNED_OUT') {
               isDuringRecovery = false;
@@ -107,28 +115,13 @@ const App: React.FC = () => {
           if (!isDuringRecovery) {
             const { data: { session } } = await supabase.auth.getSession();
             if (session?.user) {
-              const email = session.user.email!.toLowerCase();
+              const role = await fetchRoleSafe(session.user.email!);
 
-              // Busca o role e autorização no banco de dados (Acesso Dinâmico)
-              const emailBase = email.split('@')[0];
-              const { data: authData } = await supabase
-                .from('authorized_professors')
-                .select('role')
-                .or(`email.eq.${emailBase}@prof.educacao.sp.gov.br,email.eq.${emailBase}@professor.educacao.sp.gov.br`)
-                .maybeSingle();
-
-              let userRole: 'gestor' | 'professor' | null = null;
-              if (authData) {
-                userRole = authData.role as 'gestor' | 'professor';
-              } else if (isProfessorRegistered(email)) {
-                userRole = 'professor';
-              }
-
-              if (userRole) {
-                setUser({ email, role: userRole });
+              if (role) {
+                setUser({ email: session.user.email!.toLowerCase(), role: role as any });
                 setView('dashboard');
               } else {
-                setUser({ email, role: 'professor' });
+                setUser({ email: session.user.email!.toLowerCase(), role: 'professor' });
                 setView('unauthorized');
               }
             }
@@ -220,14 +213,14 @@ const App: React.FC = () => {
             finalStudents = sheetsStudents;
             console.log(`✅ Google Sheets: Carregados ${sheetsStudents.length} alunos`);
 
-            // Sincronizar com Supabase se houver conexão E usuário logado (para evitar erro de RLS)
+            // Sincronizar com Supabase se houver conexão E usuário logado E for GESTOR (para evitar erro de RLS)
             const { data: { session } } = await supabase.auth.getSession();
-            if (isSupabaseConfigured && supabase && session) {
+            const isGestor = user?.role === 'gestor';
+
+            if (isSupabaseConfigured && supabase && session && isGestor) {
               try {
-                // Limpar tabela students para evitar duplicatas (usando filtro 'neq' em campo garantido ou delete all se RLS permitir)
-                // Nota: No Supabase, delete sem filtro pode ser bloqueado dependendo da config.
-                // Mas aqui estamos limpando tudo para repopular.
-                await supabase.from('students').delete().filter('id', 'neq', '00000000-0000-0000-0000-000000000000');
+                // Tenta limpar apenas se tiver permissão (RLS)
+                await supabase.from('students').delete().neq('id', '0');
 
                 // Inserir em lotes para evitar problemas de payload grande
                 const CHUNK_SIZE = 500;

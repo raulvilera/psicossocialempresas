@@ -102,44 +102,59 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         throw new Error(authError.message.toUpperCase());
       }
 
-      if (!data.user) {
-        throw new Error('FALHA AO OBTER DADOS DO USUÁRIO APÓS LOGIN.');
-      }
+      if (data.user) {
+        console.log('✅ [LOGIN] Autenticado! Buscando autorização para:', displayEmail);
 
-      console.log('✅ [LOGIN] Autenticado! Buscando autorização no banco para:', displayEmail);
+        // Função para buscar cargo no banco com timeout
+        const fetchRoleWithTimeout = async () => {
+          const emailBase = displayEmail.split('@')[0];
+          const query = supabase
+            .from('authorized_professors')
+            .select('role')
+            .or(`email.eq.${emailBase}@prof.educacao.sp.gov.br,email.eq.${emailBase}@professor.educacao.sp.gov.br`)
+            .maybeSingle();
 
-      // Busca o role e autorização no banco de dados
-      const emailBase = displayEmail.split('@')[0];
-      const { data: authData, error: authCheckError } = await supabase
-        .from('authorized_professors')
-        .select('role')
-        .or(`email.eq.${emailBase}@prof.educacao.sp.gov.br,email.eq.${emailBase}@professor.educacao.sp.gov.br`)
-        .maybeSingle();
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('TIMEOUT_DB')), 4000)
+          );
 
-      if (authCheckError) {
-        console.error('⚠️ [LOGIN] Erro ao consultar authorized_professors:', authCheckError);
-        // Não jogamos erro aqui ainda, tentamos o fallback local
-      }
+          try {
+            const result: any = await Promise.race([query, timeoutPromise]);
+            return result.data?.role || null;
+          } catch (e) {
+            console.warn('⚠️ [LOGIN] Consulta ao banco falhou ou deu timeout, usando fallback local.');
+            return null;
+          }
+        };
 
-      clearTimeout(loginTimeout);
+        const dbRole = await fetchRoleWithTimeout();
+        let userRole: 'gestor' | 'professor' | null = dbRole as any;
 
-      // Se encontrou no banco, usa o role de lá. Senão, verifica se está no DB local.
-      if (authData) {
-        console.log('✅ [LOGIN] Acesso autorizado via Banco de Dados! Role:', authData.role);
-        onLogin({ email: displayEmail, role: authData.role as 'gestor' | 'professor' });
-      } else if (isProfessorRegistered(displayEmail)) {
-        console.log('✅ [LOGIN] Acesso autorizado via Lista Local! Role: professor');
-        onLogin({ email: displayEmail, role: 'professor' });
-      } else {
-        console.error('❌ [LOGIN] E-mail não autorizado:', displayEmail);
-        await supabase.auth.signOut();
-        throw new Error('ACESSO NEGADO: SEU E-MAIL NÃO ESTÁ AUTORIZADO NA PLATAFORMA.');
+        // Fallback para lista local se não encontrou no banco
+        if (!userRole && isProfessorRegistered(displayEmail)) {
+          console.log('✅ [LOGIN] Autorizado via Lista Local! (Fallback)');
+          userRole = 'professor';
+        }
+
+        if (userRole) {
+          console.log('🚀 [LOGIN] Entrando com role:', userRole);
+          onLogin({ email: displayEmail, role: userRole });
+        } else {
+          console.error('❌ [LOGIN] Acesso negado para:', displayEmail);
+          await supabase.auth.signOut();
+          throw new Error('ACESSO NEGADO: SEU E-MAIL NÃO CONSTA NA LISTA DE AUTORIZADOS.');
+        }
       }
 
     } catch (err: any) {
       clearTimeout(loginTimeout);
       console.error('❌ [LOGIN] Erro capturado:', err);
-      setError(err.message.toUpperCase() || 'ERRO DESCONHECIDO AO TENTAR ENTRAR.');
+
+      const message = err.message === 'TIMEOUT_DB'
+        ? 'A CONEXÃO COM O BANCO ESTÁ LENTA. TENTE NOVAMENTE EM ALGUNS INSTANTES.'
+        : (err.message.toUpperCase() || 'ERRO DESCONHECIDO AO TENTAR ENTRAR.');
+
+      setError(message);
     } finally {
       setIsLoading(false);
     }
