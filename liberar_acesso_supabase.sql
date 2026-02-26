@@ -17,22 +17,15 @@ BEGIN
     END IF;
 END $$;
 
--- 2. ATUALIZAR POLÍTICAS DE GESTÃO (RLS) NA TABELA 'STUDENTS'
--- Isso garante que ela tenha permissão para sincronizar alunos
+-- 2. ATUALIZAR POLÍTICAS DE ACESSO (RLS) NA TABELA 'STUDENTS'
+-- Isso garante que qualquer professor autenticado possa sincronizar alunos
 DROP POLICY IF EXISTS "Allow write access for managers" ON students;
-CREATE POLICY "Allow write access for managers"
+DROP POLICY IF EXISTS "Allow write access for all authorized users" ON students;
+CREATE POLICY "Allow write access for all authorized users"
   ON students FOR ALL
   TO authenticated
-  USING (
-    auth.jwt() ->> 'email' IN (
-      'gestao@escola.com',
-      'cadastroslkm@gmail.com',
-      'vilera@prof.educacao.sp.gov.br',
-      'alinecardoso1@prof.educacao.sp.gov.br',
-      'alinecardoso1@professor.educacao.sp.gov.br',
-      'aline.gestao@prof.educacao.sp.gov.br'
-    )
-  );
+  USING (true)
+  WITH CHECK (true);
 
 -- 3. VERIFICAÇÃO FINAL
 -- Lista os e-mails que agora têm acesso de gestão

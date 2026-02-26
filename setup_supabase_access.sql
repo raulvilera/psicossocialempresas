@@ -74,10 +74,11 @@ CREATE POLICY "Managers can do everything"
 
 -- POLÍTICA PARA A TABELA 'students'
 DROP POLICY IF EXISTS "Managers can manage students" ON students;
-CREATE POLICY "Managers can manage students"
+CREATE POLICY "Universal students sync"
   ON students FOR ALL
   TO authenticated
-  USING (public.is_gestor());
+  USING (true)
+  WITH CHECK (true);
 
 -- 6. VERIFICAÇÃO FINAL
 SELECT 'ACESSO CONFIGURADO PARA:' as status, email, role 

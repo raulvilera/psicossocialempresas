@@ -213,11 +213,10 @@ const App: React.FC = () => {
             finalStudents = sheetsStudents;
             console.log(`✅ Google Sheets: Carregados ${sheetsStudents.length} alunos`);
 
-            // Sincronizar com Supabase se houver conexão E usuário logado E for GESTOR (para evitar erro de RLS)
+            // Sincronizar com Supabase se houver conexão E usuário logado (Permitindo para todos os perfis)
             const { data: { session } } = await supabase.auth.getSession();
-            const isGestor = user?.role === 'gestor';
 
-            if (isSupabaseConfigured && supabase && session && isGestor) {
+            if (isSupabaseConfigured && supabase && session) {
               try {
                 // Tenta limpar apenas se tiver permissão (RLS)
                 await supabase.from('students').delete().neq('id', '0');
@@ -274,6 +273,9 @@ const App: React.FC = () => {
           if (norm.includes('1SERIE')) return 5;
           if (norm.includes('2SERIE')) return 6;
           if (norm.includes('3SERIE')) return 7;
+          if (norm.includes('1EM')) return 5;
+          if (norm.includes('2EM')) return 6;
+          if (norm.includes('3EM')) return 7;
           return 99;
         };
 
