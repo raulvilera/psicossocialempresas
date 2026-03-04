@@ -105,8 +105,10 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
-      overflow-y: auto;
-      overflow-x: hidden
+      overflow-y: scroll;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      padding-bottom: 12px
     }
 
     .sidebar-logo {
@@ -1205,7 +1207,7 @@
   <!-- MAIN -->
   <div class="main">
     <div class="topbar">
-      <div class="topbar-title" id="topTitle">Dashboard SESMT</div>
+      <div class="topbar-title" id="topTitle">Dashboard</div>
       <div class="search-box"><svg width="13" height="13" fill="none" stroke="rgba(0,120,255,0.22)" stroke-width="2"
           viewBox="0 0 24 24">
           <circle cx="11" cy="11" r="8" />
@@ -2314,7 +2316,7 @@
       document.getElementById('sec-' + name).classList.add('active');
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       if (el) el.classList.add('active');
-      const t = { dashboard: 'Dashboard SESMT', funcionarios: 'Funcionários', aso: 'ASO & Exames', agendamentos: 'Agendamentos', epis: 'EPIs & Estoque', cats: 'Acidentes (CAT)', treinamentos: 'Treinamentos', ia: 'Análise Preditiva', laudos: 'Laudos Automáticos' };
+      const t = { dashboard: 'Dashboard', funcionarios: 'Funcionários', aso: 'ASO & Exames', agendamentos: 'Agendamentos', epis: 'EPIs & Estoque', cats: 'Acidentes (CAT)', treinamentos: 'Treinamentos', ia: 'Análise Preditiva', laudos: 'Laudos Automáticos' };
       document.getElementById('topTitle').textContent = t[name] || name;
       if (name === 'funcionarios') loadFunc();
       if (name === 'aso') loadAso();
