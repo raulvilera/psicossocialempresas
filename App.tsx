@@ -14,10 +14,12 @@ import { isProfessorRegistered } from './professorsData';
 // E-mail com acesso dual (gestor + professor)
 const DUAL_ACCESS_EMAIL = 'vilera@prof.educacao.sp.gov.br';
 
+import { normalizeClassName } from './utils/formatters';
+
 type View = 'login' | 'dashboard' | 'resetPassword' | 'unauthorized';
 type ViewMode = 'gestor' | 'professor';
 
-const App: React.FC = () => {
+const App = () => {
   const [view, setView] = useState<View>('login');
   const [user, setUser] = useState<User | null>(null);
   const [incidents, setIncidents] = useState<Incident[]>([]);
@@ -195,7 +197,7 @@ const App: React.FC = () => {
               id: s.id,
               nome: s.nome,
               ra: s.ra,
-              turma: s.turma
+              turma: normalizeClassName(s.turma)
             }));
             loadedFromSupabase = true;
             console.log(`✅ Supabase: Total de ${finalStudents.length} alunos carregados (Paginado)`);
@@ -210,7 +212,10 @@ const App: React.FC = () => {
         try {
           const sheetsStudents = await loadStudentsFromSheets();
           if (sheetsStudents.length > 0) {
-            finalStudents = sheetsStudents;
+            finalStudents = sheetsStudents.map(s => ({
+              ...s,
+              turma: normalizeClassName(s.turma)
+            }));
             console.log(`✅ Google Sheets: Carregados ${sheetsStudents.length} alunos`);
 
             // Sincronizar com Supabase se houver conexão E usuário logado (Permitindo para todos os perfis)
@@ -230,7 +235,7 @@ const App: React.FC = () => {
                     id: `synced-${Date.now()}-${i + index}`,
                     nome: s.nome,
                     ra: s.ra,
-                    turma: s.turma
+                    turma: s.turma // Já normalizado acima
                   }));
 
                   const { error } = await supabase.from('students').insert(studentsToInsert);
@@ -259,8 +264,11 @@ const App: React.FC = () => {
 
       // Gerar lista de turmas dinamicamente — inclui turmas da planilha mesmo sem alunos
       const fromStudents = finalStudents.map(s => s.turma);
-      const fromSheets: string[] = (window as any).__allDetectedClasses || [];
-      const uniqueClasses = Array.from(new Set([...fromStudents, ...fromSheets]));
+      const fromSheetsRaw: string[] = (window as any).__allDetectedClasses || [];
+      const fromSheets = fromSheetsRaw.map(t => normalizeClassName(t));
+
+      const uniqueClasses = Array.from(new Set([...fromStudents, ...fromSheets]))
+        .filter(t => t !== '---'); // Remove placeholders
       const sortedClasses = uniqueClasses.sort((a, b) => {
         const getOrder = (s: string) => {
           // Normaliza: remove acentos e caracteres especiais, mantendo apenas letras e números

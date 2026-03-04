@@ -1,5 +1,6 @@
 
 import { Incident, Student } from '../types';
+import { normalizeClassName } from '../utils/formatters';
 
 /**
  * URL do seu Google Apps Script implantado como Web App.
@@ -30,7 +31,7 @@ export const loadStudentsFromSheets = async (): Promise<Student[]> => {
       if (data.debug?.classBlocksDetected && Array.isArray(data.debug.classBlocksDetected)) {
         // Extrai apenas o nome da turma antes do " (nome:..."
         const detectedClasses: string[] = data.debug.classBlocksDetected.map(
-          (entry: string) => entry.split(' (')[0].trim()
+          (entry: string) => normalizeClassName(entry.split(' (')[0].trim())
         );
         (window as any).__allDetectedClasses = detectedClasses;
         console.log(`📋 Turmas detectadas na planilha: ${detectedClasses.join(', ')}`);
