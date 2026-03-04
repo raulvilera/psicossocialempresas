@@ -533,6 +533,153 @@
             color: #fff;
             box-shadow: 0 6px 30px rgba(0, 100, 220, 0.5)
         }
+
+        /* ─── MODAL SETORES ─── */
+        .modal-setores-box {
+            background: linear-gradient(145deg, #040c18, #02080f);
+            border: 1px solid rgba(0, 120, 255, 0.25);
+            border-radius: 22px;
+            padding: 32px 28px;
+            max-width: 560px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .setores-header {
+            text-align: center;
+            margin-bottom: 22px
+        }
+
+        .setores-header .big-icon {
+            font-size: 44px;
+            margin-bottom: 10px
+        }
+
+        .setores-header h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 5px
+        }
+
+        .setores-header p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1.6
+        }
+
+        .setor-row {
+            background: rgba(0, 60, 120, 0.15);
+            border: 1px solid rgba(0, 120, 255, 0.18);
+            border-radius: 13px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+        }
+
+        .setor-nome {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .setor-id-badge {
+            font-size: 9px;
+            font-weight: 700;
+            background: rgba(0, 120, 255, 0.2);
+            color: var(--cyan);
+            border: 1px solid rgba(0, 120, 255, 0.3);
+            padding: 2px 8px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+        }
+
+        .setor-link-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .setor-link-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 120, 255, 0.18);
+            border-radius: 8px;
+            padding: 8px 11px;
+            font-size: 11px;
+            color: rgba(0, 204, 255, 0.8);
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+            cursor: text;
+        }
+
+        .btn-copiar {
+            padding: 7px 13px;
+            background: rgba(0, 80, 160, 0.3);
+            border: 1px solid rgba(0, 120, 255, 0.3);
+            color: var(--cyan);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: .5px;
+            white-space: nowrap;
+            transition: all .15s;
+            flex-shrink: 0;
+        }
+
+        .btn-copiar:hover {
+            background: rgba(0, 100, 200, 0.5);
+            color: #fff
+        }
+
+        .btn-copiar.copiado {
+            background: rgba(0, 150, 60, 0.3);
+            border-color: rgba(0, 200, 80, 0.4);
+            color: #44dd88
+        }
+
+        .setores-footer {
+            margin-top: 18px;
+            text-align: center
+        }
+
+        .btn-dashboard {
+            display: inline-block;
+            padding: 13px 30px;
+            background: linear-gradient(135deg, #001a33, #003d7a, #0077ff);
+            color: var(--cyan);
+            border: 1px solid rgba(0, 120, 255, 0.4);
+            border-radius: 13px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all .2s;
+            box-shadow: 0 4px 20px rgba(0, 100, 220, 0.35);
+            text-decoration: none;
+        }
+
+        .btn-dashboard:hover {
+            color: #fff;
+            box-shadow: 0 6px 30px rgba(0, 100, 220, 0.5)
+        }
+
+        .setores-nota {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.25);
+            margin-top: 10px
+        }
     </style>
 </head>
 
@@ -643,19 +790,14 @@
         </div><!-- /plans-grid -->
     </div><!-- /main-content -->
 
-    <!-- TELA DE SUCESSO -->
+    <!-- TELA DE SUCESSO (simples, substituída pelo modal de setores) -->
     <div class="success-screen" id="success-screen">
         <div class="success-icon">🎉</div>
         <div class="success-title">Plano Ativado!</div>
-        <div class="success-sub">
-            Seu plano foi assinado com sucesso.<br>
-            O acesso ao dashboard está liberado.<br>
-            Bem-vindo à <strong style="color:var(--cyan)">Psicos Pro</strong>!
-        </div>
-        <a href="/" class="btn-go">Ir para o Dashboard →</a>
+        <div class="success-sub">Redirecionando para o Dashboard...</div>
     </div>
 
-    <!-- MODAL DE CONFIRMAÇÃO -->
+    <!-- MODAL DE CONFIRMAÇÃO DE PLANO -->
     <div class="modal" id="modal">
         <div class="modal-box">
             <div class="modal-icon" id="modal-icon">📋</div>
@@ -665,6 +807,24 @@
             <button class="btn-confirmar" id="btn-confirmar" onclick="confirmarAssinatura()">✅ CONFIRMAR
                 ASSINATURA</button>
             <button class="btn-back" onclick="fecharModal()">← Voltar e escolher outro plano</button>
+        </div>
+    </div>
+
+    <!-- MODAL SETORES — links do formulário por setor -->
+    <div class="modal" id="modal-setores">
+        <div class="modal-setores-box">
+            <div class="setores-header">
+                <div class="big-icon">📋</div>
+                <h2>Formulários por Setor</h2>
+                <p>Plano assinado com sucesso! Agora envie o link do formulário psicossocial<br>específico para cada
+                    setor da sua empresa.</p>
+            </div>
+            <div id="setores-lista"></div>
+            <div class="setores-footer">
+                <a href="/" class="btn-dashboard">Ir para o Dashboard →</a>
+                <div class="setores-nota">⚠️ Salve estes links antes de fechar. Eles estarão disponíveis no Dashboard.
+                </div>
+            </div>
         </div>
     </div>
 
@@ -785,6 +945,59 @@
             document.getElementById('modal').classList.remove('show');
         }
 
+        // ─── Gera UUID simples ──────────────────────────────────
+        function gerarUUID() {
+            return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g,
+                c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
+        }
+
+        // ─── Constrói e mostra o modal de setores ──────────────
+        async function mostrarModalSetores() {
+            const FORM_BASE = 'https://digital-survey-craft.lovable.app/';
+            const listaSets = setores ? setores.split(',').map(s => s.trim()).filter(Boolean) : ['Geral'];
+            const lista = document.getElementById('setores-lista');
+            lista.innerHTML = '';
+
+            const linksGerados = [];
+            for (const setor of listaSets) {
+                const token = gerarUUID();
+                const link = `${FORM_BASE}?empresa_id=${empresaId}&setor=${encodeURIComponent(setor)}&token=${token}`;
+                linksGerados.push({ setor, token, link });
+
+                const row = document.createElement('div');
+                row.className = 'setor-row';
+                row.innerHTML = `
+                    <div class="setor-nome">
+                        🏭 ${setor}
+                        <span class="setor-id-badge">ID: ${token.slice(0, 8).toUpperCase()}</span>
+                    </div>
+                    <div class="setor-link-wrap">
+                        <input class="setor-link-input" type="text" value="${link}" readonly id="link-${token.slice(0, 8)}">
+                        <button class="btn-copiar" onclick="copiarLink('link-${token.slice(0, 8)}', this)">📋 Copiar</button>
+                    </div>`;
+                lista.appendChild(row);
+            }
+
+            // Salvar links no backend
+            try {
+                const fd2 = new FormData();
+                fd2.append('empresa_id', empresaId);
+                fd2.append('links', JSON.stringify(linksGerados));
+                await fetch('/api/setores/registrar-links', { method: 'POST', body: fd2 });
+            } catch (e) { /* continua mesmo se falhar */ }
+
+            document.getElementById('modal-setores').classList.add('show');
+        }
+
+        function copiarLink(inputId, btn) {
+            const inp = document.getElementById(inputId);
+            navigator.clipboard.writeText(inp.value).then(() => {
+                btn.textContent = '✅ Copiado!';
+                btn.classList.add('copiado');
+                setTimeout(() => { btn.textContent = '📋 Copiar'; btn.classList.remove('copiado'); }, 2000);
+            });
+        }
+
         async function confirmarAssinatura() {
             const btn = document.getElementById('btn-confirmar');
             btn.textContent = 'PROCESSANDO...';
@@ -796,19 +1009,13 @@
                 fd.append('plano', planoSelecionado);
                 fd.append('periodo', periodoAnual ? 'anual' : 'mensal');
                 fd.append('valor', periodoAnual ? PRECOS[planoSelecionado].anual : PRECOS[planoSelecionado].mensal);
-
                 await fetch('/api/empresa/assinar-plano', { method: 'POST', body: fd });
-            } catch (e) {
-                // Continua mesmo se o backend falhar (protótipo)
-            }
+            } catch (e) { /* continua mesmo se falhar */ }
 
-            // Exibir tela de sucesso
+            // Fechar modal de confirmação e abrir modal de setores com links
             fecharModal();
             document.getElementById('main-content').style.display = 'none';
-            document.getElementById('success-screen').style.display = 'block';
-
-            // Redirecionar para o dashboard após 3 segundos
-            setTimeout(() => window.location.href = '/', 3000);
+            await mostrarModalSetores();
         }
 
         // ─── Init ──────────────────────────────────────────────────────────────

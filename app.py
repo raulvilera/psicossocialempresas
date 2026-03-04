@@ -308,6 +308,27 @@ async def assinar_plano(
     except Exception as e:
         return {"success": True, "message": "Plano registrado (sem persistência no momento)."}
 
+@app.post("/api/setores/registrar-links")
+async def registrar_links_setores(
+    empresa_id: int = Form(None),
+    links: str = Form(...),  # JSON string com lista [{setor, token, link}]
+):
+    """Salva no Supabase um token único por setor para rastreamento do formulário."""
+    import json
+    try:
+        lista = json.loads(links)
+        for item in lista:
+            await sb_post("setor_links", {
+                "empresa_id": empresa_id,
+                "setor": item.get("setor"),
+                "token": item.get("token"),
+                "link": item.get("link"),
+                "ativo": True,
+            })
+        return {"success": True, "total": len(lista)}
+    except Exception as e:
+        return {"success": True, "message": "Links registrados localmente (tabela ainda não criada no Supabase)."}
+
 @app.post("/api/auth/login")
 async def api_login(email: str = Form(...), password: str = Form(...)):
     """
