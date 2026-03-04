@@ -1943,123 +1943,169 @@
       delete scenes[id];
     }
 
-    // ROSCA 3D
+    // ROSCA 3D — alto relevo com sombreamento branco na base/esquerda
     function donut3d(id, labels, values, colors) {
       clearScene(id);
       const cont = document.getElementById(id);
       if (!cont) return;
       const W = cont.offsetWidth || 200, H = cont.offsetHeight || 200;
       const scene = new THREE.Scene();
-      const cam = new THREE.PerspectiveCamera(42, W / H, 0.1, 50);
-      cam.position.set(0, 2.5, 4.8); cam.lookAt(0, 0, 0);
-      const ren = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      const cam = new THREE.PerspectiveCamera(40, W / H, 0.1, 50);
+      cam.position.set(0, 2.8, 5.2); cam.lookAt(0, 0.1, 0);
+      const ren = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
       ren.setSize(W, H); ren.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       ren.shadowMap.enabled = true; ren.shadowMap.type = THREE.PCFSoftShadowMap;
       cont.appendChild(ren.domElement);
       renderers[id] = ren; scenes[id] = scene;
 
-      scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-      const dl = new THREE.DirectionalLight(0xffffff, 1.1);
-      dl.position.set(4, 6, 4); dl.castShadow = true; scene.add(dl);
-      scene.add(Object.assign(new THREE.PointLight(0x00aaff, 0.35, 20), { position: new THREE.Vector3(-3, 2, 2) }));
+      // Luz ambiente suave
+      scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+      // Luz principal (topo-direita-frente) - cria sombra
+      const dl = new THREE.DirectionalLight(0xffffff, 1.2);
+      dl.position.set(5, 8, 5); dl.castShadow = true;
+      dl.shadow.mapSize.width = 1024; dl.shadow.mapSize.height = 1024;
+      scene.add(dl);
+      // Luz de preenchimento branca INFERIOR-ESQUERDA — alto relevo
+      const fillLight = new THREE.DirectionalLight(0xffffff, 0.55);
+      fillLight.position.set(-4, -2, 3); scene.add(fillLight);
+      // Luz de brilho pontual
+      scene.add(Object.assign(new THREE.PointLight(0xaaddff, 0.4, 22), { position: new THREE.Vector3(-3, 2, 4) }));
 
       const total = values.reduce((a, b) => a + b, 0) || 1;
-      const iR = 0.5, oR = 1.0, depth = 0.32;
+      const iR = 0.45, oR = 1.0, depth = 0.38;
       let sa = -Math.PI / 2;
       const grp = new THREE.Group(); scene.add(grp);
 
       values.forEach((v, i) => {
         if (v <= 0) return;
         const ang = (v / total) * Math.PI * 2;
-        const segs = Math.max(14, Math.round(ang * 22));
+        const segs = Math.max(18, Math.round(ang * 28));
         const shape = new THREE.Shape();
         shape.moveTo(Math.cos(sa) * oR, Math.sin(sa) * oR);
         for (let s = 0; s <= segs; s++) { const a = sa + (ang * s / segs); shape.lineTo(Math.cos(a) * oR, Math.sin(a) * oR) }
         for (let s = segs; s >= 0; s--) { const a = sa + (ang * s / segs); shape.lineTo(Math.cos(a) * iR, Math.sin(a) * iR) }
         shape.closePath();
-        const geo = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.02, bevelSegments: 3 });
-        const mat = new THREE.MeshPhongMaterial({ color: pc(colors[i]), shininess: 130, specular: new THREE.Color(0.25, 0.25, 0.25) });
+        const geo = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.03, bevelSegments: 5 });
+        const mat = new THREE.MeshPhongMaterial({ color: pc(colors[i]), shininess: 180, specular: new THREE.Color(0.5, 0.5, 0.5) });
         const mesh = new THREE.Mesh(geo, mat);
         mesh.rotation.x = -Math.PI / 2; mesh.castShadow = true; mesh.receiveShadow = true;
         grp.add(mesh); sa += ang;
       });
 
+      // Plano de sombra no chão — dá efeito de alto relevo
+      const floorGeo = new THREE.CircleGeometry(1.4, 64);
+      const floorMat = new THREE.ShadowMaterial({ opacity: 0.35 });
+      const floor = new THREE.Mesh(floorGeo, floorMat);
+      floor.rotation.x = -Math.PI / 2; floor.position.y = -0.25; floor.receiveShadow = true;
+      scene.add(floor);
+
       // legenda
       const legEl = document.getElementById('leg-' + id.replace('c-', ''));
       if (legEl) {
-        legEl.innerHTML = labels.map((l, i) => `<div class="leg-item"><div class="leg-dot" style="background:${colors[i]}"></div>${l}: <b>${values[i]}</b></div>`).join('');
+        legEl.innerHTML = labels.map((l, i) => `<div class="leg-item"><div class="leg-dot" style="background:${colors[i]};border-radius:50%;box-shadow:0 0 5px ${colors[i]}88"></div>${l}: <b style="color:#fff">${values[i]}</b></div>`).join('');
       }
 
+      grp.position.y = -0.12;
       let t = 0;
       function anim() {
         animIds[id] = requestAnimationFrame(anim);
-        t += 0.007; grp.rotation.y = t * 0.35;
+        t += 0.006; grp.rotation.y = t * 0.3;
         ren.render(scene, cam);
       }
       anim();
     }
 
-    // BARRAS 3D
+    // BARRAS 3D — alto relevo com sombreamento branco na base/esquerda
     function bar3d(id, labels, values, colors) {
       clearScene(id);
       const cont = document.getElementById(id);
       if (!cont) return;
       const W = cont.offsetWidth || 300, H = cont.offsetHeight || 200;
       const scene = new THREE.Scene();
-      const cam = new THREE.PerspectiveCamera(38, W / H, 0.1, 60);
-      cam.position.set(0, 3.8, 9); cam.lookAt(0, 0.5, 0);
-      const ren = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      const cam = new THREE.PerspectiveCamera(36, W / H, 0.1, 60);
+      cam.position.set(0, 4.2, 10); cam.lookAt(0, 1.0, 0);
+      const ren = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
       ren.setSize(W, H); ren.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      ren.shadowMap.enabled = true; cont.appendChild(ren.domElement);
+      ren.shadowMap.enabled = true; ren.shadowMap.type = THREE.PCFSoftShadowMap;
+      cont.appendChild(ren.domElement);
       renderers[id] = ren; scenes[id] = scene;
 
-      scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-      const dl = new THREE.DirectionalLight(0xffffff, 1.0);
-      dl.position.set(5, 7, 5); dl.castShadow = true; scene.add(dl);
-      scene.add(Object.assign(new THREE.PointLight(0x00aaff, 0.28, 30), { position: new THREE.Vector3(-4, 4, 3) }));
+      // Luz ambiente suave
+      scene.add(new THREE.AmbientLight(0xffffff, 0.38));
+      // Luz principal (topo-direita) — define sombras
+      const dl = new THREE.DirectionalLight(0xffffff, 1.1);
+      dl.position.set(6, 9, 6); dl.castShadow = true;
+      dl.shadow.mapSize.width = 1024; dl.shadow.mapSize.height = 1024;
+      scene.add(dl);
+      // Luz de preenchimento branca INFERIOR-ESQUERDA — alto relevo
+      const fillLight = new THREE.DirectionalLight(0xffffff, 0.6);
+      fillLight.position.set(-5, -2, 4); scene.add(fillLight);
+      // Rim light lateral branca
+      const rimLight = new THREE.DirectionalLight(0xffffff, 0.4);
+      rimLight.position.set(-6, 3, -2); scene.add(rimLight);
+      // Point light colorida para brilho
+      scene.add(Object.assign(new THREE.PointLight(0x88ccff, 0.3, 35), { position: new THREE.Vector3(-4, 5, 5) }));
 
       const maxV = Math.max(...values, 1);
-      const bW = 0.65, gap = 0.42, total = (bW + gap) * values.length;
-      const sx = -total / 2 + bW / 2;
+      const bW = 0.62, gap = 0.38, totalW = (bW + gap) * values.length;
+      const sx = -totalW / 2 + bW / 2;
       const grp = new THREE.Group(); scene.add(grp);
 
       values.forEach((v, i) => {
-        const h = Math.max((v / maxV) * 3.2, 0.08);
+        const h = Math.max((v / maxV) * 3.5, 0.1);
         const col = pc(colors[i % colors.length]);
 
-        // Barra principal
+        // Barra principal com cantos chanfrados
         const geo = new THREE.BoxGeometry(bW, h, bW);
-        const mat = new THREE.MeshPhongMaterial({ color: col, shininess: 110, specular: new THREE.Color(0.18, 0.18, 0.18) });
+        const mat = new THREE.MeshPhongMaterial({
+          color: col, shininess: 160,
+          specular: new THREE.Color(0.45, 0.45, 0.45)
+        });
         const mesh = new THREE.Mesh(geo, mat);
         mesh.position.set(sx + i * (bW + gap), h / 2, 0);
         mesh.castShadow = true; mesh.receiveShadow = true; grp.add(mesh);
 
         // Topo brilhante
-        const topG = new THREE.BoxGeometry(bW, 0.05, bW);
-        const topM = new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: 0.45, shininess: 200 });
-        grp.add(Object.assign(new THREE.Mesh(topG, topM), { position: new THREE.Vector3(sx + i * (bW + gap), h + 0.025, 0) }));
+        const topG = new THREE.BoxGeometry(bW, 0.06, bW);
+        const topM = new THREE.MeshPhongMaterial({ color: 0xffffff, emissive: col, emissiveIntensity: 0.3, shininess: 240, opacity: 0.85, transparent: true });
+        grp.add(Object.assign(new THREE.Mesh(topG, topM), { position: new THREE.Vector3(sx + i * (bW + gap), h + 0.03, 0) }));
 
-        // Label flutuante (canvas texture)
-        const lc = document.createElement('canvas'); lc.width = 128; lc.height = 80;
+        // Aresta branca esquerda (alto relevo)
+        const edgeG = new THREE.BoxGeometry(0.06, h, bW + 0.04);
+        const edgeM = new THREE.MeshPhongMaterial({ color: 0xffffff, emissiveIntensity: 0.15, emissive: new THREE.Color(1, 1, 1), opacity: 0.55, transparent: true, shininess: 200 });
+        grp.add(Object.assign(new THREE.Mesh(edgeG, edgeM), { position: new THREE.Vector3(sx + i * (bW + gap) - bW / 2, h / 2, 0) }));
+
+        // Label flutuante
+        const lc = document.createElement('canvas'); lc.width = 140; lc.height = 80;
         const lx = lc.getContext('2d');
-        lx.fillStyle = 'rgba(0,120,255,0.75)'; lx.font = 'bold 18px sans-serif'; lx.textAlign = 'center';
-        lx.fillText(labels[i].substring(0, 7), 64, 28);
-        lx.fillStyle = 'rgba(255,255,255,0.6)'; lx.font = 'bold 20px sans-serif';
-        lx.fillText(v, 64, 54);
+        lx.clearRect(0, 0, 140, 80);
+        lx.fillStyle = 'rgba(255,255,255,0.8)'; lx.font = 'bold 17px sans-serif'; lx.textAlign = 'center';
+        lx.fillText(labels[i].substring(0, 8), 70, 26);
+        lx.fillStyle = 'rgba(255,220,80,0.95)'; lx.font = 'bold 22px sans-serif';
+        lx.fillText(v, 70, 54);
         const tex = new THREE.CanvasTexture(lc);
         const lm = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false });
-        grp.add(Object.assign(new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.7), lm), { position: new THREE.Vector3(sx + i * (bW + gap), -0.5, 0.4) }));
+        grp.add(Object.assign(new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.65), lm), { position: new THREE.Vector3(sx + i * (bW + gap), -0.55, 0.45) }));
       });
 
-      // Base
-      const baseG = new THREE.BoxGeometry(total + 0.8, 0.07, 1.6);
-      const baseM = new THREE.MeshPhongMaterial({ color: new THREE.Color(0.04, 0.08, 0.15), shininess: 40 });
-      grp.add(Object.assign(new THREE.Mesh(baseG, baseM), { position: new THREE.Vector3(0, -0.04, 0), receiveShadow: true }));
+      // Plano base com reflexo
+      const baseG = new THREE.BoxGeometry(totalW + 1.0, 0.08, 1.8);
+      const baseM = new THREE.MeshPhongMaterial({ color: new THREE.Color(0.03, 0.06, 0.14), shininess: 80, specular: new THREE.Color(0.2, 0.2, 0.3) });
+      const base = new THREE.Mesh(baseG, baseM);
+      base.position.set(0, -0.04, 0); base.receiveShadow = true; grp.add(base);
+
+      // Plano de sombra projetada (alto relevo)
+      const shadowPlane = new THREE.Mesh(
+        new THREE.PlaneGeometry(totalW + 2, 4),
+        new THREE.ShadowMaterial({ opacity: 0.4 })
+      );
+      shadowPlane.rotation.x = -Math.PI / 2; shadowPlane.position.y = -0.09; shadowPlane.receiveShadow = true;
+      scene.add(shadowPlane);
 
       let t = 0;
       function anim() {
         animIds[id] = requestAnimationFrame(anim);
-        t += 0.005; grp.rotation.y = Math.sin(t) * 0.12;
+        t += 0.004; grp.rotation.y = Math.sin(t) * 0.10;
         ren.render(scene, cam);
       }
       anim();
