@@ -2343,7 +2343,7 @@
 
     async function loadDRPS() {
       if (!empId) { toast('Selecione uma empresa'); return }
-      document.getElementById('drps-link').value = `${location.origin}/questionario?emp=${empId}`;
+      document.getElementById('drps-link').value = 'https://digital-survey-craft.lovable.app/';
       try {
         const d = await fetch(`/api/drps/resultados/${empId}`).then(r => r.json());
         drpsData = d;
