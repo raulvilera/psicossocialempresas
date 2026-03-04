@@ -1,161 +1,286 @@
 /**
- * Google Apps Script para ler dados da planilha Google Sheets
- * VERSÃO DEFINITIVA v2: Suporte Total ao Formato Largo da Escola
- * ATUALIZADO: Detecção aprimorada para turmas nas colunas BA3:BD (ex: 7ºAno E)
- * 
- * INSTRUÇÕES:
- * 1. Substitua TODO o código por este.
- * 2. Implante como "Nova Versão" (Gerenciar implantações > Editar > Nova versão).
- * 3. Copie o URL da Web App se ele mudar.
+ * ============================================================
+ * Google Apps Script — EE LYDIA KITZ MOREIRA
+ * VERSÃO DEFINITIVA v3 — Leitura Completa e Robusta
+ * ============================================================
+ *
+ * FUNCIONALIDADES:
+ *  - doGet  → Lê todos os alunos de todas as turmas da planilha
+ *  - doPost → Registra dados (ocorrências/respostas) na planilha
+ *
+ * SUPORTE:
+ *  - Formato largo: múltiplos blocos de turma por linha (ex: BA3:BD)
+ *  - Nomes de turma: "7ºAno A", "7º ANO E", "7ANO E", "6ª SERIE B", etc.
+ *  - Busca cabeçalho nas primeiras 15 linhas
+ *  - Busca coluna RA nas próximas 10 colunas de cada bloco
+ *  - Deduplicação automática de alunos (mesmo nome + mesma turma)
+ *  - Segurança: validação de payload no doPost
+ *
+ * INSTRUÇÕES DE DEPLOY:
+ *  1. Cole TODO este código no Google Apps Script.
+ *  2. Clique em "Gerenciar implantações" → "Editar" → "Nova versão".
+ *  3. Confirme o URL da Web App (copie se mudou).
+ *  4. Acesso: "Qualquer pessoa" (sem autenticação).
+ * ============================================================
  */
 
+// ─── CONSTANTES ─────────────────────────────────────────────
+var SPREADSHEET_ID = '1u7qMsMHkZT47OZdar5qvshQDRA8XJrLgDjAZVOViAio';
+var DEFAULT_SHEET = 'BANCODEDADOSGERAL';
+
+// Quantas linhas iniciais verificar procurando o cabeçalho de turmas
+var MAX_HEADER_SCAN_ROWS = 15;
+
+// Quantas colunas à frente de cada turma verificar para encontrar "RA"
+var MAX_RA_SCAN_COLS = 10;
+
+
+// ─── UTILITÁRIOS ────────────────────────────────────────────
+
+/**
+ * Normaliza uma string removendo acentos, símbolos ordinais e espaços extras.
+ * Retorna MAIÚSCULO sem acentos para comparação uniforme.
+ */
+function normalizeStr(val) {
+    return String(val)
+        .trim()
+        .toUpperCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')   // Remove acentos
+        .replace(/[º°ª]/g, '')             // Remove ordinais
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+/**
+ * Detecta se uma célula representa um cabeçalho de turma.
+ * Aceita formatos variados usados pela escola:
+ *   "7ºAno A", "7º ANO E", "7 ANO E", "7ANO E",
+ *   "6ª SERIE B", "6 SERIE A", "9ANO", "9 ANO", etc.
+ */
+function isClassHeader(val) {
+    if (val === null || val === undefined) return false;
+    var raw = String(val).trim();
+    if (raw === '') return false;
+
+    var s = normalizeStr(raw);
+
+    return (
+        /\d\s*(ANO|SERIE)\s*[A-Z]?$/.test(s) ||   // "7 ANO A", "6 SERIE B", "9ANO"
+        /^(ANO|SERIE)\s*\d/.test(s) ||              // "ANO 7", "SERIE 6"
+        /^\d\s*[A-F]\s*$/.test(s)                   // "7A", "8 B" (apenas letra de turma)
+    );
+}
+
+/**
+ * Retorna uma resposta JSON padronizada.
+ */
+function jsonResponse(obj) {
+    return ContentService
+        .createTextOutput(JSON.stringify(obj))
+        .setMimeType(ContentService.MimeType.JSON);
+}
+
+
+// ─── doGet: LEITURA DE ALUNOS ────────────────────────────────
+
 function doGet(e) {
-    const sheetName = e.parameter.sheetName || 'BANCODEDADOSGERAL';
-    const ss = SpreadsheetApp.openById('1u7qMsMHkZT47OZdar5qvshQDRA8XJrLgDjAZVOViAio');
-    const sheet = ss.getSheetByName(sheetName);
+    try {
+        var params = e.parameter || {};
+        var sheetName = params.sheetName || DEFAULT_SHEET;
 
-    if (!sheet) {
-        return ContentService.createTextOutput(JSON.stringify({ success: false, error: 'Aba não encontrada' })).setMimeType(ContentService.MimeType.JSON);
-    }
+        var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+        var sheet = ss.getSheetByName(sheetName);
+        var allSheets = ss.getSheets().map(function (s) { return s.getName(); });
 
-    const allSheets = ss.getSheets().map(s => s.getName());
-    const data = sheet.getDataRange().getValues();
-
-    if (data.length === 0) {
-        return ContentService.createTextOutput(JSON.stringify({
-            success: false,
-            error: 'Planilha vazia',
-            availableSheets: allSheets
-        })).setMimeType(ContentService.MimeType.JSON);
-    }
-
-    // Detecta se uma célula é cabeçalho de turma
-    // Aceita formatos: "7ºAno A", "7º ANO E", "7ANO E", "SERIE", etc.
-    function isClassHeader(val) {
-        const raw = String(val).trim();
-        if (raw === '') return false;
-        const upper = raw.toUpperCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, '') // Remove acentos (ã, é, etc.)
-            .replace(/[º°ª]/g, '')           // Remove símbolos ordinais (º, °, ª)
-            .replace(/\s+/g, ' ')
-            .trim();
-        return (
-            upper.includes('ANO') ||
-            upper.includes('SERIE') ||
-            /^\d\s*ANO\s*[A-Z]?/.test(upper) ||
-            /^\d\s*[A-F]\s*$/.test(upper)
-        );
-    }
-
-    // Tentar encontrar a linha de cabeçalho
-    // AMPLIADO: Agora busca nas primeiras 10 linhas (antes era 5)
-    // Isso cobre casos onde o cabeçalho aparece mais abaixo na planilha
-    let headerRowIndex = -1;
-    for (let r = 0; r < Math.min(data.length, 10); r++) {
-        const hasBlock = data[r].some(cell => isClassHeader(cell));
-        if (hasBlock) {
-            headerRowIndex = r;
-            break;
-        }
-    }
-
-    if (headerRowIndex === -1) {
-        return ContentService.createTextOutput(JSON.stringify({
-            success: true,
-            count: 0,
-            students: [],
-            debug: {
-                error: 'Nenhum cabeçalho de turma encontrado nas primeiras 10 linhas',
-                firstRowPreview: data[0].slice(0, 5),
+        // ── Aba não encontrada
+        if (!sheet) {
+            return jsonResponse({
+                success: false,
+                error: 'Aba "' + sheetName + '" não encontrada.',
                 availableSheets: allSheets
+            });
+        }
+
+        var data = sheet.getDataRange().getValues();
+
+        // ── Planilha vazia
+        if (!data || data.length === 0) {
+            return jsonResponse({
+                success: false,
+                error: 'A planilha está vazia.',
+                availableSheets: allSheets
+            });
+        }
+
+        // ── 1. Encontrar a linha de cabeçalho de turmas
+        var headerRowIndex = -1;
+        for (var r = 0; r < Math.min(data.length, MAX_HEADER_SCAN_ROWS); r++) {
+            var rowHasClass = data[r].some(function (cell) {
+                return isClassHeader(cell);
+            });
+            if (rowHasClass) {
+                headerRowIndex = r;
+                break;
             }
-        })).setMimeType(ContentService.MimeType.JSON);
-    }
+        }
 
-    const headers = data[headerRowIndex].map(h => String(h).toUpperCase().trim());
-    const subHeaders = data[headerRowIndex + 1] ? data[headerRowIndex + 1].map(h => String(h).toUpperCase().trim()) : [];
-    const classBlocks = [];
+        if (headerRowIndex === -1) {
+            return jsonResponse({
+                success: true,
+                count: 0,
+                students: [],
+                debug: {
+                    warning: 'Nenhum cabeçalho de turma encontrado nas primeiras ' + MAX_HEADER_SCAN_ROWS + ' linhas.',
+                    primeirasLinhas: data.slice(0, 3).map(function (row) {
+                        return row.slice(0, 10).map(String);
+                    }),
+                    availableSheets: allSheets
+                }
+            });
+        }
 
-    // Identifica o início de cada bloco de turma
-    headers.forEach((h, i) => {
-        if (isClassHeader(h)) {
-            // No formato específico da escola:
-            // 1. O Nome do aluno está na MESMA coluna do título da turma
-            // 2. O RA está 3 colunas à direita (ou onde estiver escrito 'RA' no subHeader)
+        // ── 2. Mapear cabeçalhos e sub-cabeçalhos
+        var headerRow = data[headerRowIndex];
+        var subHeaderRow = (data[headerRowIndex + 1]) ? data[headerRowIndex + 1] : [];
 
-            let nameIdx = i; // Por padrão, o nome está na coluna da turma
-            let raIdx = i + 3; // Por padrão, RA está 3 colunas depois
+        var headers = headerRow.map(function (h) { return normalizeStr(h); });
+        var subHeaders = subHeaderRow.map(function (h) { return normalizeStr(h); });
 
-            // AMPLIADO: Busca "RA" nas próximas 8 colunas (antes era 6)
-            // Isso garante que colunas distantes como BA3:BD sejam detectadas corretamente
-            for (let j = i; j < i + 8 && j < headers.length; j++) {
+        // ── 3. Identificar todos os blocos de turma
+        var classBlocks = [];
+
+        for (var i = 0; i < headers.length; i++) {
+            if (!isClassHeader(headerRow[i])) continue;
+
+            var className = normalizeStr(headerRow[i]);
+            var nameIdx = i;  // Coluna do NOME do aluno = mesma coluna do título da turma
+            var raIdx = -1; // Será descoberto abaixo
+
+            // Procura "RA" nas colunas imediatamente seguintes
+            for (var j = i + 1; j < Math.min(i + MAX_RA_SCAN_COLS, headers.length); j++) {
                 if (subHeaders[j] === 'RA' || headers[j] === 'RA') {
                     raIdx = j;
                     break;
                 }
             }
 
+            // Se não achou "RA", usa a convenção da escola: RA está 3 colunas à direita do nome
+            if (raIdx === -1) {
+                raIdx = i + 3;
+            }
+
             classBlocks.push({
-                className: h,
+                className: className,
                 nameIndex: nameIdx,
                 raIndex: raIdx
             });
         }
-    });
 
-    const students = [];
-    // Pula o cabeçalho e o sub-cabeçalho
-    const dataStartRow = headerRowIndex + 2;
-    const rows = data.slice(dataStartRow);
+        // ── 4. Extrair alunos de cada bloco
+        var students = [];
+        var seenKeys = {};           // Para deduplicar entradas idênticas
+        var dataStart = headerRowIndex + 2; // Pula cabeçalho + sub-cabeçalho
 
-    rows.forEach(row => {
-        classBlocks.forEach(block => {
-            const name = row[block.nameIndex];
-            const ra = row[block.raIndex];
+        for (var rowIdx = dataStart; rowIdx < data.length; rowIdx++) {
+            var row = data[rowIdx];
 
-            // Validação: deve ter nome, não ser apenas um número e não ser o próprio cabeçalho
-            if (name && String(name).trim() !== '' &&
-                String(name).trim().toUpperCase() !== 'NOME' &&
-                isNaN(Number(String(name).trim()))) {
+            for (var b = 0; b < classBlocks.length; b++) {
+                var block = classBlocks[b];
+                var rawName = row[block.nameIndex];
+                var rawRA = row[block.raIndex];
+
+                var nameStr = (rawName !== null && rawName !== undefined) ? String(rawName).trim() : '';
+
+                // Ignora células vazias, numéricas isoladas ou que repetem cabeçalhos
+                if (!nameStr) continue;
+                if (!isNaN(Number(nameStr))) continue;
+                var nameNorm = normalizeStr(nameStr);
+                if (nameNorm === 'NOME' || nameNorm === 'ALUNO' || nameNorm === '') continue;
+                // Ignora se o valor da célula for um cabeçalho de turma (linha de separação)
+                if (isClassHeader(rawName)) continue;
+
+                var raStr = (rawRA !== null && rawRA !== undefined) ? String(rawRA).trim() : '';
+                if (!raStr || isNaN(Number(raStr))) {
+                    raStr = '---';
+                }
+
+                // Deduplicação: chave = nome normalizado + turma
+                var dedupKey = nameNorm + '||' + block.className;
+                if (seenKeys[dedupKey]) continue;
+                seenKeys[dedupKey] = true;
 
                 students.push({
-                    nome: String(name).trim().toUpperCase(),
-                    ra: ra ? String(ra).trim().toLowerCase() : '---',
+                    nome: nameNorm,
+                    ra: raStr.toLowerCase(),
                     turma: block.className
                 });
             }
-        });
-    });
-
-    return ContentService.createTextOutput(JSON.stringify({
-        success: true,
-        count: students.length,
-        students: students,
-        debug: {
-            blocks: classBlocks.length,
-            sheetUsed: sheetName,
-            headerRow: headerRowIndex + 1,
-            // Exibe até 60 headers para diagnosticar turmas distantes como BA3:BD
-            detectedHeaders: headers.slice(0, 60),
-            subHeadersPreview: subHeaders.slice(0, 60),
-            classBlocksDetected: classBlocks.map(b => b.className),
-            availableSheets: allSheets
         }
-    })).setMimeType(ContentService.MimeType.JSON);
+
+        // ── 5. Retornar resultado
+        return jsonResponse({
+            success: true,
+            count: students.length,
+            students: students,
+            debug: {
+                sheetUsed: sheetName,
+                headerRow: headerRowIndex + 1,
+                totalRows: data.length,
+                totalCols: headers.length,
+                classBlocksDetected: classBlocks.map(function (b) {
+                    return b.className + ' (nome:' + b.nameIndex + ', ra:' + b.raIndex + ')';
+                }),
+                availableSheets: allSheets
+            }
+        });
+
+    } catch (err) {
+        return jsonResponse({
+            success: false,
+            error: 'Erro interno no doGet: ' + err.toString()
+        });
+    }
 }
+
+
+// ─── doPost: REGISTRO DE DADOS ───────────────────────────────
 
 function doPost(e) {
     try {
-        const payload = JSON.parse(e.postData.contents);
-        const ss = SpreadsheetApp.openById('1u7qMsMHkZT47OZdar5qvshQDRA8XJrLgDjAZVOViAio');
-        const sheet = ss.getSheetByName(payload.sheetName);
-        if (sheet) {
-            sheet.appendRow(payload.values);
-            return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);
+        // Garante que o body existe
+        if (!e || !e.postData || !e.postData.contents) {
+            return jsonResponse({ success: false, error: 'Payload ausente ou inválido.' });
         }
-        return ContentService.createTextOutput(JSON.stringify({ success: false })).setMimeType(ContentService.MimeType.JSON);
+
+        var payload = JSON.parse(e.postData.contents);
+
+        // Campos obrigatórios
+        if (!payload.sheetName) {
+            return jsonResponse({ success: false, error: 'Campo "sheetName" obrigatório.' });
+        }
+        if (!Array.isArray(payload.values) || payload.values.length === 0) {
+            return jsonResponse({ success: false, error: 'Campo "values" deve ser um array não vazio.' });
+        }
+
+        var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+        var sheet = ss.getSheetByName(payload.sheetName);
+
+        if (!sheet) {
+            return jsonResponse({
+                success: false,
+                error: 'Aba "' + payload.sheetName + '" não encontrada para escrita.'
+            });
+        }
+
+        sheet.appendRow(payload.values);
+
+        return jsonResponse({ success: true, message: 'Dados registrados com sucesso.' });
+
     } catch (err) {
-        return ContentService.createTextOutput(JSON.stringify({ success: false, error: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+        return jsonResponse({
+            success: false,
+            error: 'Erro interno no doPost: ' + err.toString()
+        });
     }
 }
