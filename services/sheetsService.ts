@@ -5,7 +5,7 @@ import { normalizeClassName } from '../utils/formatters';
 /**
  * URL do seu Google Apps Script implantado como Web App.
  */
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbylej3Lw5-Sp0iudgrjouoKGvoSOieTwh2M35QSbcmt1dWBBepfOXTC5f5vlXNazn1T/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbziba7KN12x6onsQMKFe-DcW9qG-esqBG2KQx7uvvEMX7uKNuGvjYEP-DoNF_cpmDgH/exec';
 
 /**
  * Carrega a lista de alunos da planilha Google Sheets.
