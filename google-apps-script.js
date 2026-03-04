@@ -1,6 +1,7 @@
 /**
  * Google Apps Script para ler dados da planilha Google Sheets
- * VERSÃO DEFINITIVA: Suporte Total ao Formato Largo da Escola
+ * VERSÃO DEFINITIVA v2: Suporte Total ao Formato Largo da Escola
+ * ATUALIZADO: Detecção aprimorada para turmas nas colunas BA3:BD (ex: 7ºAno E)
  * 
  * INSTRUÇÕES:
  * 1. Substitua TODO o código por este.
@@ -28,13 +29,31 @@ function doGet(e) {
         })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    // Tentar encontrar a linha de cabeçalho (procura por "ANO" ou "SÉRIE" nas primeiras 5 linhas)
+    // Detecta se uma célula é cabeçalho de turma
+    // Aceita formatos: "7ºAno A", "7º ANO E", "7ANO E", "SERIE", etc.
+    function isClassHeader(val) {
+        const raw = String(val).trim();
+        if (raw === '') return false;
+        const upper = raw.toUpperCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, '') // Remove acentos (ã, é, etc.)
+            .replace(/[º°ª]/g, '')           // Remove símbolos ordinais (º, °, ª)
+            .replace(/\s+/g, ' ')
+            .trim();
+        return (
+            upper.includes('ANO') ||
+            upper.includes('SERIE') ||
+            /^\d\s*ANO\s*[A-Z]?/.test(upper) ||
+            /^\d\s*[A-F]\s*$/.test(upper)
+        );
+    }
+
+    // Tentar encontrar a linha de cabeçalho
+    // AMPLIADO: Agora busca nas primeiras 10 linhas (antes era 5)
+    // Isso cobre casos onde o cabeçalho aparece mais abaixo na planilha
     let headerRowIndex = -1;
-    for (let r = 0; r < Math.min(data.length, 5); r++) {
-        const hasBlock = data[r].some(cell => {
-            const val = String(cell).toUpperCase();
-            return val.includes('ANO') || val.includes('SERIE') || val.includes('SÉRIE');
-        });
+    for (let r = 0; r < Math.min(data.length, 10); r++) {
+        const hasBlock = data[r].some(cell => isClassHeader(cell));
         if (hasBlock) {
             headerRowIndex = r;
             break;
@@ -47,7 +66,7 @@ function doGet(e) {
             count: 0,
             students: [],
             debug: {
-                error: 'Nenhum cabeçalho de turma encontrado nas primeiras 5 linhas',
+                error: 'Nenhum cabeçalho de turma encontrado nas primeiras 10 linhas',
                 firstRowPreview: data[0].slice(0, 5),
                 availableSheets: allSheets
             }
@@ -60,16 +79,17 @@ function doGet(e) {
 
     // Identifica o início de cada bloco de turma
     headers.forEach((h, i) => {
-        if (h !== '' && (h.includes('ANO') || h.includes('SERIE') || h.includes('SÉRIE'))) {
+        if (isClassHeader(h)) {
             // No formato específico da escola:
-            // 1. O Nome do aluno está na MESMA coluna do título da turma (ex: Ano6ºA)
+            // 1. O Nome do aluno está na MESMA coluna do título da turma
             // 2. O RA está 3 colunas à direita (ou onde estiver escrito 'RA' no subHeader)
 
             let nameIdx = i; // Por padrão, o nome está na coluna da turma
             let raIdx = i + 3; // Por padrão, RA está 3 colunas depois
 
-            // Refinamento: procurar o texto "RA" nas próximas 5 colunas para ter certeza
-            for (let j = i; j < i + 6 && j < headers.length; j++) {
+            // AMPLIADO: Busca "RA" nas próximas 8 colunas (antes era 6)
+            // Isso garante que colunas distantes como BA3:BD sejam detectadas corretamente
+            for (let j = i; j < i + 8 && j < headers.length; j++) {
                 if (subHeaders[j] === 'RA' || headers[j] === 'RA') {
                     raIdx = j;
                     break;
@@ -116,8 +136,10 @@ function doGet(e) {
             blocks: classBlocks.length,
             sheetUsed: sheetName,
             headerRow: headerRowIndex + 1,
-            detectedHeaders: headers.slice(0, 20),
-            subHeadersPreview: subHeaders.slice(0, 20),
+            // Exibe até 60 headers para diagnosticar turmas distantes como BA3:BD
+            detectedHeaders: headers.slice(0, 60),
+            subHeadersPreview: subHeaders.slice(0, 60),
+            classBlocksDetected: classBlocks.map(b => b.className),
             availableSheets: allSheets
         }
     })).setMimeType(ContentService.MimeType.JSON);
