@@ -240,7 +240,11 @@ async def profissional_page(request: Request):
 
 @app.get("/admin", response_class=HTMLResponse)
 async def admin_page(request: Request):
-    return templates.TemplateResponse("admin.html", {"request": request})
+    try:
+        return templates.TemplateResponse("admin.html", {"request": request})
+    except Exception as e:
+        import traceback
+        return HTMLResponse(content=f"Error rendering admin: {str(e)}<br><pre>{traceback.format_exc()}</pre>", status_code=500)
 
 @app.get("/planos", response_class=HTMLResponse)
 async def planos_page(request: Request):
