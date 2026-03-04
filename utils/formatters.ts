@@ -10,17 +10,22 @@ export const normalizeClassName = (raw: string): string => {
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "") // Remove acentos
         .replace(/[º°ª]/g, "")           // Remove ordinais
-        .replace(/\(DESCONSIDERA.*\)/g, "") // Remove (desconsidera) ou (desconsidere)
+        .replace(/\(DESCONSIDER.*\)/g, "") // Remove (desconsidera), (desconsidere), etc.
         .replace(/\s+/g, " ")            // Remove espaços duplos
         .trim();
 
-    // Correções de typos específicos
-    if (s.includes("3 SEIE")) s = s.replace("3 SEIE", "3 SERIE");
-    if (s.includes("2 SEROIE")) s = s.replace("2 SEROIE", "2 SERIE");
-    if (s.includes("1 SR")) s = s.replace("1 SR", "1 SERIE");
+    // Correções de typos específicos e normalização de espaços
+    // Garante que "3SEIE" ou "3 SEIE" virem "3 SERIE"
+    s = s.replace(/3\s*SEIE/g, "3 SERIE")
+        .replace(/2\s*SEROIE/g, "2 SERIE")
+        .replace(/1\s*SR/g, "1 SERIE")
+        .replace(/SERIE/g, " SERIE ")
+        .replace(/ANO/g, " ANO ")
+        .replace(/\s+/g, " ")
+        .trim();
 
-    // Regex aprimorada: captura número, tipo (ANO/SERIE/EM) e letra final (A-H)
-    const match = s.match(/^(\d+)\s*(ANO|SERIE|EM|SERIE)?\s*([A-H])?$/);
+    // Regex robusta: captura número, tipo e letra
+    const match = s.match(/^(\d+)\s*(ANO|SERIE|EM)?\s*([A-H])?$/);
 
     if (match) {
         const num = match[1];
@@ -36,6 +41,6 @@ export const normalizeClassName = (raw: string): string => {
         return `${num}ºAno ${letter}`.trim();
     }
 
-    // Fallback: Retorna o original se fugir do padrão
+    // Fallback: Retorna o original limpo
     return raw.trim();
 };

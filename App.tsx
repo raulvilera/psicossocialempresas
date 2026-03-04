@@ -271,14 +271,17 @@ const App = () => {
       setStudents(finalStudents);
 
       // Gerar lista de turmas dinamicamente — inclui turmas da planilha mesmo sem alunos
-      const fromStudents = finalStudents.map(s => s.turma);
+      const fromStudents = finalStudents.map(s => normalizeClassName(s.turma));
       const fromSheetsRaw: string[] = (window as any).__allDetectedClasses || [];
       const fromSheets = fromSheetsRaw.map(t => normalizeClassName(t));
-      // GARANTE que turmas do banco local (studentsData.ts) sempre apareçam
-      const fromLocalDB = STUDENTS_DB.map(s => s.turma);
+      const fromLocalDB = STUDENTS_DB.map(s => normalizeClassName(s.turma));
 
       const uniqueClasses = Array.from(new Set([...fromStudents, ...fromSheets, ...fromLocalDB]))
-        .filter(t => t && t !== '---' && !t.includes('desconsidera') && !t.includes('desconsidere'));
+        .filter(t => {
+          if (!t || t === '---') return false;
+          const low = t.toLowerCase();
+          return !low.includes('desconsidera') && !low.includes('desconsidere');
+        });
 
       const sortedClasses = uniqueClasses.sort((a, b) => {
         const getOrder = (s: string) => {
