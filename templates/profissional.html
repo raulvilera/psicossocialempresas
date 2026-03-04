@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Profissional — Psicos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'DM Sans',sans-serif;background:#050a05;color:#e0ffe0;display:flex;min-height:100vh}
+    .sidebar{width:240px;background:linear-gradient(180deg,#060d06,#080f08);border-right:1px solid rgba(0,255,80,0.1);display:flex;flex-direction:column;padding:0;flex-shrink:0}
+    .sidebar-logo{padding:24px 20px 20px;border-bottom:1px solid rgba(0,255,80,0.1)}
+    .logo-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#330033,#550055);border:1px solid rgba(200,0,255,0.3);color:#cc88ff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:8px;margin-bottom:10px;letter-spacing:1px}
+    .sidebar h2{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#fff}
+    .sidebar h2 em{color:#cc88ff;font-style:normal}
+    .sidebar-sub{font-size:10px;color:rgba(200,0,255,0.3);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+    .nav-item{display:flex;align-items:center;gap:10px;margin:3px 10px;padding:11px 14px;color:rgba(255,255,255,0.45);font-size:13px;font-weight:500;cursor:pointer;border-radius:10px;border:1px solid transparent;background:linear-gradient(145deg,#0a080a,#06050a);box-shadow:2px 2px 6px rgba(0,0,0,0.6);transition:all .15s}
+    .nav-item.active{color:#cc88ff;background:linear-gradient(135deg,#1a0033,#220044,#180033);border-color:rgba(200,0,255,0.3);box-shadow:0 0 15px rgba(150,0,200,0.2)}
+    .nav-item:active{transform:translateY(1px);box-shadow:inset 2px 2px 5px rgba(0,0,0,0.8)}
+    .sidebar-footer{margin-top:auto;padding:16px;border-top:1px solid rgba(0,255,80,0.08)}
+    .btn-logout{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;border-radius:10px;border:1px solid rgba(200,0,0,0.2);background:linear-gradient(145deg,#1a0505,#100303);color:rgba(255,100,100,0.6);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:2px 2px 6px rgba(0,0,0,0.6);transition:all .15s}
+    .btn-logout:active{transform:translateY(1px);box-shadow:inset 2px 2px 5px rgba(0,0,0,0.7)}
+    .main{flex:1;display:flex;flex-direction:column;background:radial-gradient(ellipse at 30% 20%,rgba(100,0,150,0.05) 0%,transparent 50%),#070d07}
+    .topbar{background:linear-gradient(90deg,#080508,#0a070a);border-bottom:1px solid rgba(200,0,255,0.1);padding:12px 24px;display:flex;align-items:center;gap:16px}
+    .topbar h1{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:1px;flex:1}
+    .content{flex:1;padding:28px}
+    .page-title{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:#fff;letter-spacing:1px;margin-bottom:20px}
+    .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+    .kpi-card{background:linear-gradient(145deg,#0d0a1a,#0a0812);border:1px solid rgba(200,0,255,0.12);border-radius:14px;padding:20px;text-align:center;box-shadow:3px 3px 10px rgba(0,0,0,0.5)}
+    .kpi-icon{font-size:28px;margin-bottom:10px}
+    .kpi-label{font-size:11px;color:rgba(200,0,255,0.4);font-weight:600;text-transform:uppercase;letter-spacing:1px}
+    .kpi-value{font-family:'Rajdhani',sans-serif;font-size:38px;font-weight:700;color:#fff;margin-top:4px}
+    .table-card{background:linear-gradient(145deg,#0d0a1a,#0a0812);border:1px solid rgba(200,0,255,0.1);border-radius:14px;overflow:hidden;box-shadow:3px 3px 10px rgba(0,0,0,0.5)}
+    .table-header{padding:16px 18px;border-bottom:1px solid rgba(200,0,255,0.08)}
+    .table-header h3{font-size:13px;font-weight:600;color:rgba(200,0,255,0.6);text-transform:uppercase;letter-spacing:1px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th{background:rgba(0,0,0,0.3);color:rgba(200,0,255,0.35);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:1px;padding:9px 14px;text-align:left}
+    td{padding:12px 14px;color:rgba(255,255,255,0.6);border-top:1px solid rgba(200,0,255,0.05)}
+    tr:hover td{background:rgba(100,0,150,0.1)}
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-badge">🧠 Psicos</div>
+      <h2>Painel<br><em>Profissional</em></h2>
+      <div class="sidebar-sub">Área Restrita</div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="nav-item active"><span>📊</span> Visão Geral</div>
+      <div class="nav-item"><span>🏢</span> Empresas</div>
+    </div>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="window.location.href='/login'">🚪 Sair do Sistema</button>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar"><h1>PAINEL PROFISSIONAL</h1></div>
+    <div class="content">
+      <div class="page-title">VISÃO GERAL</div>
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-icon">🏢</div><div class="kpi-label">Empresas</div><div class="kpi-value" id="te">—</div></div>
+        <div class="kpi-card"><div class="kpi-icon">👥</div><div class="kpi-label">Colaboradores</div><div class="kpi-value" id="tf" style="color:#66aaff">—</div></div>
+        <div class="kpi-card"><div class="kpi-icon">⚠️</div><div class="kpi-label">Alto Risco</div><div class="kpi-value" id="tr" style="color:#ff6060">—</div></div>
+      </div>
+      <div class="table-card">
+        <div class="table-header"><h3>📋 Empresas Cadastradas</h3></div>
+        <table>
+          <thead><tr><th>Empresa</th><th>CNPJ</th><th>Funcionários</th><th>Alto Risco</th><th>Score</th></tr></thead>
+          <tbody id="lista"><tr><td colspan="5" style="text-align:center;padding:24px;color:rgba(200,0,255,0.2)">Carregando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script>
+    async function load(){
+      const empresas=await fetch('/api/empresas').then(r=>r.json());
+      document.getElementById('te').textContent=empresas.length;
+      let tf=0,tr=0;
+      const rows=await Promise.all(empresas.map(async e=>{
+        const d=await fetch(`/api/dashboard/${e.id}`).then(r=>r.json());
+        tf+=d.kpis.total_funcionarios;tr+=d.kpis.alto_risco;
+        return`<tr><td style="font-weight:600;color:#e0e0ff">${e.nome}</td><td style="color:#888">${e.cnpj||'—'}</td><td>${d.kpis.total_funcionarios}</td><td style="color:#ff6060;font-weight:700">${d.kpis.alto_risco}</td><td style="color:#00cc44;font-weight:700">${d.kpis.score_seguranca}%</td></tr>`;
+      }));
+      document.getElementById('tf').textContent=tf;
+      document.getElementById('tr').textContent=tr;
+      document.getElementById('lista').innerHTML=rows.join('')||'<tr><td colspan="5" style="text-align:center;padding:16px;color:rgba(200,0,255,0.2)">Nenhuma empresa</td></tr>';
+    }
+    load();
+  </script>
+</body>
+</html>
