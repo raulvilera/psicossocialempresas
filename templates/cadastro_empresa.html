@@ -230,10 +230,19 @@
       e.preventDefault(); const btn = e.target.querySelector('button'); btn.textContent = 'PROCESSANDO...'; btn.disabled = true;
       const fd = new FormData();
       ['cnpj', 'nome', 'telefone', 'responsavel', 'colaboradores', 'setores'].forEach(id => fd.append(id, document.getElementById(id).value));
+      // Repassar empresa_id se existir na URL
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('empresa_id')) fd.append('empresa_id', params.get('empresa_id'));
       const res = await fetch('/api/empresa/registrar', { method: 'POST', body: fd });
       const data = await res.json(); const msg = document.getElementById('msg'); msg.style.display = 'block';
-      if (data.success) { msg.className = 'msg success'; msg.textContent = '✓ ' + data.message; setTimeout(() => window.location.href = '/dashboard', 1500) }
-      else { msg.className = 'msg error'; msg.textContent = '✗ ' + (data.message || 'Erro.'); btn.textContent = '⚡ CADASTRAR EMPRESA'; btn.disabled = false }
+      if (data.success) {
+        msg.className = 'msg success'; msg.textContent = '✓ Dados salvos! Preparando sua recomendação de plano...';
+        const nome = document.getElementById('nome').value;
+        const colab = document.getElementById('colaboradores').value;
+        const setores = encodeURIComponent(document.getElementById('setores').value);
+        const eid = data.empresa_id || params.get('empresa_id') || '';
+        setTimeout(() => window.location.href = `/planos?nome=${encodeURIComponent(nome)}&colaboradores=${colab}&setores=${setores}&empresa_id=${eid}`, 1200);
+      } else { msg.className = 'msg error'; msg.textContent = '✗ ' + (data.message || 'Erro.'); btn.textContent = '⚡ CADASTRAR EMPRESA'; btn.disabled = false }
     });
   </script>
 </body>

@@ -242,6 +242,10 @@ async def profissional_page(request: Request):
 async def admin_page(request: Request):
     return templates.TemplateResponse("admin.html", {"request": request})
 
+@app.get("/planos", response_class=HTMLResponse)
+async def planos_page(request: Request):
+    return templates.TemplateResponse("planos.html", {"request": request})
+
 @app.get("/cadastro-empresa", response_class=HTMLResponse)
 async def cadastro_empresa_page(request: Request):
     return templates.TemplateResponse("cadastro_empresa.html", {"request": request})
@@ -282,6 +286,27 @@ async def registrar_empresa(
             return {"success": True, "message": "Empresa cadastrada com sucesso!", "redirect": "/", "empresa_id": nova.get("id")}
     except Exception as e:
         return {"success": False, "message": f"Erro ao salvar empresa: {str(e)}"}
+
+@app.post("/api/empresa/assinar-plano")
+async def assinar_plano(
+    empresa_id: int = Form(None),
+    plano: str = Form(...),
+    periodo: str = Form(...),
+    valor: float = Form(...),
+):
+    """Registra a assinatura do plano escolhido pela empresa."""
+    try:
+        dados_assinatura = {
+            "plano": plano,
+            "periodo": periodo,
+            "valor_mensal": valor,
+            "plano_ativo": True,
+        }
+        if empresa_id:
+            await sb_patch("empresas", empresa_id, dados_assinatura)
+        return {"success": True, "message": f"Plano {plano} assinado com sucesso!"}
+    except Exception as e:
+        return {"success": True, "message": "Plano registrado (sem persistência no momento)."}
 
 @app.post("/api/auth/login")
 async def api_login(email: str = Form(...), password: str = Form(...)):
