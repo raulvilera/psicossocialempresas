@@ -222,8 +222,8 @@ Documento gerado automaticamente — SESMT PRO v3.0
 # ─── Routes ───────────────────────────────────────────────────────────────────
 
 @app.get("/", response_class=HTMLResponse)
+@app.get("/dashboard", response_class=HTMLResponse)
 async def index(request: Request):
-    # Verificar se está logado (simplificado para este exemplo)
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/login", response_class=HTMLResponse)
