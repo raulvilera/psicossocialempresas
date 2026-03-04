@@ -218,8 +218,9 @@ const App: React.FC = () => {
 
             if (isSupabaseConfigured && supabase && session) {
               try {
-                // Tenta limpar apenas se tiver permissão (RLS)
-                await supabase.from('students').delete().neq('id', '0');
+                // Apaga APENAS registros de sincronizações automáticas anteriores (prefixo 'synced-')
+                // Preserva registros inseridos manualmente (ex: '7anoe-', 'manual-')
+                await supabase.from('students').delete().like('id', 'synced-%');
 
                 // Inserir em lotes para evitar problemas de payload grande
                 const CHUNK_SIZE = 500;
@@ -237,7 +238,7 @@ const App: React.FC = () => {
                     console.error(`❌ Erro ao sincronizar lote ${i / CHUNK_SIZE}:`, error.message);
                   }
                 }
-                console.log('✅ Supabase: Sincronização completa concluída');
+                console.log('✅ Supabase: Sincronização concluída (registros manuais preservados)');
               } catch (syncError) {
                 console.warn('⚠️ Supabase: Erro crítico na sincronização:', syncError);
               }
