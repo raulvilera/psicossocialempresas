@@ -254,6 +254,10 @@ async def planos_page(request: Request):
 async def cadastro_empresa_page(request: Request):
     return templates.TemplateResponse("cadastro_empresa.html", {"request": request})
 
+@app.get("/questionario", response_class=HTMLResponse)
+async def questionario_page(request: Request):
+    return templates.TemplateResponse("questionario.html", {"request": request})
+
 @app.post("/api/empresa/registrar")
 async def registrar_empresa(
     cnpj: str = Form(...),
