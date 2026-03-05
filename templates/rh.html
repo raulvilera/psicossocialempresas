@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
@@ -751,7 +751,8 @@
       color: #fff;
       box-shadow: 0 4px 18px rgba(0, 114, 255, .3)
     }
-  </style>
+  )responsive
+  
 </head>
 
 <body>
@@ -807,7 +808,7 @@
 
   <!-- MAIN -->
   <div class="main">
-    <div class="topbar">
+    <button class=\"hamburger\" onclick=\"toggleSidebar()\" aria-label=\"Menu\">&#9776;</button><div class=\"sidebar-overlay\" id=\"sb-overlay\" onclick=\"closeSidebar()\"></div><div class="topbar">
       <div class="topbar-title" id="topTitle">DASHBOARD RH</div>
       <div class="perfil-badge">&#127970; RH</div>
       <button class="btn-topbar" onclick="window.location.href='/dashboard'">&#128202; Painel Completo</button>
@@ -1543,6 +1544,8 @@
 
     init();
   </script>
-</body>
+<script>function toggleSidebar(){var s=document.querySelector(".sidebar");var o=document.getElementById("sb-overlay");s.classList.toggle("open");o.classList.toggle("open")}function closeSidebar(){document.querySelector(".sidebar").classList.remove("open");document.getElementById("sb-overlay").classList.remove("open")}</script>
+
 
 </html>
+

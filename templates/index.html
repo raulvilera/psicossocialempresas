@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
@@ -1164,7 +1164,8 @@
     .section.active {
       display: block
     }
-  </style>
+  )responsive
+  
 </head>
 
 <body>
@@ -1209,7 +1210,7 @@
 
   <!-- MAIN -->
   <div class="main">
-    <div class="topbar">
+    <button class=\"hamburger\" onclick=\"toggleSidebar()\" aria-label=\"Menu\">&#9776;</button><div class=\"sidebar-overlay\" id=\"sb-overlay\" onclick=\"closeSidebar()\"></div><div class="topbar">
       <div class="topbar-title" id="topTitle">Dashboard</div>
       <div class="search-box"><svg width="13" height="13" fill="none" stroke="rgba(0,120,255,0.22)" stroke-width="2"
           viewBox="0 0 24 24">
@@ -2868,6 +2869,7 @@ ${'─'.repeat(62)}
 
     loadEmpresas();
   </script>
-</body>
+<script>function toggleSidebar(){var s=document.querySelector(".sidebar");var o=document.getElementById("sb-overlay");s.classList.toggle("open");o.classList.toggle("open")}function closeSidebar(){document.querySelector(".sidebar").classList.remove("open");document.getElementById("sb-overlay").classList.remove("open")}</script>
+
 
 </html>
