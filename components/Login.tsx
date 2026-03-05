@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { User } from '../types';
 import { supabase } from '../services/supabaseClient';
-import { PROFESSORS_DB, isProfessorRegistered, getProfessorNameFromEmail } from '../professorsData';
+import { PROFESSORS_DB, isProfessorRegistered, getProfessorNameFromEmail, getProfessorRoleFromEmail } from '../professorsData';
 
 interface LoginProps {
   onLogin: (user: User) => void;
@@ -131,9 +131,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         let userRole: 'gestor' | 'professor' | null = dbRole as any;
 
         // Fallback para lista local se não encontrou no banco
-        if (!userRole && isProfessorRegistered(displayEmail)) {
-          console.log('✅ [LOGIN] Autorizado via Lista Local! (Fallback)');
-          userRole = 'professor';
+        if (!userRole) {
+          userRole = getProfessorRoleFromEmail(displayEmail);
+          if (userRole) {
+            console.log('✅ [LOGIN] Autorizado via Lista Local! (Fallback)');
+          }
         }
 
         if (userRole) {
@@ -205,8 +207,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         let userRole: 'gestor' | 'professor' | null = null;
         if (authData) {
           userRole = authData.role as 'gestor' | 'professor';
-        } else if (isProfessorRegistered(lowerEmail)) {
-          userRole = 'professor';
+        } else {
+          userRole = getProfessorRoleFromEmail(lowerEmail);
         }
 
         if (!userRole) {

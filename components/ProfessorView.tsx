@@ -42,6 +42,11 @@ const ProfessorView: React.FC<ProfessorViewProps> = ({ user, incidents, students
   const [studentHistory, setStudentHistory] = useState<Incident[]>([]);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
 
+  // Estados para Devolutiva (Gestão)
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState<Incident | null>(null);
+  const [newStatus, setNewStatus] = useState<'Pendente' | 'Em Análise' | 'Resolvido'>('Pendente');
+  const [feedback, setFeedback] = useState('');
+
   const studentsInClass = useMemo(() => students.filter(a => a.turma === classRoom), [classRoom, students]);
 
   // Preenche automaticamente o nome do professor baseado no e-mail
@@ -185,6 +190,32 @@ const ProfessorView: React.FC<ProfessorViewProps> = ({ user, incidents, students
       alert("Erro ao salvar.");
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleUpdateStatus = async () => {
+    if (!isUpdatingStatus) return;
+
+    try {
+      const { error } = await supabase
+        .from('incidents')
+        .update({
+          status: newStatus,
+          management_feedback: feedback.toUpperCase(),
+          last_viewed_at: new Date().toISOString()
+        })
+        .eq('id', isUpdatingStatus.id);
+
+      if (error) throw error;
+
+      alert('✅ Devolutiva salva com sucesso!');
+      setIsUpdatingStatus(null);
+      setFeedback('');
+      // Recarregar a página ou notificar o pai para atualizar a lista
+      window.location.reload();
+    } catch (err) {
+      console.error('Erro ao atualizar status:', err);
+      alert('Erro ao salvar devolutiva.');
     }
   };
 
@@ -370,7 +401,7 @@ const ProfessorView: React.FC<ProfessorViewProps> = ({ user, incidents, students
                   <th className="p-4">Tipo</th>
                   <th className="p-4">Responsável</th>
                   <th className="p-4">Descrição</th>
-                  <th className="p-4 text-center">Ação</th>
+                  <th className="p-4 text-center">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50 bg-white">
@@ -437,18 +468,35 @@ const ProfessorView: React.FC<ProfessorViewProps> = ({ user, incidents, students
                         </div>
                       )}
                     </td>
-                    <td className="p-4 text-center">
-                      {(inc.authorEmail === user.email) && (
-                        <button
-                          onClick={() => onDelete(inc.id)}
-                          className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all"
-                          title="Excluir meu registro"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
-                      )}
+                    <td className="p-4">
+                      <div className="flex justify-center gap-2">
+                        {user.role === 'gestor' && (
+                          <button
+                            onClick={() => {
+                              setIsUpdatingStatus(inc);
+                              setNewStatus(inc.status as any);
+                              setFeedback(inc.managementFeedback || '');
+                            }}
+                            className="p-2 bg-teal-50 text-teal-600 rounded-lg hover:bg-teal-600 hover:text-white transition-all"
+                            title="Dar Devolutiva (Gestão)"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                          </button>
+                        )}
+                        {(inc.authorEmail === user.email) && (
+                          <button
+                            onClick={() => onDelete(inc.id)}
+                            className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all"
+                            title="Excluir meu registro"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 )) : (
@@ -588,6 +636,46 @@ const ProfessorView: React.FC<ProfessorViewProps> = ({ user, incidents, students
               >
                 Fechar Histórico
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Devolutiva (Gestão) */}
+      {isUpdatingStatus && (
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white w-full max-w-lg rounded-[32px] overflow-hidden shadow-2xl">
+            <div className="bg-[#002b5c] p-6 text-center border-b-4 border-teal-500">
+              <h3 className="text-white font-black text-xs uppercase tracking-[0.2em]">Sinalizar Estágio da Ocorrência</h3>
+              <p className="text-teal-400 text-[9px] font-bold mt-1 uppercase">{isUpdatingStatus.studentName}</p>
+            </div>
+            <div className="p-8 space-y-6">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block ml-2">Status da Ocorrência</label>
+                <select
+                  value={newStatus}
+                  onChange={(e) => setNewStatus(e.target.value as any)}
+                  className="w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-2xl text-[11px] font-black outline-none focus:ring-2 focus:ring-teal-500 text-black"
+                >
+                  <option value="Pendente">🔴 PENDENTE</option>
+                  <option value="Em Análise">🟡 EM ANÁLISE</option>
+                  <option value="Resolvido">🟢 RESOLVIDO</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block ml-2">Devolutiva / Justificativa</label>
+                <textarea
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  rows={4}
+                  placeholder="Descreva a resolução ou estágio atual..."
+                  className="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl text-[11px] font-bold outline-none focus:ring-2 focus:ring-teal-500 text-black uppercase"
+                ></textarea>
+              </div>
+              <div className="flex gap-4">
+                <button onClick={() => setIsUpdatingStatus(null)} className="flex-1 py-4 bg-gray-100 text-gray-500 font-black text-[10px] uppercase rounded-2xl hover:bg-gray-200">Cancelar</button>
+                <button onClick={handleUpdateStatus} className="flex-1 py-4 bg-teal-500 text-white font-black text-[10px] uppercase rounded-2xl hover:bg-teal-600 shadow-md">Salvar</button>
+              </div>
             </div>
           </div>
         </div>

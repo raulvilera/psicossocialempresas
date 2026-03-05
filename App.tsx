@@ -9,10 +9,10 @@ import { Incident, User, Student } from './types';
 import { supabase, isSupabaseConfigured } from './services/supabaseClient';
 import { STUDENTS_DB } from './studentsData';
 import { saveToGoogleSheets, loadStudentsFromSheets } from './services/sheetsService';
-import { isProfessorRegistered } from './professorsData';
+import { isProfessorRegistered, getProfessorRoleFromEmail } from './professorsData';
 
-// E-mail com acesso dual (gestor + professor)
-const DUAL_ACCESS_EMAIL = 'vilera@prof.educacao.sp.gov.br';
+// E-mails com acesso dual (gestor + professor)
+const DUAL_ACCESS_EMAILS = ['vilera@prof.educacao.sp.gov.br', 'cadastroslkm@gmail.com'];
 
 import { normalizeClassName } from './utils/formatters';
 
@@ -68,13 +68,13 @@ const App = () => {
               const result: any = await Promise.race([query, timeoutPromise]);
               let role = result.data?.role || null;
 
-              if (!role && isProfessorRegistered(email)) {
-                role = 'professor';
+              if (!role) {
+                role = getProfessorRoleFromEmail(email);
               }
               return role;
             } catch (e) {
               console.warn('⚠️ [APP] Fallback ativado para role:', email);
-              return isProfessorRegistered(email) ? 'professor' : null;
+              return getProfessorRoleFromEmail(email);
             }
           };
 
@@ -639,7 +639,7 @@ const App = () => {
     );
   }
 
-  const hasDualAccess = user?.email === DUAL_ACCESS_EMAIL;
+  const hasDualAccess = DUAL_ACCESS_EMAILS.includes(user?.email || '');
 
   const handleToggleView = () => {
     setViewMode(prev => prev === 'gestor' ? 'professor' : 'gestor');
