@@ -369,9 +369,8 @@
 
   <div class="card">
     <div class="logo-wrap">
-      <div class="logo-icon">&#128737;</div>
-      <div class="logo-title">S PSICOS</div>
-      <div class="logo-sub">Plataforma de Saúde Ocupacional · IA Engine</div>
+      <h1>PSICOS</h1>
+      <p class="subtitle">Bem-vindo. Entre com suas credenciais.</p>
     </div>
 
     <!-- Seleção de perfil -->
@@ -414,7 +413,7 @@
         </div>
       </div>
       <div class="forgot"><a href="#">Esqueci minha senha</a></div>
-      <button type="submit" class="btn-primary" id="btn-login">&#9889; ENTRAR</button>
+      <button type="submit" class="btn-primary" id="btn-login">ENTRAR</button>
     </form>
 
     <p class="signup-link">Não tem conta? <a href="/signup">Criar conta</a> &nbsp;|&nbsp; <a
@@ -471,14 +470,14 @@
           msg.className = 'msg error';
           msg.style.display = 'block';
           msg.textContent = '&#10007; ' + (data.message || 'Credenciais inválidas.');
-          btn.innerHTML = '&#9889; ENTRAR';
+          btn.innerHTML = 'ENTRAR';
           btn.disabled = false;
         }
       } catch (err) {
         msg.className = 'msg error';
         msg.style.display = 'block';
         msg.textContent = '&#10007; Erro de conexão. Tente novamente.';
-        btn.innerHTML = '&#9889; ENTRAR';
+        btn.innerHTML = 'ENTRAR';
         btn.disabled = false;
       }
     });
