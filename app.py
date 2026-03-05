@@ -330,12 +330,12 @@ async def registrar_links_setores(
                 "empresa_id": empresa_id,
                 "setor": item.get("setor"),
                 "token": item.get("token"),
-                "link": item.get("link"),
+                "link": f"https://digital-survey-craft.lovable.app?empresa_id={empresa_id}&setor={item.get('setor')}",
                 "ativo": True,
             })
         return {"success": True, "total": len(lista)}
     except Exception as e:
-        return {"success": True, "message": "Links registrados localmente (tabela ainda não criada no Supabase)."}
+        return {"success": True, "message": "Links registrados localmente."}
 
 @app.get("/api/setores/por-empresa")
 async def setores_por_empresa(empresa_id: int = None, token: str = None):
@@ -417,7 +417,7 @@ async def api_login(email: str = Form(...), password: str = Form(...)):
                     "primeiro_acesso": True
                 }
 
-        return {"success": True, "redirect": "/", "role": "rh"}
+        return {"success": True, "redirect": "/rh", "role": "rh"}
 
     except Exception as e:
         return {"success": False, "message": f"Erro ao processar login: {str(e)}"}

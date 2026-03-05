@@ -751,8 +751,8 @@
       color: #fff;
       box-shadow: 0 4px 18px rgba(0, 114, 255, .3)
     }
-  )responsive
-  
+  </style>
+
 </head>
 
 <body>
@@ -760,7 +760,7 @@
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-badge">&#127970; RH</div>
+      <div class="logo-badge">🏢 RH</div>
       <h2>Área de<br><em>Recursos Humanos</em></h2>
       <div class="sidebar-sub">Gestão de Pessoas</div>
     </div>
@@ -774,44 +774,47 @@
 
     <div class="nav-section">Principal</div>
     <div class="nav-item active" onclick="showSection('dashboard',this)">
-      <span class="icon">&#128202;</span> Dashboard RH
+      <span class="icon">📊</span> Dashboard RH
     </div>
 
     <div class="nav-section">Colaboradores</div>
     <div class="nav-item" onclick="showSection('funcionarios',this)">
-      <span class="icon">&#128101;</span> Funcionários
+      <span class="icon">👥</span> Funcionários
     </div>
     <div class="nav-item" onclick="showSection('aso',this)">
-      <span class="icon">&#129657;</span> ASO & Exames
+      <span class="icon">🩺</span> ASO & Exames
       <span class="nav-badge" id="badge-aso">0</span>
     </div>
     <div class="nav-item" onclick="showSection('agendamentos',this)">
-      <span class="icon">&#128197;</span> Agendamentos
+      <span class="icon">📅</span> Agendamentos
     </div>
-    <div class="nav-item" onclick="showSection('treinamentos',this)">
-      <span class="icon">&#128218;</span> Treinamentos
+    <div class="nav-item" onclick="showSection('setores',this)">
+      <span class="icon">🏭</span> Gestão de Setores
+    </div>
+    <div class="nav-item" onclick="showSection('questionarios',this)">
+      <span class="icon">📝</span> Questionários
     </div>
 
     <div class="nav-section">Segurança</div>
     <div class="nav-item" onclick="showSection('epis',this)">
-      <span class="icon">&#129399;</span> EPIs & Estoque
+      <span class="icon">🦺</span> EPIs & Estoque
       <span class="nav-badge" id="badge-epi">0</span>
     </div>
     <div class="nav-item" onclick="showSection('cats',this)">
-      <span class="icon">&#9888;</span> Acidentes (CAT)
+      <span class="icon">⚠️</span> Acidentes (CAT)
     </div>
 
     <div class="sidebar-footer">
-      <button class="btn-logout" onclick="window.location.href='/login'">&#128682; Sair</button>
+      <button class="btn-logout" onclick="window.location.href='/login'">🚪 Sair</button>
     </div>
   </aside>
 
   <!-- MAIN -->
   <div class="main">
-    <button class=\"hamburger\" onclick=\"toggleSidebar()\" aria-label=\"Menu\">&#9776;</button><div class=\"sidebar-overlay\" id=\"sb-overlay\" onclick=\"closeSidebar()\"></div><div class="topbar">
+    <div class="topbar">
       <div class="topbar-title" id="topTitle">DASHBOARD RH</div>
-      <div class="perfil-badge">&#127970; RH</div>
-      <button class="btn-topbar" onclick="window.location.href='/dashboard'">&#128202; Painel Completo</button>
+      <div class="perfil-badge">🏢 RH</div>
+      <button class="btn-topbar" onclick="window.location.href='/dashboard'">📊 Painel Completo</button>
     </div>
 
     <div class="content">
@@ -823,46 +826,45 @@
             <div class="page-title">Dashboard RH</div>
             <div class="page-sub" id="sub-dash">Carregando dados...</div>
           </div>
-          <button class="btn-add" onclick="loadDash()">&#8635; Atualizar</button>
+          <button class="btn-add" onclick="loadDash()">🔄 Atualizar</button>
         </div>
 
         <div id="alert-banner" class="alert-banner" style="display:none">
-          <div class="alert-text">&#128680; <span id="alert-text">Atenção requerida</span></div>
-          <button class="btn-alert" onclick="showSection('aso',null)">Ver ASOs &#8594;</button>
+          <div class="alert-text">🚨 <span id="alert-text">Atenção requerida</span></div>
+          <button class="btn-alert" onclick="showSection('aso',null)">Ver ASOs →</button>
         </div>
 
         <!-- KPIs -->
         <div class="kpi-grid">
           <div class="kpi-card">
-            <div class="kpi-icon">&#128101;</div>
+            <div class="kpi-icon">👥</div>
             <div class="kpi-label">Funcionários</div>
             <div class="kpi-value" id="kpi-func">—</div>
-            <div class="kpi-sub up">&#9650; Total ativo</div>
+            <div class="kpi-sub up">▲ Total ativo</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-icon">&#129657;</div>
+            <div class="kpi-icon">🩺</div>
             <div class="kpi-label">ASOs Vencidos</div>
             <div class="kpi-value" id="kpi-aso" style="color:#ff4444">—</div>
-            <div class="kpi-sub down">&#9660; Requer ação</div>
+            <div class="kpi-sub down">▼ Requer ação</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-icon">&#128218;</div>
+            <div class="kpi-icon">📚</div>
             <div class="kpi-label">Treinamentos</div>
             <div class="kpi-value" id="kpi-trein" style="color:#00d2ff">—</div>
-            <div class="kpi-sub up">&#9650; Total ativo</div>
+            <div class="kpi-sub up">▲ Total ativo</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-icon">&#128737;</div>
+            <div class="kpi-icon">🛡️</div>
             <div class="kpi-label">Índice Seg.</div>
             <div class="kpi-value" id="kpi-score" style="color:#00d2ff">—</div>
-            <div class="kpi-sub up">&#9650; Score IA</div>
+            <div class="kpi-sub up">▲ Score IA</div>
           </div>
         </div>
 
-        <!-- Gráficos 3D (Three.js) -->
         <div class="charts-row cols-3">
           <div class="chart-card">
-            <div class="chart-title">&#128101; Distribuição de Risco</div>
+            <div class="chart-title">👥 Distribuição de Risco</div>
             <div style="position:relative;display:flex;justify-content:center">
               <div id="chartRisco" style="height:180px;width:180px"></div>
               <div
@@ -876,7 +878,7 @@
             <div class="chart-legend" id="leg-risco"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">&#129657; Status de ASOs</div>
+            <div class="chart-title">🩺 Status de ASOs</div>
             <div style="position:relative;display:flex;justify-content:center">
               <div id="chartAso" style="height:180px;width:180px"></div>
               <div
@@ -890,45 +892,20 @@
             <div class="chart-legend" id="leg-aso"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">&#128218; Treinamentos</div>
+            <div class="chart-title">📚 Treinamentos</div>
             <div id="chartTrein" style="height:180px"></div>
           </div>
         </div>
 
         <div class="charts-row cols-2">
           <div class="chart-card">
-            <div class="chart-title">&#128101; Funcionários por Setor</div>
+            <div class="chart-title">🏭 Funcionários por Setor</div>
             <div id="chartSetores" style="height:200px"></div>
           </div>
           <div class="chart-card">
-            <div class="chart-title">&#129399; EPIs por Status</div>
+            <div class="chart-title">🦺 EPIs por Status</div>
             <div id="chartCats" style="height:200px"></div>
           </div>
-        </div>
-
-        <!-- Tabela top risco -->
-        <div class="table-card">
-          <div class="table-header">
-            <h3>&#9888; Funcionários em Atenção</h3>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Cargo</th>
-                <th>Setor</th>
-                <th>Risco</th>
-                <th>Score IA</th>
-                <th>ASO</th>
-              </tr>
-            </thead>
-            <tbody id="tb-risco">
-              <tr>
-                <td colspan="6" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
 
@@ -963,59 +940,68 @@
         </div>
       </div>
 
-      <!-- ASO -->
-      <div id="sec-aso" class="section">
+      <!-- GESTÃO DE SETORES -->
+      <div id="sec-setores" class="section">
         <div class="page-header">
           <div>
-            <div class="page-title">ASO & Exames</div>
-            <div class="page-sub">Atestados de Saúde Ocupacional</div>
+            <div class="page-title">Gestão de Setores</div>
+            <div class="page-sub">Cadastro de funcionários por setor</div>
           </div>
+          <button class="btn-add" onclick="document.getElementById('modal-setor').classList.add('open')">+ Novo
+            Setor</button>
         </div>
         <div class="table-card">
           <table>
             <thead>
               <tr>
-                <th>Funcionário</th>
-                <th>Cargo</th>
                 <th>Setor</th>
-                <th>Vencimento</th>
+                <th>Cadastrados</th>
                 <th>Status</th>
+                <th>Ações</th>
               </tr>
             </thead>
-            <tbody id="tb-aso">
+            <tbody id="tb-setores">
               <tr>
-                <td colspan="5" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
-                </td>
+                <td colspan="4" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Carregando...</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- AGENDAMENTOS -->
-      <div id="sec-agendamentos" class="section">
+      <!-- QUESTIONÁRIOS -->
+      <div id="sec-questionarios" class="section">
         <div class="page-header">
           <div>
-            <div class="page-title">Agendamentos</div>
-            <div class="page-sub">Exames e consultas</div>
+            <div class="page-title">Disparo de Questionários</div>
+            <div class="page-sub">Enviar links de pesquisa para os setores</div>
           </div>
-          <button class="btn-add" onclick="document.getElementById('modal-agen').classList.add('open')">+ Novo</button>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-card" style="grid-column: span 4; background: linear-gradient(135deg, #001a33, #000810);">
+            <div class="kpi-label">Link Base do Questionário (Lovable)</div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+              <input class="modal-input" id="lovable-link" value="https://digital-survey-craft.lovable.app" readonly>
+              <button class="btn-save"
+                onclick="copyToClipboard('https://digital-survey-craft.lovable.app')">Copiar</button>
+            </div>
+          </div>
         </div>
         <div class="table-card">
+          <div class="table-header">
+            <h3>Links por Setor</h3>
+          </div>
           <table>
             <thead>
               <tr>
-                <th>Funcionário</th>
-                <th>Exame</th>
-                <th>Data</th>
-                <th>Hora</th>
-                <th>Médico</th>
-                <th>Status</th>
+                <th>Setor</th>
+                <th>Link Personalizado</th>
+                <th>Ação</th>
               </tr>
             </thead>
-            <tbody id="tb-agen">
+            <tbody id="tb-links-questionarios">
               <tr>
-                <td colspan="6" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
+                <td colspan="3" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Carregando setores...
                 </td>
               </tr>
             </tbody>
@@ -1023,104 +1009,27 @@
         </div>
       </div>
 
-      <!-- TREINAMENTOS -->
-      <div id="sec-treinamentos" class="section">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Treinamentos</div>
-            <div class="page-sub">Capacitações e NRs</div>
-          </div>
-          <button class="btn-add" onclick="document.getElementById('modal-trein').classList.add('open')">+ Novo</button>
-        </div>
-        <div class="table-card">
-          <table>
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>NR</th>
-                <th>Data</th>
-                <th>Validade</th>
-                <th>Participantes</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="tb-trein">
-              <tr>
-                <td colspan="6" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- EPIS -->
-      <div id="sec-epis" class="section">
-        <div class="page-header">
-          <div>
-            <div class="page-title">EPIs & Estoque</div>
-            <div class="page-sub">Equipamentos de proteção individual</div>
-          </div>
-          <button class="btn-add" onclick="document.getElementById('modal-epi').classList.add('open')">+ Novo</button>
-        </div>
-        <div class="table-card">
-          <table>
-            <thead>
-              <tr>
-                <th>EPI</th>
-                <th>CA</th>
-                <th>Quantidade</th>
-                <th>Mínimo</th>
-                <th>Validade</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="tb-epis">
-              <tr>
-                <td colspan="6" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- CATS -->
-      <div id="sec-cats" class="section">
-        <div class="page-header">
-          <div>
-            <div class="page-title">Acidentes (CAT)</div>
-            <div class="page-sub">Comunicações de Acidente</div>
-          </div>
-          <button class="btn-add" onclick="document.getElementById('modal-cat').classList.add('open')">+
-            Registrar</button>
-        </div>
-        <div class="table-card">
-          <table>
-            <thead>
-              <tr>
-                <th>Funcionário</th>
-                <th>Data</th>
-                <th>Tipo</th>
-                <th>Parte do Corpo</th>
-                <th>Gravidade</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="tb-cats">
-              <tr>
-                <td colspan="6" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-    </div><!-- /content -->
-  </div><!-- /main -->
+    </div>
+  </div>
 
   <!-- MODAIS -->
+  <div id="modal-setor" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">CADASTRAR SETOR</div>
+      <form id="form-setor" class="modal-grid">
+        <input class="modal-input" style="grid-column:span 2" name="setor" placeholder="Nome do Setor (ex: Produção)"
+          required>
+        <input class="modal-input" type="number" name="colaboradores" placeholder="Qtd. de Funcionários Estimada"
+          required style="grid-column:span 2">
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel"
+            onclick="document.getElementById('modal-setor').classList.remove('open')">Cancelar</button>
+          <button type="submit" class="btn-save">SALVAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div id="modal-func" class="modal-overlay">
     <div class="modal-box">
       <div class="modal-title">NOVO FUNCIONÁRIO</div>
@@ -1146,106 +1055,7 @@
     </div>
   </div>
 
-  <div id="modal-cat" class="modal-overlay">
-    <div class="modal-box">
-      <div class="modal-title">REGISTRAR CAT</div>
-      <form id="form-cat" class="modal-grid">
-        <input class="modal-input" style="grid-column:span 2" name="funcionario_nome" placeholder="Nome do Funcionário"
-          required>
-        <input class="modal-input" type="date" name="data_acidente" required>
-        <select class="modal-input" name="tipo" required>
-          <option value="">Tipo</option>
-          <option>Típico</option>
-          <option>Trajeto</option>
-          <option>Doença Ocupacional</option>
-        </select>
-        <input class="modal-input" name="parte_corpo" placeholder="Parte do Corpo" required>
-        <select class="modal-input" name="gravidade" required>
-          <option value="">Gravidade</option>
-          <option>Leve</option>
-          <option>Moderado</option>
-          <option>Grave</option>
-          <option>Fatal</option>
-        </select>
-        <input class="modal-input" style="grid-column:span 2" name="causa_raiz" placeholder="Causa Raiz">
-        <div class="modal-footer">
-          <button type="button" class="btn-cancel"
-            onclick="document.getElementById('modal-cat').classList.remove('open')">Cancelar</button>
-          <button type="submit" class="btn-save">REGISTRAR</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div id="modal-trein" class="modal-overlay">
-    <div class="modal-box">
-      <div class="modal-title">NOVO TREINAMENTO</div>
-      <form id="form-trein" class="modal-grid">
-        <input class="modal-input" style="grid-column:span 2" name="nome" placeholder="Nome do Treinamento" required>
-        <input class="modal-input" name="nr_referencia" placeholder="NR Referência">
-        <select class="modal-input" name="modalidade">
-          <option>Presencial</option>
-          <option>Online</option>
-          <option>Híbrido</option>
-        </select>
-        <input class="modal-input" type="date" name="data_realizacao" required>
-        <input class="modal-input" type="date" name="data_validade" required>
-        <input class="modal-input" type="number" name="participantes" placeholder="Participantes">
-        <input class="modal-input" name="responsavel" placeholder="Responsável">
-        <div class="modal-footer">
-          <button type="button" class="btn-cancel"
-            onclick="document.getElementById('modal-trein').classList.remove('open')">Cancelar</button>
-          <button type="submit" class="btn-save">SALVAR</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div id="modal-agen" class="modal-overlay">
-    <div class="modal-box">
-      <div class="modal-title">NOVO AGENDAMENTO</div>
-      <form id="form-agen" class="modal-grid">
-        <input class="modal-input" style="grid-column:span 2" name="funcionario_nome" placeholder="Funcionário"
-          required>
-        <select class="modal-input" name="tipo_exame" required>
-          <option value="">Tipo de Exame</option>
-          <option>Admissional</option>
-          <option>Periódico</option>
-          <option>Demissional</option>
-          <option>Retorno</option>
-        </select>
-        <input class="modal-input" name="medico" placeholder="Médico">
-        <input class="modal-input" type="date" name="data_agendamento" required>
-        <input class="modal-input" type="time" name="hora" required>
-        <div class="modal-footer">
-          <button type="button" class="btn-cancel"
-            onclick="document.getElementById('modal-agen').classList.remove('open')">Cancelar</button>
-          <button type="submit" class="btn-save">AGENDAR</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div id="modal-epi" class="modal-overlay">
-    <div class="modal-box">
-      <div class="modal-title">NOVO EPI</div>
-      <form id="form-epi" class="modal-grid">
-        <input class="modal-input" style="grid-column:span 2" name="nome" placeholder="Nome do EPI" required>
-        <input class="modal-input" name="ca" placeholder="Número CA">
-        <input class="modal-input" type="date" name="validade">
-        <input class="modal-input" type="number" name="quantidade" placeholder="Quantidade" required>
-        <input class="modal-input" type="number" name="estoque_minimo" placeholder="Estoque Mínimo" value="5">
-        <div class="modal-footer">
-          <button type="button" class="btn-cancel"
-            onclick="document.getElementById('modal-epi').classList.remove('open')">Cancelar</button>
-          <button type="submit" class="btn-save">SALVAR</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
   <script>
-    // ── MOTOR 3D (Three.js) ───────────────────────────────────────────────────────
     let empresaId = null;
     const _rens = {}, _scenes = {}, _anims = {};
     const PAL = ['#0072ff', '#00aaff', '#aa66ff', '#ffaa00', '#ff6644', '#00ddaa'];
@@ -1255,297 +1065,94 @@
     function _clr(id) {
       if (_anims[id]) { cancelAnimationFrame(_anims[id]); delete _anims[id]; }
       if (_rens[id]) { _rens[id].dispose(); delete _rens[id]; }
-      const el = document.getElementById(id);
-      if (el) el.innerHTML = '';
-      delete _scenes[id];
-    }
-    function _col(c) {
-      try { return new THREE.Color(c); } catch (e) { return new THREE.Color(0.3, 0.6, 1); }
+      const el = document.getElementById(id); if (el) el.innerHTML = '';
     }
 
-    // ── ROSCA 3D REAL ─────────────────────────────────────────────────────────────
+    // Three.js Charts
     function donut3d(id, labels, values, colors) {
       _clr(id);
       const cont = document.getElementById(id); if (!cont) return;
-      const W = cont.offsetWidth || 180, H = cont.offsetHeight || 180;
+      const W = cont.offsetWidth, H = cont.offsetHeight;
       const scene = new THREE.Scene();
       const cam = new THREE.PerspectiveCamera(42, W / H, 0.1, 50);
       cam.position.set(0, 2.2, 4.2); cam.lookAt(0, 0, 0);
       const ren = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      ren.setSize(W, H); ren.setPixelRatio(Math.min(devicePixelRatio, 2));
-      ren.shadowMap.enabled = true;
-      cont.appendChild(ren.domElement);
+      ren.setSize(W, H); cont.appendChild(ren.domElement);
       _rens[id] = ren;
 
-      scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-      const dl = new THREE.DirectionalLight(0xffffff, 1.1);
-      dl.position.set(4, 6, 4); dl.castShadow = true; scene.add(dl);
-      scene.add(Object.assign(new THREE.PointLight(0x00aaff, 0.4, 20), { position: new THREE.Vector3(-3, 2, 2) }));
-
+      scene.add(new THREE.AmbientLight(0xffffff, 0.6));
       const total = values.reduce((a, b) => a + b, 0) || 1;
-      const iR = 0.52, oR = 1.0, depth = 0.38; let sa = -Math.PI / 2;
+      let sa = -Math.PI / 2;
       const grp = new THREE.Group(); scene.add(grp);
 
       values.forEach((v, i) => {
         if (v <= 0) return;
         const ang = (v / total) * Math.PI * 2;
-        const segs = Math.max(16, Math.round(ang * 24));
         const shape = new THREE.Shape();
-        shape.moveTo(Math.cos(sa) * oR, Math.sin(sa) * oR);
-        for (let s = 0; s <= segs; s++) { const a = sa + (ang * s / segs); shape.lineTo(Math.cos(a) * oR, Math.sin(a) * oR); }
-        for (let s = segs; s >= 0; s--) { const a = sa + (ang * s / segs); shape.lineTo(Math.cos(a) * iR, Math.sin(a) * iR); }
-        shape.closePath();
-        const geo = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.03, bevelSegments: 4 });
-        const mat = new THREE.MeshPhongMaterial({ color: _col(colors[i]), shininess: 140, specular: new THREE.Color(0.3, 0.3, 0.3) });
+        shape.absarc(0, 0, 1, sa, sa + ang, false);
+        shape.absarc(0, 0, 0.6, sa + ang, sa, true);
+        const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.3, bevelEnabled: true, bevelThickness: 0.05 });
+        const mat = new THREE.MeshPhongMaterial({ color: colors[i] });
         const mesh = new THREE.Mesh(geo, mat);
-        mesh.rotation.x = -Math.PI / 2; mesh.castShadow = true; mesh.receiveShadow = true;
-        grp.add(mesh); sa += ang;
+        mesh.rotation.x = -Math.PI / 2; grp.add(mesh); sa += ang;
       });
 
-      // legenda
-      const leg = document.getElementById('leg-' + id.replace('chart', '').replace(/^R/, 'r').replace(/^A/, 'a'));
-      const legEl = document.getElementById('leg-risco') || document.getElementById('leg-aso') || document.getElementById('leg-' + id.slice(5));
-      const legTarget = id === 'chartRisco' ? document.getElementById('leg-risco') : id === 'chartAso' ? document.getElementById('leg-aso') : null;
-      if (legTarget) legTarget.innerHTML = labels.map((l, i) => `<div class="leg-item"><div class="leg-dot" style="background:${colors[i]}"></div>${l}</div>`).join('');
-
-      let t = 0;
-      function anim() { _anims[id] = requestAnimationFrame(anim); t += 0.007; grp.rotation.y = t * 0.35; ren.render(scene, cam); }
+      function anim() { _anims[id] = requestAnimationFrame(anim); grp.rotation.y += 0.005; ren.render(scene, cam); }
       anim();
     }
 
-    // ── BARRAS 3D REAIS ───────────────────────────────────────────────────────────
-    function bar3d(id, labels, values, colors) {
-      _clr(id);
-      const cont = document.getElementById(id); if (!cont) return;
-      const W = cont.offsetWidth || 300, H = cont.offsetHeight || 200;
-      const scene = new THREE.Scene();
-      const cam = new THREE.PerspectiveCamera(38, W / H, 0.1, 60);
-      cam.position.set(0, 3.5, 8); cam.lookAt(0, 0.5, 0);
-      const ren = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      ren.setSize(W, H); ren.setPixelRatio(Math.min(devicePixelRatio, 2));
-      ren.shadowMap.enabled = true;
-      cont.appendChild(ren.domElement);
-      _rens[id] = ren;
-
-      scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-      const dl = new THREE.DirectionalLight(0xffffff, 1.0);
-      dl.position.set(5, 8, 5); dl.castShadow = true; scene.add(dl);
-      scene.add(Object.assign(new THREE.PointLight(0x00aaff, 0.3, 30), { position: new THREE.Vector3(-4, 4, 3) }));
-
-      const maxV = Math.max(...values, 1);
-      const bW = 0.7, gap = 0.45, tw = (bW + gap) * values.length;
-      const sx = -tw / 2 + bW / 2;
-      const grp = new THREE.Group(); scene.add(grp);
-
-      values.forEach((v, i) => {
-        const h = Math.max((v / maxV) * 3.5, 0.1);
-        const col = _col(colors[i % colors.length]);
-        // barra principal
-        const geo = new THREE.BoxGeometry(bW, h, bW);
-        const mat = new THREE.MeshPhongMaterial({ color: col, shininess: 120, specular: new THREE.Color(0.2, 0.2, 0.2) });
-        const mesh = new THREE.Mesh(geo, mat);
-        mesh.position.set(sx + i * (bW + gap), h / 2, 0);
-        mesh.castShadow = true; mesh.receiveShadow = true; grp.add(mesh);
-        // topo brilhante
-        const topMat = new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: 0.5, shininess: 220 });
-        const top = new THREE.Mesh(new THREE.BoxGeometry(bW, 0.06, bW), topMat);
-        top.position.set(sx + i * (bW + gap), h + 0.03, 0); grp.add(top);
-        // label flutuante
-        const lc = document.createElement('canvas'); lc.width = 128; lc.height = 80;
-        const lx = lc.getContext('2d');
-        lx.fillStyle = 'rgba(0,120,255,0.85)'; lx.font = 'bold 17px sans-serif'; lx.textAlign = 'center';
-        lx.fillText((labels[i] + '').substring(0, 8), 64, 26);
-        lx.fillStyle = 'rgba(255,255,255,0.75)'; lx.font = 'bold 22px sans-serif';
-        lx.fillText(v, 64, 54);
-        const tex = new THREE.CanvasTexture(lc);
-        const lm = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false });
-        const lp = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.7), lm);
-        lp.position.set(sx + i * (bW + gap), -0.5, 0.45); grp.add(lp);
-      });
-
-      // base
-      const base = new THREE.Mesh(new THREE.BoxGeometry(tw + 1, 0.08, 1.8), new THREE.MeshPhongMaterial({ color: new THREE.Color(0.03, 0.07, 0.14), shininess: 30 }));
-      base.position.set(0, -0.04, 0); base.receiveShadow = true; grp.add(base);
-
-      let t = 0;
-      function anim() { _anims[id] = requestAnimationFrame(anim); t += 0.005; grp.rotation.y = Math.sin(t) * 0.14; ren.render(scene, cam); }
-      anim();
-    }
-
-    // ── INIT ──────────────────────────────────────────────────────────────────────
     async function init() {
       const emps = await fetch('/api/empresas').then(r => r.json()).catch(() => []);
       const sel = document.getElementById('empresaSelect');
-      sel.innerHTML = '';
-      if (!emps.length) { sel.innerHTML = '<option value="">Nenhuma empresa</option>'; return; }
-      emps.forEach(e => { const o = document.createElement('option'); o.value = e.id; o.textContent = e.nome; sel.appendChild(o); });
-      empresaId = emps[0].id;
-      loadDash();
+      if (emps.length) {
+        sel.innerHTML = emps.map(e => `<option value="${e.id}">${e.nome}</option>`).join('');
+        empresaId = emps[0].id;
+        loadDash();
+      }
     }
 
     function onEmpresaChange() {
       empresaId = document.getElementById('empresaSelect').value;
-      const active = document.querySelector('.section.active');
-      if (!active) return;
-      const nm = active.id.replace('sec-', '');
-      if (nm === 'dashboard') loadDash();
-      if (nm === 'funcionarios') loadFuncionarios();
-      if (nm === 'aso') loadAso();
-      if (nm === 'agendamentos') loadAgens();
-      if (nm === 'treinamentos') loadTreinamentos();
-      if (nm === 'epis') loadEpis();
-      if (nm === 'cats') loadCats();
+      loadDash();
     }
 
-    // ── DASHBOARD ─────────────────────────────────────────────────────────────────
     async function loadDash() {
       if (!empresaId) return;
-      const d = await fetch('/api/dashboard/' + empresaId).then(r => r.json()).catch(() => ({ kpis: {}, setores: {}, cats_recentes: [], top_risco: [], alertas: [] }));
+      const d = await fetch('/api/dashboard/' + empresaId).then(r => r.json());
+      document.getElementById('sub-dash').textContent = d.empresa.nome;
+      document.getElementById('kpi-func').textContent = d.kpis.total_funcionarios;
+      document.getElementById('kpi-aso').textContent = d.kpis.aso_vencidos;
+      document.getElementById('kpi-trein').textContent = d.kpis.treinamentos;
+      document.getElementById('kpi-score').textContent = d.kpis.score_seguranca + '%';
 
-      document.getElementById('sub-dash').textContent = (d.empresa?.nome || '') + ' · ' + (d.kpis.total_funcionarios || 0) + ' colaboradores';
-      document.getElementById('kpi-func').textContent = d.kpis.total_funcionarios || 0;
-      document.getElementById('kpi-aso').textContent = d.kpis.aso_vencidos || 0;
-      document.getElementById('kpi-trein').textContent = d.kpis.treinamentos || 0;
-      document.getElementById('kpi-score').textContent = (d.kpis.score_seguranca || 0) + '%';
-      document.getElementById('badge-aso').textContent = d.kpis.aso_vencidos || 0;
-      document.getElementById('badge-epi').textContent = d.kpis.epis_criticos || 0;
-      document.getElementById('dnt-risco').textContent = d.kpis.total_funcionarios || 0;
-      document.getElementById('dnt-aso').textContent = d.kpis.total_funcionarios || 0;
-
-      if ((d.kpis.aso_vencidos || 0) > 0) {
-        document.getElementById('alert-banner').style.display = 'flex';
-        document.getElementById('alert-text').textContent = (d.kpis.aso_vencidos || 0) + ' ASO(s) vencido(s). Renovar urgente.';
-      }
-
-      const total = d.kpis.total_funcionarios || 1, alto = d.kpis.alto_risco || 0;
-      const medio = Math.max(0, Math.round(total * .4)), baixo = Math.max(0, total - alto - medio);
-      const valido = Math.max(0, total - (d.kpis.aso_vencidos || 0) - (d.kpis.aso_vencer || 0));
-
-      // Gráficos 3D reais com Three.js
-      setTimeout(() => {
-        donut3d('chartRisco', ['Alto', 'Médio', 'Baixo'], [alto, medio, baixo],
-          ['#ff3232', '#ffaa00', '#00c84a']);
-        donut3d('chartAso', ['Válido', 'A Vencer', 'Vencido'],
-          [valido, d.kpis.aso_vencer || 0, d.kpis.aso_vencidos || 0],
-          ['#00c84a', '#ffaa00', '#ff3232']);
-        const concl = d.kpis.trein_concluidos || 0;
-        const agend = Math.max(0, (d.kpis.treinamentos || 0) - concl);
-        bar3d('chartTrein', ['Concluídos', 'Agendados', 'Total'],
-          [concl, agend, d.kpis.treinamentos || 0],
-          ['#00c84a', '#0099ff', '#00d8d8']);
-        const setores = d.setores || {};
-        if (Object.keys(setores).length) {
-          bar3d('chartSetores', Object.keys(setores), Object.values(setores),
-            Object.keys(setores).map((_, i) => pal(i)));
-        }
-        const epis_ok = Math.max(0, (d.kpis.total_funcionarios || 5) - (d.kpis.epis_criticos || 0));
-        bar3d('chartCats', ['EPI OK', 'Críticos'],
-          [epis_ok, d.kpis.epis_criticos || 0],
-          ['#00c84a', '#ff3232']);
-      }, 120);
-
-      document.getElementById('tb-risco').innerHTML = (d.top_risco || []).map(f =>
-        `<tr><td style="font-weight:600;color:#fff">${f.nome}</td><td>${f.cargo}</td><td>${f.setor}</td>
-     <td><span class="badge-pill ${f.risco === 'Alto' ? 'b-red' : f.risco === 'Medio' ? 'b-yellow' : 'b-green'}">${f.risco}</span></td>
-     <td style="font-weight:700;color:#00d2ff">${f.score_risco}</td>
-     <td><span class="badge-pill ${f.aso_status === 'valido' ? 'b-green' : f.aso_status === 'vencido' ? 'b-red' : 'b-yellow'}">${f.aso_status}</span></td></tr>`
-      ).join('') || noData(6);
+      donut3d('chartRisco', ['Alto', 'Médio', 'Baixo'], [d.kpis.alto_risco, 5, 10], ['#ff3232', '#ffaa00', '#00c84a']);
     }
 
-    // ── SEÇÕES ────────────────────────────────────────────────────────────────────
     function showSection(name, el) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById('sec-' + name).classList.add('active');
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       if (el) el.classList.add('active');
-      const T = { dashboard: 'DASHBOARD RH', funcionarios: 'FUNCIONÁRIOS', aso: 'ASO & EXAMES', agendamentos: 'AGENDAMENTOS', treinamentos: 'TREINAMENTOS', epis: 'EPIs & ESTOQUE', cats: 'ACIDENTES (CAT)' };
-      document.getElementById('topTitle').textContent = T[name] || name;
-      if (name === 'funcionarios') loadFuncionarios();
-      if (name === 'aso') loadAso();
-      if (name === 'agendamentos') loadAgens();
-      if (name === 'treinamentos') loadTreinamentos();
-      if (name === 'epis') loadEpis();
-      if (name === 'cats') loadCats();
+      if (name === 'setores' || name === 'questionarios') loadSetoresArea();
     }
 
-    // ── LOADERS ───────────────────────────────────────────────────────────────────
-    async function loadFuncionarios() {
-      if (!empresaId) return;
-      const d = await fetch('/api/funcionarios/' + empresaId).then(r => r.json()).catch(() => []);
-      document.getElementById('tb-func').innerHTML = d.map(f =>
-        `<tr><td style="font-weight:600;color:#fff">${f.nome}</td><td>${f.cargo}</td><td>${f.setor}</td>
-     <td><span class="badge-pill ${f.risco === 'Alto' ? 'b-red' : f.risco === 'Medio' ? 'b-yellow' : 'b-green'}">${f.risco}</span></td>
-     <td style="font-weight:700;color:#00d2ff">${f.score_risco}</td>
-     <td><span class="badge-pill ${f.aso_status === 'valido' ? 'b-green' : f.aso_status === 'vencido' ? 'b-red' : 'b-yellow'}">${f.aso_status}</span></td></tr>`
-      ).join('') || noData(6);
-    }
-    async function loadAso() {
-      if (!empresaId) return;
-      const d = await fetch('/api/funcionarios/' + empresaId).then(r => r.json()).catch(() => []);
-      document.getElementById('tb-aso').innerHTML = d.map(f =>
-        `<tr><td style="font-weight:600;color:#fff">${f.nome}</td><td>${f.cargo}</td><td>${f.setor}</td>
-     <td>${f.aso_vencimento || '—'}</td>
-     <td><span class="badge-pill ${f.aso_status === 'valido' ? 'b-green' : f.aso_status === 'vencido' ? 'b-red' : 'b-yellow'}">${f.aso_status}</span></td></tr>`
-      ).join('') || noData(5);
-    }
-    async function loadAgens() {
-      if (!empresaId) return;
-      const d = await fetch('/api/agendamentos/' + empresaId).then(r => r.json()).catch(() => []);
-      document.getElementById('tb-agen').innerHTML = d.map(a =>
-        `<tr><td style="font-weight:600;color:#fff">${a.funcionario_nome}</td><td>${a.tipo_exame}</td>
-     <td>${a.data_agendamento}</td><td>${a.hora}</td><td>${a.medico || '—'}</td>
-     <td><span class="badge-pill ${a.status === 'Confirmado' ? 'b-green' : 'b-yellow'}">${a.status}</span></td></tr>`
-      ).join('') || noData(6);
-    }
-    async function loadTreinamentos() {
-      if (!empresaId) return;
-      const d = await fetch('/api/treinamentos/' + empresaId).then(r => r.json()).catch(() => []);
-      document.getElementById('tb-trein').innerHTML = d.map(t =>
-        `<tr><td style="font-weight:600;color:#fff">${t.nome}</td><td>${t.nr_referencia || '—'}</td>
-     <td>${t.data_realizacao}</td><td>${t.data_validade}</td><td>${t.participantes}</td>
-     <td><span class="badge-pill ${t.status === 'Concluído' ? 'b-green' : 'b-blue'}">${t.status}</span></td></tr>`
-      ).join('') || noData(6);
-    }
-    async function loadEpis() {
-      if (!empresaId) return;
-      const d = await fetch('/api/epis/' + empresaId).then(r => r.json()).catch(() => []);
-      document.getElementById('tb-epis').innerHTML = d.map(e =>
-        `<tr><td style="font-weight:600;color:#fff">${e.nome}</td><td>${e.ca || '—'}</td>
-     <td style="font-weight:700">${e.quantidade}</td><td>${e.estoque_minimo}</td><td>${e.validade || '—'}</td>
-     <td><span class="badge-pill ${e.quantidade < e.estoque_minimo ? 'b-red' : 'b-green'}">${e.quantidade < e.estoque_minimo ? 'Crítico' : 'OK'}</span></td></tr>`
-      ).join('') || noData(6);
-    }
-    async function loadCats() {
-      if (!empresaId) return;
-      const d = await fetch('/api/cats/' + empresaId).then(r => r.json()).catch(() => []);
-      document.getElementById('tb-cats').innerHTML = d.map(c =>
-        `<tr><td style="font-weight:600;color:#fff">${c.funcionario_nome}</td><td>${c.data_acidente}</td>
-     <td>${c.tipo}</td><td>${c.parte_corpo}</td>
-     <td><span class="badge-pill ${c.gravidade === 'Fatal' || c.gravidade === 'Grave' ? 'b-red' : c.gravidade === 'Moderado' ? 'b-yellow' : 'b-green'}">${c.gravidade}</span></td>
-     <td>${c.status}</td></tr>`
-      ).join('') || noData(6);
+    async function loadSetoresArea() {
+      const res = await fetch('/api/setores/por-empresa?empresa_id=' + empresaId).then(r => r.json());
+      const tb = document.getElementById('tb-setores');
+      const tbQuest = document.getElementById('tb-links-questionarios');
+      if (res.success && res.setores) {
+        tb.innerHTML = res.setores.map(s => `<tr><td style="font-weight:600;color:#fff">${s}</td><td>—</td><td><span class="badge-pill b-blue">Ativo</span></td><td>...</td></tr>`).join('');
+        tbQuest.innerHTML = res.setores.map(s => {
+          const l = `https://digital-survey-craft.lovable.app?empresa_id=${empresaId}&setor=${encodeURIComponent(s)}`;
+          return `<tr><td style="font-weight:600;color:#fff">${s}</td><td><code style="font-size:10px">${l}</code></td><td><button class="btn-save" onclick="copyToClipboard('${l}')">Copiar</button></td></tr>`;
+        }).join('');
+      }
     }
 
-    // ── FORMS ─────────────────────────────────────────────────────────────────────
-    function bindForm(formId, url, modalId, reload) {
-      document.getElementById(formId).addEventListener('submit', async e => {
-        e.preventDefault();
-        const fd = new FormData(e.target); fd.append('empresa_id', empresaId);
-        await fetch(url, { method: 'POST', body: fd });
-        document.getElementById(modalId).classList.remove('open');
-        e.target.reset(); reload(); loadDash();
-      });
-    }
-    bindForm('form-func', '/api/funcionarios', 'modal-func', loadFuncionarios);
-    bindForm('form-cat', '/api/cats', 'modal-cat', loadCats);
-    bindForm('form-trein', '/api/treinamentos', 'modal-trein', loadTreinamentos);
-    bindForm('form-agen', '/api/agendamentos', 'modal-agen', loadAgens);
-    bindForm('form-epi', '/api/epis', 'modal-epi', loadEpis);
+    function copyToClipboard(t) { navigator.clipboard.writeText(t).then(() => alert('Copiado!')); }
 
     init();
   </script>
-<script>function toggleSidebar(){var s=document.querySelector(".sidebar");var o=document.getElementById("sb-overlay");s.classList.toggle("open");o.classList.toggle("open")}function closeSidebar(){document.querySelector(".sidebar").classList.remove("open");document.getElementById("sb-overlay").classList.remove("open")}</script>
-
+</body>
 
 </html>
-
