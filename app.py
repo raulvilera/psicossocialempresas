@@ -428,12 +428,7 @@ async def api_signup(
 ):
     """Cadastro de novo usuário RH vinculado a uma empresa."""
     try:
-        # Verificar se usuário já existe
-        existing = await sb_get("users", {"email": f"eq.{email}"})
-        if existing:
-            return {"success": False, "message": "E-mail já cadastrado."}
-
-        # Inserir novo usuário
+        # Inserir diretamente (RLS bloqueia consulta prévia; constraint unique de email garante unicidade)
         await sb_post("users", {
             "nome": nome,
             "email": email,
@@ -443,6 +438,9 @@ async def api_signup(
         })
         return {"success": True, "message": "Cadastro realizado com sucesso!"}
     except Exception as e:
+        err = str(e).lower()
+        if "duplicate" in err or "unique" in err or "23505" in err:
+            return {"success": False, "message": "E-mail já cadastrado. Faça login."}
         return {"success": False, "message": f"Erro ao realizar cadastro: {str(e)}"}
 
 # ── Empresas
