@@ -933,60 +933,75 @@
 
     // ── CARREGA TUDO ──────────────────────────────────────────────────────────────
     async function loadAll() {
-      allEmpresas = await fetch('/api/empresas').then(r => r.json()).catch(() => []);
-      allDash = await Promise.all(allEmpresas.map(e => fetch('/api/dashboard/' + e.id).then(r => r.json()).catch(() => ({ kpis: {} }))));
+      try {
+        console.log('Iniciando carga profissional...');
+        allEmpresas = await fetch('/api/empresas').then(r => r.json()).catch(err => { console.error('Erro /api/empresas:', err); return []; });
 
-      let totFunc = 0, totRisk = 0, totScore = 0;
-      allDash.forEach(d => { totFunc += d.kpis.total_funcionarios || 0; totRisk += d.kpis.alto_risco || 0; totScore += d.kpis.score_seguranca || 0; });
-      const scoreM = allEmpresas.length ? Math.round(totScore / allEmpresas.length) : 0;
+        if (allEmpresas.length === 0) {
+          document.getElementById('tb-empresas').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;">Nenhuma empresa cadastrada.</td></tr>';
+          return;
+        }
 
-      document.getElementById('kpi-emp').textContent = allEmpresas.length;
-      document.getElementById('kpi-col').textContent = totFunc;
-      document.getElementById('kpi-risk').textContent = totRisk;
-      document.getElementById('kpi-score').textContent = scoreM + '%';
-      document.getElementById('dnt-emp').textContent = allEmpresas.length;
+        allDash = await Promise.all(allEmpresas.map(e =>
+          fetch('/api/dashboard/' + e.id)
+            .then(r => r.json())
+            .catch(err => { console.error(`Erro dashboard ${e.id}:`, err); return { kpis: {} }; })
+        ));
 
-      // Donut status
-      const comRisco = allDash.filter(d => (d.kpis.alto_risco || 0) > 0).length;
-      const semRisco = allEmpresas.length - comRisco;
-      donut3d('chartStatus', ['Com Risco', 'Seguras'], [comRisco, semRisco], ['#ff5050', '#0072ff']);
+        let totFunc = 0, totRisk = 0, totScore = 0;
+        allDash.forEach(d => { totFunc += d.kpis.total_funcionarios || 0; totRisk += d.kpis.alto_risco || 0; totScore += d.kpis.score_seguranca || 0; });
+        const scoreM = allEmpresas.length ? Math.round(totScore / allEmpresas.length) : 0;
 
-      // Barras 3D score
-      const labels = allEmpresas.map(e => e.nome.substring(0, 10));
-      bar3d('chartScoreEmp', labels, allDash.map(d => d.kpis.score_seguranca || 0), allEmpresas.map((_, i) => pal(i)));
-      bar3d('chartColEmp', labels, allDash.map(d => d.kpis.total_funcionarios || 0), allEmpresas.map((_, i) => pal(i)));
-      bar3d('chartRiskEmp', labels, allDash.map(d => d.kpis.alto_risco || 0), allEmpresas.map(() => '#ff5050'));
+        document.getElementById('kpi-emp').textContent = allEmpresas.length;
+        document.getElementById('kpi-col').textContent = totFunc;
+        document.getElementById('kpi-risk').textContent = totRisk;
+        document.getElementById('kpi-score').textContent = scoreM + '%';
+        document.getElementById('dnt-emp').textContent = allEmpresas.length;
 
-      // Tabelas
-      const rows = allEmpresas.map((e, i) => {
-        const d = allDash[i];
-        return `<tr>
-      <td style="color:rgba(255,255,255,.45)">${e.id}</td>
-      <td style="font-weight:600;color:#fff">${e.nome}</td>
-      <td style="color:rgba(255,255,255,.45)">${e.cnpj || '—'}</td>
-      <td>${d.kpis.total_funcionarios || 0}</td>
-      <td style="color:#ff6060;font-weight:700">${d.kpis.alto_risco || 0}</td>
-      <td><span class="badge-pill ${(d.kpis.aso_vencidos || 0) > 0 ? 'b-red' : 'b-green'}">${d.kpis.aso_vencidos || 0}</span></td>
-      <td style="color:#00d2ff;font-weight:700">${d.kpis.score_seguranca || 0}%</td>
-    </tr>`;
-      }).join('') || noData(7);
-      document.getElementById('tb-empresas').innerHTML = rows;
-      document.getElementById('tb-emp2').innerHTML = rows;
+        const comRisco = allDash.filter(d => (d.kpis.alto_risco || 0) > 0).length;
+        const semRisco = allEmpresas.length - comRisco;
+        donut3d('chartStatus', ['Com Risco', 'Seguras'], [comRisco, semRisco], ['#ff5050', '#0072ff']);
 
-      // Usuários
-      loadUsuarios();
+        const labels = allEmpresas.map(e => e.nome.substring(0, 10));
+        bar3d('chartScoreEmp', labels, allDash.map(d => d.kpis.score_seguranca || 0), allEmpresas.map((_, i) => pal(i)));
+        bar3d('chartColEmp', labels, allDash.map(d => d.kpis.total_funcionarios || 0), allEmpresas.map((_, i) => pal(i)));
+        bar3d('chartRiskEmp', labels, allDash.map(d => d.kpis.alto_risco || 0), allEmpresas.map(() => '#ff5050'));
+
+        const rows = allEmpresas.map((e, i) => {
+          const d = allDash[i];
+          return `<tr>
+        <td style="color:rgba(255,255,255,.45)">${e.id}</td>
+        <td style="font-weight:600;color:#fff">${e.nome}</td>
+        <td style="color:rgba(255,255,255,.45)">${e.cnpj || '—'}</td>
+        <td>${d.kpis.total_funcionarios || 0}</td>
+        <td style="color:#ff6060;font-weight:700">${d.kpis.alto_risco || 0}</td>
+        <td><span class="badge-pill ${(d.kpis.aso_vencidos || 0) > 0 ? 'b-red' : 'b-green'}">${d.kpis.aso_vencidos || 0}</span></td>
+        <td style="color:#00d2ff;font-weight:700">${d.kpis.score_seguranca || 0}%</td>
+      </tr>`;
+        }).join('') || '<tr><td colspan="7" style="text-align:center;padding:20px;">Nenhum dado disponível.</td></tr>';
+        document.getElementById('tb-empresas').innerHTML = rows;
+        document.getElementById('tb-emp2').innerHTML = rows;
+
+        loadUsuarios();
+      } catch (err) {
+        console.error('Erro global loadAll Profissional:', err);
+      }
     }
 
     async function loadUsuarios() {
-      const u = await fetch('/api/admin/usuarios').then(r => r.json()).catch(() => []);
-      document.getElementById('tb-usuarios').innerHTML = u.map(us =>
-        `<tr>
-      <td style="font-weight:600;color:#fff">${us.nome || us.email}</td>
-      <td style="color:rgba(255,255,255,.6)">${us.email || '—'}</td>
-      <td><span class="badge-pill b-gold">${us.perfil || 'RH'}</span></td>
-      <td>${us.empresa_id || '—'}</td>
-    </tr>`
-      ).join('') || noData(4);
+      try {
+        const u = await fetch('/api/admin/usuarios').then(r => r.json()).catch(() => []);
+        document.getElementById('tb-usuarios').innerHTML = u.map(us =>
+          `<tr>
+        <td style="font-weight:600;color:#fff">${us.nome || us.email}</td>
+        <td style="color:rgba(255,255,255,.6)">${us.email || '—'}</td>
+        <td><span class="badge-pill b-gold">${us.perfil || 'RH'}</span></td>
+        <td>${us.empresa_id || '—'}</td>
+      </tr>`
+        ).join('') || '<tr><td colspan="4" style="text-align:center;padding:20px;">Nenhum usuário.</td></tr>';
+      } catch (err) {
+        console.error('Erro loadUsuarios Profissional:', err);
+      }
     }
 
     // ── SEÇÕES ────────────────────────────────────────────────────────────────────
