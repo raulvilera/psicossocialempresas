@@ -18,11 +18,6 @@ from fastapi.templating import Jinja2Templates
 # ─── App Setup ────────────────────────────────────────────────────────────────
 app = FastAPI(title="Psico Pro", version="3.5.0-FORCE")
 
-@app.get("/api/version")
-async def get_version():
-    return {"version": "3.5.0", "build_time": "2026-03-07 06:55", "status": "FORCE_DEPLOY"}
-
-
 BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
