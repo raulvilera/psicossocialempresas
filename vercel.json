@@ -13,6 +13,10 @@
   ],
   "rewrites": [
     {
+      "source": "/",
+      "destination": "/api/index.py"
+    },
+    {
       "source": "/(.*)",
       "destination": "/api/index.py"
     }
