@@ -368,30 +368,31 @@
       clearTimeout(window._toastTimer);
       window._toastTimer = setTimeout(() => { toast.style.display = 'none' }, 3000);
     }
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js');
-        });
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('SW Registered', reg))
+          .catch(err => console.log('SW Error', err));
+      });
     }
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
+      e.preventDefault();
       const btn = e.target.querySelector('button[type=submit]');
       btn.textContent = 'VERIFICANDO...'; btn.disabled = true;
       const fd = new FormData();
       fd.append('email', document.getElementById('email').value);
       fd.append('password', document.getElementById('password').value);
-      const res = await fetch('/api/auth/login', {method: 'POST', body: fd });
+      const res = await fetch('/api/auth/login', { method: 'POST', body: fd });
       const data = await res.json();
       const msg = document.getElementById('msg');
       if (data.success) {
         msg.className = 'msg success'; msg.style.display = 'block';
-      msg.textContent = '✓ Acesso autorizado! Redirecionando...';
+        msg.textContent = '✓ Acesso autorizado! Redirecionando...';
         setTimeout(() => window.location.href = data.redirect || '/dashboard', 1000);
       } else {
         msg.className = 'msg error'; msg.style.display = 'block';
-      msg.textContent = '✗ ' + (data.message || 'Credenciais inválidas.');
-      btn.textContent = 'ENTRAR'; btn.disabled = false;
+        msg.textContent = '✗ ' + (data.message || 'Credenciais inválidas.');
+        btn.textContent = 'ENTRAR'; btn.disabled = false;
       }
     });
   </script>
