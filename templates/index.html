@@ -1163,210 +1163,918 @@
 
     .section.active {
       display: block
-    })responsive </head><body><div class="toast" id="toast">✓ Operação realizada</div>< !-- SIDEBAR --><aside class="sidebar"><div class="sidebar-logo"><div class="logo-badge">S Psicos</div><h2>Segurança<br><em>Inteligente</em></h2><div class="sidebar-sub">Plataforma v2.0 · IA Engine</div></div><div class="empresa-box"><div class="empresa-label">Empresa Ativa</div><select class="empresa-select" id="empresaSelect" onchange="loadDashboard()"><option value="">Carregando...</option></select></div><div class="nav-sec">Principal</div><div class="nav-item active" onclick="nav('dashboard',this)"><span>📊</span>Dashboard</div><div class="nav-sec">Operações</div><div class="nav-item" onclick="nav('funcionarios',this)"><span>👷</span>Funcionários</div><div class="nav-item" onclick="nav('aso',this)"><span>📋</span>ASO & Exames<span class="nav-badge"
-    id="badge-aso">0</span></div><div class="nav-item" onclick="nav('agendamentos',this)"><span>📅</span>Agendamentos</div><div class="nav-item" onclick="nav('epis',this)"><span>🦺</span>EPIs & Estoque<span class="nav-badge warn"
-    id="badge-epi"> !</span></div><div class="nav-sec">Segurança</div><div class="nav-item" onclick="nav('cats',this)"><span>⚠️</span>Acidentes (CAT)</div><div class="nav-item" onclick="nav('treinamentos',this)"><span>🎓</span>Treinamentos</div><div class="nav-sec">Inteligência Artificial</div><div class="nav-item" onclick="nav('ia',this)"><span>🤖</span>Análise Preditiva</div><div class="nav-item" onclick="nav('laudos',this)"><span>📄</span>Laudos Automáticos</div><div class="sidebar-user" onclick="window.location.href='/login'"><div class="user-avatar" id="user-av">MS</div><div><div class="user-name" id="user-nm">Usuário</div><div class="user-role">Téc. Segurança</div></div></div></aside>< !-- MAIN --><div class="main"><button class=\"hamburger\" onclick=\"toggleSidebar()\" aria-label=\"Menu\">&#9776;
-    </button><div class=\"sidebar-overlay\" id=\"sb-overlay\" onclick=\"closeSidebar()\"></div><div class="topbar"><div class="topbar-title" id="topTitle">Dashboard</div><div class="search-box"><svg width="13" height="13" fill="none" stroke="rgba(0,120,255,0.22)" stroke-width="2"
-    viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg><input type="text" placeholder="Buscar funcionário, treinamento..."></div><div class="ia-badge"><span class="ia-dot"></span>IA Ativa</div><div class="btn-icon">🤖</div><div class="btn-icon"><span>🔔</span><span class="notif-dot" id="notif-n">0</span></div><button class="btn-g" onclick="nav('ia',null)">🤖 Ver IA</button></div><div class="content">< !-- DASHBOARD --><div id="sec-dashboard" class="section active"><div class="page-hdr"><div><div class="page-title">Painel de Controle</div><div class="page-sub" id="psub">Carregando...</div></div><div style="display:flex;gap:8px"><button class="btn-g" onclick="loadDashboard()">↻ Atualizar</button><button class="btn-g" onclick="nav('ia',null)">🤖 Ver IA</button></div></div><div class="alert-bar" id="alert-bar"><div class="alert-txt">🚨 <span id="alert-txt">Atenção</span></div><button class="btn-alert"
-    onclick="nav('aso',null)">Ver ASOs →</button></div><div class="kpi-grid"><div class="kpi"><div class="kpi-icon">📚</div><div class="kpi-label">Treinamentos</div><div class="kpi-value" id="kpi-t">—</div><div class="kpi-sub up" id="kpi-tsub">▲ 0 concluídos</div></div><div class="kpi"><div class="kpi-icon">📅</div><div class="kpi-label">Agend. Pendentes</div><div class="kpi-value" id="kpi-a" style="color:#66aaff">—</div><div class="kpi-sub" style="color:#888">Aguardando confirmação</div></div><div class="kpi"><div class="kpi-icon">🔴</div><div class="kpi-label">Alto Risco</div><div class="kpi-value" id="kpi-r" style="color:#ff4444">—</div><div class="kpi-sub dn">▼ Funcionários críticos</div></div><div class="kpi"><div class="kpi-icon">🦺</div><div class="kpi-label">EPIs Críticos</div><div class="kpi-value" id="kpi-e" style="color:#ffaa00">—</div><div class="kpi-sub wn">▼ Estoque abaixo do mín.</div></div></div><div class="g3">< !-- Setores --><div class="card"><div class="ctitle">👥 Funcionários por Setor</div><div class="chart3d" id="c-setores" style="height:220px"></div></div>< !-- Rosca 3D Risco --><div class="card pur"><div class="ctitle">🤖 Análise de Risco IA <span class="badge-p">PREDITIVO</span></div><div style="position:relative;display:flex;justify-content:center"><div class="chart3d" id="c-risco" style="height:200px;width:200px"></div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none"><div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#fff" id="donut-pct">—</div><div style="font-size:9px;color:var(--muted);letter-spacing:1px">RISCO</div></div></div><div class="legend" id="leg-risco" style="justify-content:center;margin-top:4px"></div><div style="margin-top:10px"><div class="ia-row"><span style="color:rgba(255,255,255,0.38)">Tendência</span><span style="color:#aa88ff;font-weight:600" id="ia-tend">—</span></div><div class="ia-row"><span style="color:rgba(255,255,255,0.38)">Setor Crítico</span><span style="color:#ff8844;font-weight:600" id="ia-setor">—</span></div><div class="ia-row"><span style="color:rgba(255,255,255,0.38)">Índice Segurança</span><span style="color:#00cc44;font-weight:600" id="ia-seg">—</span></div></div><div class="ia-rec" id="ia-rec">—</div></div>< !-- Alertas --><div class="card"><div class="ctitle">🔔 Alertas Ativos</div><div id="alertas-list"></div></div></div><div class="g2">< !-- Agendamentos --><div class="card"><div class="ctitle">📅 Próximos Agendamentos <button class="btn-g" style="font-size:10px;padding:3px 9px"
-    onclick="nav('agendamentos',null)">Ver todos →</button></div><table class="mini-t"><thead><tr><th>Funcionário</th><th>Tipo</th><th>Data</th><th>Status</th></tr></thead><tbody id="agen-prev"></tbody></table></div>< !-- Calendário --><div class="card"><div class="cal-hdr"><div class="cal-title" id="cal-title">Mar 2026</div></div><div class="cal-grid" id="cal-head"></div><div class="cal-grid" id="cal-body" style="margin-top:2px"></div></div></div></div>< !-- FUNCIONÁRIOS --><div id="sec-funcionarios" class="section"><div class="page-hdr"><div><div class="page-title">Funcionários</div><div class="page-sub" id="func-sub">—</div></div><button class="btn-g" onclick="document.getElementById('m-func').style.display='flex'">+Novo Funcionário</button></div>< !-- Gráficos 3D --><div class="g2" style="margin-bottom:14px"><div class="card"><div class="ctitle">🎯 Risco Ocupacional</div><div class="chart3d" id="c-func-risco" style="height:220px"></div><div class="legend" id="leg-func-risco"></div></div><div class="card"><div class="ctitle">📊 Funcionários por Setor</div><div class="chart3d" id="c-func-setor" style="height:220px"></div></div></div><div class="table-card"><table><thead><tr><th>Funcionário</th><th>Cargo</th><th>Setor</th><th>Risco</th><th>Score IA</th><th>ASO</th><th>Status</th></tr></thead><tbody id="func-table"><tr><td colspan="7" style="text-align:center;padding:18px;color:var(--muted)">Selecione uma empresa</td></tr></tbody></table></div></div>< !-- ASO --><div id="sec-aso" class="section"><div class="page-hdr"><div><div class="page-title">ASO & Exames Ocupacionais</div><div class="page-sub">Controle de Atestados de Saúde</div></div><button class="btn-g" onclick="document.getElementById('m-agen').style.display='flex'">+Agendar Exame</button></div>< !-- Gráficos 3D --><div class="g3" style="margin-bottom:14px"><div class="card"><div class="ctitle">🩺 Status ASOs</div><div style="position:relative;display:flex;justify-content:center"><div class="chart3d" id="c-aso-status" style="height:200px;width:200px"></div></div><div class="legend" id="leg-aso" style="justify-content:center"></div></div><div class="card"><div class="ctitle">📅 Vencimentos por Mês</div><div class="chart3d" id="c-aso-venc" style="height:200px"></div></div><div class="card"><div class="ctitle">⚠️ Risco vs ASO</div><div class="chart3d" id="c-aso-risco" style="height:200px"></div></div></div><div class="table-card"><table><thead><tr><th>Funcionário</th><th>Cargo</th><th>Setor</th><th>Risco</th><th>Vencimento</th><th>Status</th></tr></thead><tbody id="aso-table"></tbody></table></div></div>< !-- AGENDAMENTOS --><div id="sec-agendamentos" class="section"><div class="page-hdr"><div><div class="page-title">Agendamentos</div><div class="page-sub" id="agen-sub">—</div></div><button class="btn-g" onclick="document.getElementById('m-agen').style.display='flex'">+Novo Agendamento</button></div><div class="g2" style="margin-bottom:14px"><div class="card"><div class="ctitle">📅 Status dos Agendamentos</div><div style="position:relative;display:flex;justify-content:center"><div class="chart3d" id="c-agen-status" style="height:200px;width:200px"></div></div><div class="legend" id="leg-agen" style="justify-content:center"></div></div><div class="card"><div class="ctitle">🏥 Tipos de Exame</div><div class="chart3d" id="c-agen-tipo" style="height:200px"></div></div></div><div class="table-card"><table><thead><tr><th>Funcionário</th><th>Tipo</th><th>Data</th><th>Hora</th><th>Médico</th><th>Status</th><th>Ação</th></tr></thead><tbody id="agen-table"></tbody></table></div></div>< !-- EPIS --><div id="sec-epis" class="section"><div class="page-hdr"><div><div class="page-title">EPIs & Estoque</div><div class="page-sub">Equipamentos de Proteção Individual</div></div><button class="btn-g" onclick="document.getElementById('m-epi').style.display='flex'">+Novo EPI</button></div><div class="g2" style="margin-bottom:14px"><div class="card"><div class="ctitle">🦺 Status do Estoque</div><div style="position:relative;display:flex;justify-content:center"><div class="chart3d" id="c-epi-status" style="height:200px;width:200px"></div></div><div class="legend" id="leg-epi" style="justify-content:center"></div></div><div class="card"><div class="ctitle">📦 Quantidade por EPI</div><div class="chart3d" id="c-epi-qtd" style="height:200px"></div></div></div><div class="table-card"><table><thead><tr><th>EPI</th><th>CA</th><th>Quantidade</th><th>Mínimo</th><th>Validade</th><th>Status</th></tr></thead><tbody id="epi-table"></tbody></table></div></div>< !-- CATS --><div id="sec-cats" class="section"><div class="page-hdr"><div><div class="page-title">Acidentes de Trabalho (CAT)</div><div class="page-sub">Comunicação de Acidente do Trabalho</div></div><button class="btn-g" onclick="document.getElementById('m-cat').style.display='flex'">+Registrar CAT</button></div><div class="g3" style="margin-bottom:14px"><div class="card"><div class="ctitle">⚠️ Por Gravidade</div><div style="position:relative;display:flex;justify-content:center"><div class="chart3d" id="c-cat-grav" style="height:200px;width:200px"></div></div><div class="legend" id="leg-cat" style="justify-content:center"></div></div><div class="card"><div class="ctitle">📋 Por Tipo</div><div class="chart3d" id="c-cat-tipo" style="height:200px"></div></div><div class="card"><div class="ctitle">🏭 Por Setor</div><div class="chart3d" id="c-cat-setor" style="height:200px"></div></div></div><div class="table-card"><table><thead><tr><th>Funcionário</th><th>Data</th><th>Tipo</th><th>Parte</th><th>Gravidade</th><th>Status</th></tr></thead><tbody id="cats-table"></tbody></table></div></div>< !-- TREINAMENTOS --><div id="sec-treinamentos" class="section"><div class="page-hdr"><div><div class="page-title">Treinamentos de Segurança</div><div class="page-sub" id="trein-sub">—</div></div><button class="btn-g" onclick="document.getElementById('m-trein').style.display='flex'">+Novo Treinamento</button></div><div class="kpi-grid"><div class="kpi"><div class="kpi-icon">📚</div><div class="kpi-label">Total</div><div class="kpi-value" id="t-tot">—</div></div><div class="kpi"><div class="kpi-icon">✅</div><div class="kpi-label">Concluídos</div><div class="kpi-value" id="t-con" style="color:#0077ff">—</div></div><div class="kpi"><div class="kpi-icon">📅</div><div class="kpi-label">Agendados</div><div class="kpi-value" id="t-age" style="color:#66aaff">—</div></div><div class="kpi"><div class="kpi-icon">👥</div><div class="kpi-label">Participantes</div><div class="kpi-value" id="t-par" style="color:#ffaa00">—</div></div></div>< !-- Gráficos 3D --><div class="g2" style="margin-top:12px;margin-bottom:12px"><div class="card"><div class="ctitle">📊 Status dos Treinamentos</div><div style="position:relative;display:flex;justify-content:center"><div class="chart3d" id="c-trein-status" style="height:220px;width:220px"></div></div><div class="legend" id="leg-trein" style="justify-content:center"></div></div><div class="card"><div class="ctitle">👥 Participantes por NR</div><div class="chart3d" id="c-trein-part" style="height:220px"></div></div></div><div class="trein-grid" id="trein-cards"></div></div>< !-- IA --><div id="sec-ia" class="section"><div class="page-hdr"><div><div class="page-title">🤖 Análise Preditiva IA</div><div class="page-sub">Engine de Inteligência Artificial para prevenção de acidentes</div></div><button class="btn-g" onclick="loadDashboard()">↻ Atualizar Análise</button></div><div class="g3"><div class="card" style="text-align:center"><div class="ctitle" style="justify-content:center">⚠️ Prob. Acidente</div><div class="chart3d" id="c-ia-prob" style="height:180px"></div><div style="font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:#ffaa00;margin-top:6px"
-    id="ia-prob-val">—</div></div><div class="card" style="text-align:center"><div class="ctitle" style="justify-content:center">🛡️ Índice Segurança</div><div class="chart3d" id="c-ia-seg" style="height:180px"></div><div style="font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:#0077ff;margin-top:6px"
-    id="ia-seg-val">—</div></div><div class="card"><div class="ctitle">🏭 Distribuição Risco por Nível</div><div class="chart3d" id="c-ia-dist" style="height:180px"></div></div></div><div class="g2" style="margin-top:12px"><div class="table-card"><div class="table-hdr"><h3>🎯 Top 5 Funcionários Alto Risco</h3></div><table><thead><tr><th>Nome</th><th>Setor</th><th>Score</th><th>ASO</th></tr></thead><tbody id="ia-top"></tbody></table></div><div class="card"><div class="ctitle">📊 Score de Risco</div><div style="position:relative;display:flex;justify-content:center"><div class="chart3d" id="c-ia-risco" style="height:200px;width:200px"></div></div><div class="legend" id="leg-ia" style="justify-content:center"></div></div></div></div>< !-- LAUDOS / DRPS --><div id="sec-laudos" class="section"><div class="page-hdr"><div><div class="page-title">📄 Laudos Técnicos & DRPS</div><div class="page-sub">Documentos regulatórios — NR-1,
-    NR-7,
-    PGR e Relatório DRPS</div></div><button class="btn-g" onclick="loadDRPS()">↻ Carregar Dados DRPS</button></div>< !-- KPIs DRPS --><div class="kpi-grid" id="drps-kpis" style="margin-bottom:14px"><div class="kpi"><div class="kpi-icon">📋</div><div class="kpi-label">Respostas Coletadas</div><div class="kpi-value" id="drps-total" style="color:#66aaff">—</div></div><div class="kpi"><div class="kpi-icon">🏭</div><div class="kpi-label">Setores Avaliados</div><div class="kpi-value" id="drps-setores">—</div></div><div class="kpi"><div class="kpi-icon">⚠️</div><div class="kpi-label">Riscos Críticos</div><div class="kpi-value" id="drps-criticos" style="color:#ff4444">—</div></div><div class="kpi"><div class="kpi-icon">✅</div><div class="kpi-label">Tópicos OK</div><div class="kpi-value" id="drps-ok" style="color:#0077ff">—</div></div></div>< !-- LINK QUESTIONÁRIO --><div class="card" style="margin-bottom:14px"><div class="ctitle">🔗 Link do Questionário DRPS para Funcionários</div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><input id="drps-link"
-    style="flex:1;background:rgba(0,0,0,0.35);border:1px solid rgba(0,120,255,0.15);border-radius:9px;padding:9px 13px;font-size:12px;color:#aaffff;font-family:monospace;outline:none"
-    value="https://digital-survey-craft.lovable.app/" readonly><button class="btn-g" onclick="copyLink()">📋 Copiar Link</button><button class="btn-g" onclick="window.location.href='/questionario'">↗ Abrir Questionário</button></div><div style="margin-top:10px;font-size:11px;color:rgba(0,120,255,0.3)">💡 Distribua este link aos funcionários por e-mail,
-    QR Code ou WhatsApp. As respostas são anônimas e consolidadas automaticamente por setor. </div></div>< !-- GRÁFICOS DRPS 3D --><div class="g2" style="margin-bottom:14px"><div class="card"><div class="ctitle">📊 Nível de Risco por Tópico</div><div class="chart3d" id="c-drps-bar" style="height:240px"></div></div><div class="card pur"><div class="ctitle">🎯 Distribuição Geral de Risco</div><div style="position:relative;display:flex;justify-content:center"><div class="chart3d" id="c-drps-dist" style="height:200px;width:200px"></div></div><div class="legend" id="leg-drps-dist" style="justify-content:center"></div></div></div>< !-- TABELA POR SETOR E TÓPICO --><div class="table-card" style="margin-bottom:14px"><div class="table-hdr"><h3>📋 Matriz de Risco DRPS por Setor e Tópico</h3><select class="mi" id="drps-setor-filter" style="width:180px;font-size:11px;padding:5px 9px"
-    onchange="renderMatriz()"><option value="">Todos os setores</option></select></div><div style="overflow-x:auto"><table id="drps-matriz-table" style="min-width:700px"><thead><tr><th>Setor</th><th>T1 Assédio</th><th>T2 Carga</th><th>T3 Reconhec.</th><th>T4 Clima</th><th>T5 Autonomia</th><th>T6 Pressão</th><th>T7 Inseg.</th><th>T8 Conflitos</th><th>T9 Equilíbrio</th><th>Risco Geral</th></tr></thead><tbody id="drps-matriz-body"><tr><td colspan="11" style="text-align:center;padding:18px;color:var(--muted)">Carregue os dados DRPS para visualizar a matriz.</td></tr></tbody></table></div></div>< !-- LAUDOS DISPONÍVEIS --><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Documentos Técnicos Disponíveis</div><div class="laudo-card"><div class="laudo-ico" style="background:rgba(170,100,240,0.12);border:1px solid rgba(170,100,240,0.25)">🧠 </div><div style="flex:1"><div class="laudo-title">Relatório DRPS — Diagnóstico de Riscos Psicossociais</div><div class="laudo-desc">Relatório técnico completo conforme metodologia DRPS validada (ITRA, Psicodinâmica do Trabalho — Dejours, NR-1 MTE). Inclui Introdução,
-    Metodologia,
-    Análise por Setor e Tópico,
-    Matriz de Risco NR-1,
-    Conclusão e Plano de Ação.</div><div class="laudo-badges"><span class="bp bb">NR-1</span><span class="bp bpu">DRPS/MTE</span><span class="bp"
-    style="background:rgba(0,200,80,0.14);color:#00cc44;border:1px solid rgba(0,200,80,0.2)">OMS</span></div></div><button class="btn-g" onclick="gerarLaudoDRPS()">📄 Gerar Relatório</button></div><div class="laudo-card"><div class="laudo-ico gr">🛡️</div><div style="flex:1"><div class="laudo-title">PGR — Programa de Gerenciamento de Riscos</div><div class="laudo-desc">Gerenciamento integrado de todos os riscos ocupacionais (físicos, químicos,
-      biológicos, ergonômicos e psicossociais). Inventário de riscos,
-    medidas de controle e plano de ação conforme NR-1 §1.5.</div><div class="laudo-badges"><span class="bp bb">NR-1 §1.5</span><span class="bp bpu">IA Assistida</span><span class="bp"
-    style="background:rgba(170,100,240,0.14);color:#aa88ff;border:1px solid rgba(170,100,240,0.22)">Fundacentro</span></div></div><button class="btn-g" onclick="gerarLaudo('PGR')">📄 Gerar PGR</button></div><div class="laudo-card"><div class="laudo-ico bl">🏥</div><div style="flex:1"><div class="laudo-title">PCMSO — Programa de Controle Médico de Saúde Ocupacional</div><div class="laudo-desc">Documento técnico contemplando exames médicos periódicos,
-    admissionais e demissionais com base nos riscos identificados no PGR e DRPS. Conforme NR-7.</div><div class="laudo-badges"><span class="bp bb">NR-7</span><span class="bp bpu">IA Assistida</span></div></div><button class="btn-g" onclick="gerarLaudo('PCMSO')">📄 Gerar PCMSO</button></div><div class="laudo-card"><div class="laudo-ico" style="background:rgba(0,120,200,0.12);border:1px solid rgba(0,120,200,0.25)">📑</div><div style="flex:1"><div class="laudo-title">Plano de Ação — Mitigação de Riscos Psicossociais</div><div class="laudo-desc">Plano estruturado com ações corretivas e preventivas priorizadas pela Matriz de Risco NR-1,
-    responsáveis,
-    prazos e indicadores de acompanhamento para cada tópico DRPS.</div><div class="laudo-badges"><span class="bp bb">NR-1 §1.5.5</span><span class="bp"
-    style="background:rgba(0,180,80,0.14);color:#00cc44;border:1px solid rgba(0,180,80,0.2)">ESG Social</span></div></div><button class="btn-g" onclick="gerarLaudo('PLANO')">📄 Gerar Plano de Ação</button></div></div></div>< !-- /content --></div>< !-- /main -->< !-- MODALS --><div id="m-func" class="modal"><div class="mbox"><div class="mtitle">👷 Novo Funcionário<button class="btn-cancel" style="padding:4px 10px"
-    onclick="document.getElementById('m-func').style.display='none'">✕</button></div><form id="f-func" class="mgrid"><input class="mi" style="grid-column:span 2" name="nome"
-    placeholder="Nome Completo" required><input class="mi" name="cpf" placeholder="CPF"><input class="mi"
-    name="cargo" placeholder="Cargo" required><select class="mi" name="setor" required><option value="">Setor</option><option>Produção</option><option>Manutenção</option><option>Logística</option><option>Administrativo</option><option>SESMT</option><option>Qualidade</option><option>TI</option></select><select class="mi" name="risco" required><option value="">Risco</option><option>Baixo</option><option>Medio</option><option>Alto</option></select><input class="mi" type="date" name="admissao" required><input class="mi" type="date"
-    name="aso_vencimento" required><div class="mfoot"><button type="button" class="btn-cancel"
-    onclick="document.getElementById('m-func').style.display='none'">Cancelar</button><button type="submit"
-    class="btn-save">Cadastrar</button></div></form></div></div><div id="m-cat" class="modal"><div class="mbox"><div class="mtitle">⚠️ Registrar CAT<button class="btn-cancel" style="padding:4px 10px"
-    onclick="document.getElementById('m-cat').style.display='none'">✕</button></div><form id="f-cat" class="mgrid"><input class="mi" style="grid-column:span 2" name="funcionario_nome"
-    placeholder="Funcionário" required><input class="mi" type="date" name="data_acidente" required><select class="mi" name="tipo" required><option value="">Tipo</option><option>Típico</option><option>Trajeto</option><option>Doença Ocupacional</option></select><input class="mi" name="parte_corpo" placeholder="Parte do Corpo" required><select class="mi"
-    name="gravidade" required><option value="">Gravidade</option><option>Leve</option><option>Moderado</option><option>Grave</option><option>Fatal</option></select><input class="mi" style="grid-column:span 2" name="causa_raiz" placeholder="Causa Raiz"><div class="mfoot"><button type="button" class="btn-cancel"
-    onclick="document.getElementById('m-cat').style.display='none'">Cancelar</button><button type="submit"
-    class="btn-save">Registrar</button></div></form></div></div><div id="m-agen" class="modal"><div class="mbox"><div class="mtitle">📅 Novo Agendamento<button class="btn-cancel" style="padding:4px 10px"
-    onclick="document.getElementById('m-agen').style.display='none'">✕</button></div><form id="f-agen" class="mgrid"><input class="mi" style="grid-column:span 2" name="funcionario_nome"
-    placeholder="Funcionário" required><select class="mi" name="tipo_exame" required><option value="">Tipo de Exame</option><option>ASO Admissional</option><option>ASO Periódico</option><option>ASO Demissional</option><option>Retorno ao Trabalho</option><option>Mudança de Função</option></select><input class="mi" type="date" name="data_agendamento" required><input class="mi" type="time"
-    name="hora" required><input class="mi" name="medico" placeholder="Médico Responsável"><div class="mfoot"><button type="button" class="btn-cancel"
-    onclick="document.getElementById('m-agen').style.display='none'">Cancelar</button><button type="submit"
-    class="btn-save">Agendar</button></div></form></div></div><div id="m-trein" class="modal"><div class="mbox"><div class="mtitle">🎓 Novo Treinamento<button class="btn-cancel" style="padding:4px 10px"
-    onclick="document.getElementById('m-trein').style.display='none'">✕</button></div><form id="f-trein" class="mgrid"><input class="mi" style="grid-column:span 2" name="nome"
-    placeholder="Nome do Treinamento" required><input class="mi" name="nr_referencia" placeholder="NR"><select class="mi" name="modalidade"><option>Presencial</option><option>EAD</option><option>Híbrido</option></select><input class="mi" type="date" name="data_realizacao" required><input class="mi" type="date"
-    name="data_validade" required><input class="mi" type="number" name="participantes"
-    placeholder="Participantes"><select class="mi" name="status"><option>Agendado</option><option>Em Andamento</option><option>Concluído</option></select><input class="mi" style="grid-column:span 2" name="responsavel" placeholder="Responsável"><div class="mfoot"><button type="button" class="btn-cancel"
-    onclick="document.getElementById('m-trein').style.display='none'">Cancelar</button><button type="submit"
-    class="btn-save">Cadastrar</button></div></form></div></div><div id="m-epi" class="modal"><div class="mbox"><div class="mtitle">🦺 Novo EPI<button class="btn-cancel" style="padding:4px 10px"
-    onclick="document.getElementById('m-epi').style.display='none'">✕</button></div><form id="f-epi" class="mgrid"><input class="mi" style="grid-column:span 2" name="nome" placeholder="Nome do EPI"
-    required><input class="mi" name="ca" placeholder="Número CA"><input class="mi" type="number" name="quantidade"
-    placeholder="Quantidade" required><input class="mi" type="number" name="estoque_minimo"
-    placeholder="Estoque Mínimo" value="5"><input class="mi" type="date" name="validade"><div class="mfoot"><button type="button" class="btn-cancel"
-    onclick="document.getElementById('m-epi').style.display='none'">Cancelar</button><button type="submit"
-    class="btn-save">Cadastrar</button></div></form></div></div><div id="m-laudo" class="modal"><div class="mbox" style="max-width:580px"><div class="mtitle">📄 Laudo Gerado<div style="display:flex;gap:8px"><button class="btn-g"
-    style="font-size:11px;padding:4px 11px" onclick="window.print()">🖨️ Imprimir</button><button class="btn-cancel" style="padding:4px 10px"
-    onclick="document.getElementById('m-laudo').style.display='none'">✕</button></div></div><div class="laudo-out" id="laudo-out">—</div></div></div><script> // ── THREE.JS 3D ENGINE ──
-
-    const scenes= {}
-
-    ,
-    renderers= {}
-
-    ,
-    animIds= {}
-
-    ;
-
-    function pc(c) {
-      const m=c.match(/rgba?\((\d+), \s*(\d+), \s*(\d+)/);
-      if (m) return new THREE.Color(parseInt(m[1]) / 255, parseInt(m[2]) / 255, parseInt(m[3]) / 255);
-
-      try {
-        return new THREE.Color(c)
-      }
-
-      catch (e) {
-        return new THREE.Color(0.5, 0.5, 0.5)
-      }
     }
+  </style>
+</head>
 
-    function clearScene(id) {
-      if (animIds[id]) {
-        cancelAnimationFrame(animIds[id]);
-        delete animIds[id]
-      }
+<body>
+  <div class="toast" id="toast">&#10003; Operação realizada</div><!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-badge">S Psicos</div>
+      <h2>Segurança<br><em>Inteligente</em></h2>
+      <div class="sidebar-sub">Plataforma v2.0 · IA Engine</div>
+    </div>
+    <div class="empresa-box">
+      <div class="empresa-label">Empresa Ativa</div><select class="empresa-select" id="empresaSelect"
+        onchange="loadDashboard()">
+        <option value="">Carregando...</option>
+      </select>
+    </div>
+    <div class="nav-sec">Principal</div>
+    <div class="nav-item active" onclick="nav('dashboard',this)"><span>&#128202;</span>Dashboard</div>
+    <div class="nav-sec">Operações</div>
+    <div class="nav-item" onclick="nav('funcionarios',this)"><span>&#128119;</span>Funcionários</div>
+    <div class="nav-item" onclick="nav('aso',this)"><span>&#128221;</span>ASO & Exames<span class="nav-badge"
+        id="badge-aso">0</span></div>
+    <div class="nav-item" onclick="nav('agendamentos',this)"><span>&#128197;</span>Agendamentos</div>
+    <div class="nav-item" onclick="nav('epis',this)"><span>&#128230;</span>EPIs & Estoque<span class="nav-badge warn"
+        id="badge-epi"> !</span></div>
+    <div class="nav-sec">Segurança</div>
+    <div class="nav-item" onclick="nav('cats',this)"><span>&#128680;</span>Acidentes (CAT)</div>
+    <div class="nav-item" onclick="nav('treinamentos',this)"><span>&#127891;</span>Treinamentos</div>
+    <div class="nav-sec">Inteligência Artificial</div>
+    <div class="nav-item" onclick="nav('ia',this)"><span>&#129504;</span>Análise Preditiva</div>
+    <div class="nav-item" onclick="nav('laudos',this)"><span>&#128196;</span>Laudos Automáticos</div>
+    <div class="sidebar-user" onclick="window.location.href='/login'">
+      <div class="user-avatar" id="user-av">MS</div>
+      <div>
+        <div class="user-name" id="user-nm">Usuário</div>
+        <div class="user-role">Téc. Segurança</div>
+      </div>
+    </div>
+  </aside>
+  <!-- MAIN -->
+  <div class="main">
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+    <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+    <div class="topbar">
+      <div class="topbar-title" id="topTitle">Dashboard</div>
+      <div class="search-box">
+        <svg width="13" height="13" fill="none" stroke="rgba(0,120,255,0.22)" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+        <input type="text" placeholder="Buscar funcionário, treinamento...">
+      </div>
+      <div class="ia-badge"><span class="ia-dot"></span>IA Ativa</div>
+      <div class="btn-icon">&#128276;</div>
+      <div class="btn-icon"><span>&#128172;</span><span class="notif-dot" id="notif-n">0</span></div>
+      <button class="btn-g" onclick="nav('ia',null)">&#129504; Ver IA</button>
+    </div>
+    <div class="content">
+      <!-- DASHBOARD -->
+      <div id="sec-dashboard" class="section active">
+        <div class="page-hdr">
+          <div>
+            <div class="page-title">Painel de Controle</div>
+            <div class="page-sub" id="psub">Carregando...</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn-g" onclick="loadDashboard()">&#8635; Atualizar</button>
+            <button class="btn-g" onclick="nav('ia',null)">&#129504; Ver IA</button>
+          </div>
+        </div>
+        <div class="alert-bar" id="alert-bar">
+          <div class="alert-txt">&#9888; <span id="alert-txt">Atenção</span></div>
+          <button class="btn-alert" onclick="nav('aso',null)">Ver ASOs &#10145;</button>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi">
+            <div class="kpi-icon">&#127891;</div>
+            <div class="kpi-label">Treinamentos</div>
+            <div class="kpi-value" id="kpi-t">—</div>
+            <div class="kpi-sub up" id="kpi-tsub">&#10003; 0 concluídos</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-icon">&#128197;</div>
+            <div class="kpi-label">Agend. Pendentes</div>
+            <div class="kpi-value" id="kpi-a" style="color:#66aaff">—</div>
+            <div class="kpi-sub" style="color:#888">Aguardando confirmação</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-icon">&#128197;</div>
+            <div class="kpi-label">Alto Risco</div>
+            <div class="kpi-value" id="kpi-r" style="color:#ff4444">—</div>
+            <div class="kpi-sub dn">&#9888; Funcionários críticos</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-icon">&#128202;</div>
+            <div class="kpi-label">EPIs Críticos</div>
+            <div class="kpi-value" id="kpi-e" style="color:#ffaa00">—</div>
+            <div class="kpi-sub wn">&#9888; Estoque abaixo do mín.</div>
+          </div>
+        </div>
+        <div class="g3">
+          <!-- Setores -->
+          <div class="card">
+            <div class="ctitle">&#128202; Funcionários por Setor</div>
+            <div class="chart3d" id="c-setores" style="height:220px"></div>
+          </div>
+          <!-- Rosca 3D Risco -->
+          <div class="card pur">
+            <div class="ctitle">&#129504; Análise de Risco IA <span class="badge-p">PREDITIVO</span></div>
+            <div style="position:relative;display:flex;justify-content:center">
+              <div class="chart3d" id="c-risco" style="height:200px;width:200px"></div>
+              <div
+                style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none">
+                <div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#fff" id="donut-pct">
+                  —</div>
+                <div style="font-size:9px;color:var(--muted);letter-spacing:1px">RISCO</div>
+              </div>
+            </div>
+            <div class="legend" id="leg-risco" style="justify-content:center;margin-top:4px"></div>
+            <div style="margin-top:10px">
+              <div class="ia-row"><span style="color:rgba(255,255,255,0.38)">Tendência</span><span
+                  style="color:#aa88ff;font-weight:600" id="ia-tend">—</span></div>
+              <div class="ia-row"><span style="color:rgba(255,255,255,0.38)">Setor Crítico</span><span
+                  style="color:#ff8844;font-weight:600" id="ia-setor">—</span></div>
+              <div class="ia-row"><span style="color:rgba(255,255,255,0.38)">Índice Segurança</span><span
+                  style="color:#00cc44;font-weight:600" id="ia-seg">—</span></div>
+            </div>
+            <div class="ia-rec" id="ia-rec">—</div>
+          </div>
+          <!-- Alertas -->
+          <div class="card">
+            <div class="ctitle">&#128276; Alertas Ativos</div>
+            <div id="alertas-list"></div>
+          </div>
+        </div>
+        <div class="g2">
+          <!-- Agendamentos -->
+          <div class="card">
+            <div class="ctitle">&#128197; Próximos Agendamentos <button class="btn-g"
+                style="font-size:10px;padding:3px 9px" onclick="nav('agendamentos',null)">Ver todos &#10145;</button>
+            </div>
+            <table class="mini-t">
+              <thead>
+                <tr>
+                  <th>Funcionário</th>
+                  <th>Tipo</th>
+                  <th>Data</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="agen-prev"></tbody>
+            </table>
+          </div>
+          <!-- Calendário -->
+            <div class="card">
+              <div class="cal-hdr">
+                <div class="cal-title" id="cal-title">Mar 2026</div>
+              </div>
+              <div class="cal-grid" id="cal-head"></div>
+              <div class="cal-grid" id="cal-body" style="margin-top:2px"></div>
+            </div>
+        </div>
+      </div>
+      <!-- FUNCIONÁRIOS -->
+        <div id="sec-funcionarios" class="section">
+          <div class="page-hdr">
+            <div>
+              <div class="page-title">Funcionários</div>
+              <div class="page-sub" id="func-sub">—</div>
+            </div><button class="btn-g" onclick="document.getElementById('m-func').style.display='flex'">+Novo
+              Funcionário</button>
+          </div>
+          <!-- Gráficos 3D -->
+            <div class="g2" style="margin-bottom:14px">
+              <div class="card">
+                <div class="ctitle">&#128202; Risco Ocupacional</div>
+                <div class="chart3d" id="c-func-risco" style="height:220px"></div>
+                <div class="legend" id="leg-func-risco"></div>
+              </div>
+              <div class="card">
+                <div class="ctitle">&#128202; Funcionários por Setor</div>
+                <div class="chart3d" id="c-func-setor" style="height:220px"></div>
+              </div>
+            </div>
+            <div class="table-card">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Funcionário</th>
+                    <th>Cargo</th>
+                    <th>Setor</th>
+                    <th>Risco</th>
+                    <th>Score IA</th>
+                    <th>ASO</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="func-table">
+                  <tr>
+                    <td colspan="7" style="text-align:center;padding:18px;color:var(--muted)">Selecione uma empresa
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+        <!-- ASO -->
+          <div id="sec-aso" class="section">
+            <div class="page-hdr">
+              <div>
+                <div class="page-title">ASO & Exames Ocupacionais</div>
+                <div class="page-sub">Controle de Atestados de Saúde</div>
+              </div><button class="btn-g" onclick="document.getElementById('m-agen').style.display='flex'">+Agendar
+                Exame</button>
+            </div>
+            <!-- Gráficos 3D -->
+              <div class="g3" style="margin-bottom:14px">
+                <div class="card">
+                  <div class="ctitle">&#128202; Status ASOs</div>
+                  <div style="position:relative;display:flex;justify-content:center">
+                    <div class="chart3d" id="c-aso-status" style="height:200px;width:200px"></div>
+                  </div>
+                  <div class="legend" id="leg-aso" style="justify-content:center"></div>
+                </div>
+                <div class="card">
+                  <div class="ctitle">&#128202; Vencimentos por Mês</div>
+                  <div class="chart3d" id="c-aso-venc" style="height:200px"></div>
+                </div>
+                <div class="card">
+                  <div class="ctitle">&#128202; Risco vs ASO</div>
+                  <div class="chart3d" id="c-aso-risco" style="height:200px"></div>
+                </div>
+              </div>
+              <div class="table-card">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Funcionário</th>
+                      <th>Cargo</th>
+                      <th>Setor</th>
+                      <th>Risco</th>
+                      <th>Vencimento</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="aso-table"></tbody>
+                </table>
+              </div>
+          </div>
+          <!-- AGENDAMENTOS -->
+            <div id="sec-agendamentos" class="section">
+              <div class="page-hdr">
+                <div>
+                  <div class="page-title">Agendamentos</div>
+                  <div class="page-sub" id="agen-sub">—</div>
+                </div><button class="btn-g" onclick="document.getElementById('m-agen').style.display='flex'">+Novo
+                  Agendamento</button>
+              </div>
+              <div class="g2" style="margin-bottom:14px">
+                <div class="card">
+                  <div class="ctitle">&#128202; Status dos Agendamentos</div>
+                  <div style="position:relative;display:flex;justify-content:center">
+                    <div class="chart3d" id="c-agen-status" style="height:200px;width:200px"></div>
+                  </div>
+                  <div class="legend" id="leg-agen" style="justify-content:center"></div>
+                </div>
+                <div class="card">
+                  <div class="ctitle">&#128202; Tipos de Exame</div>
+                  <div class="chart3d" id="c-agen-tipo" style="height:200px"></div>
+                </div>
+              </div>
+              <div class="table-card">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Funcionário</th>
+                      <th>Tipo</th>
+                      <th>Data</th>
+                      <th>Hora</th>
+                      <th>Médico</th>
+                      <th>Status</th>
+                      <th>Ação</th>
+                    </tr>
+                  </thead>
+                  <tbody id="agen-table"></tbody>
+                </table>
+              </div>
+            </div>
+            <!-- EPIS -->
+              <div id="sec-epis" class="section">
+                <div class="page-hdr">
+                  <div>
+                    <div class="page-title">EPIs & Estoque</div>
+                    <div class="page-sub">Equipamentos de Proteção Individual</div>
+                  </div><button class="btn-g" onclick="document.getElementById('m-epi').style.display='flex'">+Novo
+                    EPI</button>
+                </div>
+                <div class="g2" style="margin-bottom:14px">
+                  <div class="card">
+                    <div class="ctitle">&#128202; Status do Estoque</div>
+                    <div style="position:relative;display:flex;justify-content:center">
+                      <div class="chart3d" id="c-epi-status" style="height:200px;width:200px"></div>
+                    </div>
+                    <div class="legend" id="leg-epi" style="justify-content:center"></div>
+                  </div>
+                  <div class="card">
+                    <div class="ctitle">&#128202; Quantidade por EPI</div>
+                    <div class="chart3d" id="c-epi-qtd" style="height:200px"></div>
+                  </div>
+                </div>
+                <div class="table-card">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>EPI</th>
+                        <th>CA</th>
+                        <th>Quantidade</th>
+                        <th>Mínimo</th>
+                        <th>Validade</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="epi-table"></tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- CATS -->
+                <div id="sec-cats" class="section">
+                  <div class="page-hdr">
+                    <div>
+                      <div class="page-title">Acidentes de Trabalho (CAT)</div>
+                      <div class="page-sub">Comunicação de Acidente do Trabalho</div>
+                    </div><button class="btn-g"
+                      onclick="document.getElementById('m-cat').style.display='flex'">+Registrar CAT</button>
+                  </div>
+                  <div class="g3" style="margin-bottom:14px">
+                    <div class="card">
+                      <div class="ctitle">&#128202; Por Gravidade</div>
+                      <div style="position:relative;display:flex;justify-content:center">
+                        <div class="chart3d" id="c-cat-grav" style="height:200px;width:200px"></div>
+                      </div>
+                      <div class="legend" id="leg-cat" style="justify-content:center"></div>
+                    </div>
+                    <div class="card">
+                      <div class="ctitle">&#128202; Por Tipo</div>
+                      <div class="chart3d" id="c-cat-tipo" style="height:200px"></div>
+                    </div>
+                    <div class="card">
+                      <div class="ctitle">&#128202; Por Setor</div>
+                      <div class="chart3d" id="c-cat-setor" style="height:200px"></div>
+                    </div>
+                  </div>
+                  <div class="table-card">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Funcionário</th>
+                          <th>Data</th>
+                          <th>Tipo</th>
+                          <th>Parte</th>
+                          <th>Gravidade</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody id="cats-table"></tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- TREINAMENTOS -->
+                  <div id="sec-treinamentos" class="section">
+                    <div class="page-hdr">
+                      <div>
+                        <div class="page-title">Treinamentos de Segurança</div>
+                        <div class="page-sub" id="trein-sub">—</div>
+                      </div><button class="btn-g"
+                        onclick="document.getElementById('m-trein').style.display='flex'">+Novo Treinamento</button>
+                    </div>
+                    <div class="kpi-grid">
+                      <div class="kpi">
+                        <div class="kpi-icon">&#128202;</div>
+                        <div class="kpi-label">Total</div>
+                        <div class="kpi-value" id="t-tot">—</div>
+                      </div>
+                      <div class="kpi">
+                        <div class="kpi-icon">?</div>
+                        <div class="kpi-label">Concluídos</div>
+                        <div class="kpi-value" id="t-con" style="color:#0077ff">—</div>
+                      </div>
+                      <div class="kpi">
+                        <div class="kpi-icon">&#128202;</div>
+                        <div class="kpi-label">Agendados</div>
+                        <div class="kpi-value" id="t-age" style="color:#66aaff">—</div>
+                      </div>
+                      <div class="kpi">
+                        <div class="kpi-icon">&#128202;</div>
+                        <div class="kpi-label">Participantes</div>
+                        <div class="kpi-value" id="t-par" style="color:#ffaa00">—</div>
+                      </div>
+                    </div>
+                    <!-- Gráficos 3D -->
+                      <div class="g2" style="margin-top:12px;margin-bottom:12px">
+                        <div class="card">
+                          <div class="ctitle">&#128202; Status dos Treinamentos</div>
+                          <div style="position:relative;display:flex;justify-content:center">
+                            <div class="chart3d" id="c-trein-status" style="height:220px;width:220px"></div>
+                          </div>
+                          <div class="legend" id="leg-trein" style="justify-content:center"></div>
+                        </div>
+                        <div class="card">
+                          <div class="ctitle">&#128202; Participantes por NR</div>
+                          <div class="chart3d" id="c-trein-part" style="height:220px"></div>
+                        </div>
+                      </div>
+                      <div class="trein-grid" id="trein-cards"></div>
+                  </div>
+                  <!-- IA -->
+                    <div id="sec-ia" class="section">
+                      <div class="page-hdr">
+                        <div>
+                          <div class="page-title">?? Análise Preditiva IA</div>
+                          <div class="page-sub">Engine de Inteligência Artificial para prevenção de acidentes</div>
+                        </div><button class="btn-g" onclick="loadDashboard()">&#8635; Atualizar Análise</button>
+                      </div>
+                      <div class="g3">
+                        <div class="card" style="text-align:center">
+                          <div class="ctitle" style="justify-content:center">?? Prob. Acidente</div>
+                          <div class="chart3d" id="c-ia-prob" style="height:180px"></div>
+                          <div
+                            style="font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:#ffaa00;margin-top:6px"
+                            id="ia-prob-val">—</div>
+                        </div>
+                        <div class="card" style="text-align:center">
+                          <div class="ctitle" style="justify-content:center">??? Índice Segurança</div>
+                          <div class="chart3d" id="c-ia-seg" style="height:180px"></div>
+                          <div
+                            style="font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:#0077ff;margin-top:6px"
+                            id="ia-seg-val">—</div>
+                        </div>
+                        <div class="card">
+                          <div class="ctitle">&#128202; Distribuição Risco por Nível</div>
+                          <div class="chart3d" id="c-ia-dist" style="height:180px"></div>
+                        </div>
+                      </div>
+                      <div class="g2" style="margin-top:12px">
+                        <div class="table-card">
+                          <div class="table-hdr">
+                            <h3>?? Top 5 Funcionários Alto Risco</h3>
+                          </div>
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>Nome</th>
+                                <th>Setor</th>
+                                <th>Score</th>
+                                <th>ASO</th>
+                              </tr>
+                            </thead>
+                            <tbody id="ia-top"></tbody>
+                          </table>
+                        </div>
+                        <div class="card">
+                          <div class="ctitle">&#128202; Score de Risco</div>
+                          <div style="position:relative;display:flex;justify-content:center">
+                            <div class="chart3d" id="c-ia-risco" style="height:200px;width:200px"></div>
+                          </div>
+                          <div class="legend" id="leg-ia" style="justify-content:center"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- LAUDOS / DRPS -->
+                      <div id="sec-laudos" class="section">
+                        <div class="page-hdr">
+                          <div>
+                            <div class="page-title">?? Laudos Técnicos & DRPS</div>
+                            <div class="page-sub">Documentos regulatórios — NR-1,
+                              NR-7,
+                              PGR e Relatório DRPS</div>
+                          </div><button class="btn-g" onclick="loadDRPS()">? Carregar Dados DRPS</button>
+                        </div>
+                        <!-- KPIs DRPS -->
+                          <div class="kpi-grid" id="drps-kpis" style="margin-bottom:14px">
+                            <div class="kpi">
+                              <div class="kpi-icon">&#128202;</div>
+                              <div class="kpi-label">Respostas Coletadas</div>
+                              <div class="kpi-value" id="drps-total" style="color:#66aaff">—</div>
+                            </div>
+                            <div class="kpi">
+                              <div class="kpi-icon">&#128202;</div>
+                              <div class="kpi-label">Setores Avaliados</div>
+                              <div class="kpi-value" id="drps-setores">—</div>
+                            </div>
+                            <div class="kpi">
+                              <div class="kpi-icon">&#128202;</div>
+                              <div class="kpi-label">Riscos Críticos</div>
+                              <div class="kpi-value" id="drps-criticos" style="color:#ff4444">—</div>
+                            </div>
+                            <div class="kpi">
+                              <div class="kpi-icon">?</div>
+                              <div class="kpi-label">Tópicos OK</div>
+                              <div class="kpi-value" id="drps-ok" style="color:#0077ff">—</div>
+                            </div>
+                          </div>
+                          <!-- LINK QUESTIONÁRIO -->
+                            <div class="card" style="margin-bottom:14px">
+                              <div class="ctitle">&#128202; Link do Questionário DRPS para Funcionários</div>
+                              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><input id="drps-link"
+                                  style="flex:1;background:rgba(0,0,0,0.35);border:1px solid rgba(0,120,255,0.15);border-radius:9px;padding:9px 13px;font-size:12px;color:#aaffff;font-family:monospace;outline:none"
+                                  value="https://digital-survey-craft.lovable.app/" readonly><button class="btn-g"
+                                  onclick="copyLink()">?? Copiar Link</button><button class="btn-g"
+                                  onclick="window.location.href='/questionario'">? Abrir Questionário</button></div>
+                              <div style="margin-top:10px;font-size:11px;color:rgba(0,120,255,0.3)">?? Distribua
+                                este link aos funcionários por e-mail,
+                                QR Code ou WhatsApp. As respostas são anônimas e consolidadas automaticamente por
+                                setor. </div>
+                            </div>
+                            <!-- GRÁFICOS DRPS 3D -->
+                              <div class="g2" style="margin-bottom:14px">
+                                <div class="card">
+                                  <div class="ctitle">&#128202; Nível de Risco por Tópico</div>
+                                  <div class="chart3d" id="c-drps-bar" style="height:240px"></div>
+                                </div>
+                                <div class="card pur">
+                                  <div class="ctitle">&#128202; Distribuição Geral de Risco</div>
+                                  <div style="position:relative;display:flex;justify-content:center">
+                                    <div class="chart3d" id="c-drps-dist" style="height:200px;width:200px"></div>
+                                  </div>
+                                  <div class="legend" id="leg-drps-dist" style="justify-content:center"></div>
+                                </div>
+                              </div>
+                              <!-- TABELA POR SETOR E TÓPICO -->
+                                <div class="table-card" style="margin-bottom:14px">
+                                  <div class="table-hdr">
+                                    <h3>?? Matriz de Risco DRPS por Setor e Tópico</h3><select class="mi"
+                                      id="drps-setor-filter" style="width:180px;font-size:11px;padding:5px 9px"
+                                      onchange="renderMatriz()">
+                                      <option value="">Todos os setores</option>
+                                    </select>
+                                  </div>
+                                  <div style="overflow-x:auto">
+                                    <table id="drps-matriz-table" style="min-width:700px">
+                                      <thead>
+                                        <tr>
+                                          <th>Setor</th>
+                                          <th>T1 Assédio</th>
+                                          <th>T2 Carga</th>
+                                          <th>T3 Reconhec.</th>
+                                          <th>T4 Clima</th>
+                                          <th>T5 Autonomia</th>
+                                          <th>T6 Pressão</th>
+                                          <th>T7 Inseg.</th>
+                                          <th>T8 Conflitos</th>
+                                          <th>T9 Equilíbrio</th>
+                                          <th>Risco Geral</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody id="drps-matriz-body">
+                                        <tr>
+                                          <td colspan="11" style="text-align:center;padding:18px;color:var(--muted)">
+                                            Carregue os
+                                            dados DRPS para visualizar a matriz.</td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                                <!-- LAUDOS DISPONÍVEIS -->
+                                  <div
+                                    style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">
+                                    Documentos Técnicos Disponíveis</div>
+                                  <div class="laudo-card">
+                                    <div class="laudo-ico"
+                                      style="background:rgba(170,100,240,0.12);border:1px solid rgba(170,100,240,0.25)">
+                                      ?? </div>
+                                    <div style="flex:1">
+                                      <div class="laudo-title">Relatório DRPS — Diagnóstico de Riscos Psicossociais
+                                      </div>
+                                      <div class="laudo-desc">Relatório técnico completo conforme metodologia DRPS
+                                        validada (ITRA, Psicodinâmica do Trabalho — Dejours, NR-1 MTE). Inclui
+                                        Introdução,
+                                        Metodologia,
+                                        Análise por Setor e Tópico,
+                                        Matriz de Risco NR-1,
+                                        Conclusão e Plano de Ação.</div>
+                                      <div class="laudo-badges"><span class="bp bb">NR-1</span><span
+                                          class="bp bpu">DRPS/MTE</span><span class="bp"
+                                          style="background:rgba(0,200,80,0.14);color:#00cc44;border:1px solid rgba(0,200,80,0.2)">OMS</span>
+                                      </div>
+                                    </div><button class="btn-g" onclick="gerarLaudoDRPS()">?? Gerar
+                                      Relatório</button>
+                                  </div>
+                                  <div class="laudo-card">
+                                    <div class="laudo-ico gr">???</div>
+                                    <div style="flex:1">
+                                      <div class="laudo-title">PGR — Programa de Gerenciamento de Riscos</div>
+                                      <div class="laudo-desc">Gerenciamento integrado de todos os riscos
+                                        ocupacionais (físicos, químicos,
+                                        biológicos, ergonômicos e psicossociais). Inventário de riscos,
+                                        medidas de controle e plano de ação conforme NR-1 §1.5.</div>
+                                      <div class="laudo-badges"><span class="bp bb">NR-1 §1.5</span><span
+                                          class="bp bpu">IA Assistida</span><span class="bp"
+                                          style="background:rgba(170,100,240,0.14);color:#aa88ff;border:1px solid rgba(170,100,240,0.22)">Fundacentro</span>
+                                      </div>
+                                    </div><button class="btn-g" onclick="gerarLaudo('PGR')">?? Gerar PGR</button>
+                                  </div>
+                                  <div class="laudo-card">
+                                    <div class="laudo-ico bl">??</div>
+                                    <div style="flex:1">
+                                      <div class="laudo-title">PCMSO — Programa de Controle Médico de Saúde
+                                        Ocupacional</div>
+                                      <div class="laudo-desc">Documento técnico contemplando exames médicos
+                                        periódicos,
+                                        admissionais e demissionais com base nos riscos identificados no PGR e DRPS.
+                                        Conforme NR-7.</div>
+                                      <div class="laudo-badges"><span class="bp bb">NR-7</span><span class="bp bpu">IA
+                                          Assistida</span></div>
+                                    </div><button class="btn-g" onclick="gerarLaudo('PCMSO')">?? Gerar
+                                      PCMSO</button>
+                                  </div>
+                                  <div class="laudo-card">
+                                    <div class="laudo-ico"
+                                      style="background:rgba(0,120,200,0.12);border:1px solid rgba(0,120,200,0.25)">
+                                      ??</div>
+                                    <div style="flex:1">
+                                      <div class="laudo-title">Plano de Ação — Mitigação de Riscos Psicossociais
+                                      </div>
+                                      <div class="laudo-desc">Plano estruturado com ações corretivas e preventivas
+                                        priorizadas pela Matriz de Risco NR-1,
+                                        responsáveis,
+                                        prazos e indicadores de acompanhamento para cada tópico DRPS.</div>
+                                      <div class="laudo-badges"><span class="bp bb">NR-1 §1.5.5</span><span class="bp"
+                                          style="background:rgba(0,180,80,0.14);color:#00cc44;border:1px solid rgba(0,180,80,0.2)">ESG
+                                          Social</span></div>
+                                    </div><button class="btn-g" onclick="gerarLaudo('PLANO')">?? Gerar Plano de
+                                      Ação</button>
+                                  </div>
+                      </div>
+    </div>
+    <!-- /content -->
+  </div>
+  <!-- /main -->
+    <!-- MODALS -->
+      <div id="m-func" class="modal">
+        <div class="mbox">
+          <div class="mtitle">?? Novo Funcionário<button class="btn-cancel" style="padding:4px 10px"
+              onclick="document.getElementById('m-func').style.display='none'">?</button></div>
+          <form id="f-func" class="mgrid"><input class="mi" style="grid-column:span 2" name="nome"
+              placeholder="Nome Completo" required><input class="mi" name="cpf" placeholder="CPF"><input class="mi"
+              name="cargo" placeholder="Cargo" required><select class="mi" name="setor" required>
+              <option value="">Setor</option>
+              <option>Produção</option>
+              <option>Manutenção</option>
+              <option>Logística</option>
+              <option>Administrativo</option>
+              <option>SESMT</option>
+              <option>Qualidade</option>
+              <option>TI</option>
+            </select><select class="mi" name="risco" required>
+              <option value="">Risco</option>
+              <option>Baixo</option>
+              <option>Medio</option>
+              <option>Alto</option>
+            </select><input class="mi" type="date" name="admissao" required><input class="mi" type="date"
+              name="aso_vencimento" required>
+            <div class="mfoot"><button type="button" class="btn-cancel"
+                onclick="document.getElementById('m-func').style.display='none'">Cancelar</button><button type="submit"
+                class="btn-save">Cadastrar</button></div>
+          </form>
+        </div>
+      </div>
+      <div id="m-cat" class="modal">
+        <div class="mbox">
+          <div class="mtitle">?? Registrar CAT<button class="btn-cancel" style="padding:4px 10px"
+              onclick="document.getElementById('m-cat').style.display='none'">?</button></div>
+          <form id="f-cat" class="mgrid"><input class="mi" style="grid-column:span 2" name="funcionario_nome"
+              placeholder="Funcionário" required><input class="mi" type="date" name="data_acidente" required><select
+              class="mi" name="tipo" required>
+              <option value="">Tipo</option>
+              <option>Típico</option>
+              <option>Trajeto</option>
+              <option>Doença Ocupacional</option>
+            </select><input class="mi" name="parte_corpo" placeholder="Parte do Corpo" required><select class="mi"
+              name="gravidade" required>
+              <option value="">Gravidade</option>
+              <option>Leve</option>
+              <option>Moderado</option>
+              <option>Grave</option>
+              <option>Fatal</option>
+            </select><input class="mi" style="grid-column:span 2" name="causa_raiz" placeholder="Causa Raiz">
+            <div class="mfoot"><button type="button" class="btn-cancel"
+                onclick="document.getElementById('m-cat').style.display='none'">Cancelar</button><button type="submit"
+                class="btn-save">Registrar</button></div>
+          </form>
+        </div>
+      </div>
+      <div id="m-agen" class="modal">
+        <div class="mbox">
+          <div class="mtitle">?? Novo Agendamento<button class="btn-cancel" style="padding:4px 10px"
+              onclick="document.getElementById('m-agen').style.display='none'">?</button></div>
+          <form id="f-agen" class="mgrid"><input class="mi" style="grid-column:span 2" name="funcionario_nome"
+              placeholder="Funcionário" required><select class="mi" name="tipo_exame" required>
+              <option value="">Tipo de Exame</option>
+              <option>ASO Admissional</option>
+              <option>ASO Periódico</option>
+              <option>ASO Demissional</option>
+              <option>Retorno ao Trabalho</option>
+              <option>Mudança de Função</option>
+            </select><input class="mi" type="date" name="data_agendamento" required><input class="mi" type="time"
+              name="hora" required><input class="mi" name="medico" placeholder="Médico Responsável">
+            <div class="mfoot"><button type="button" class="btn-cancel"
+                onclick="document.getElementById('m-agen').style.display='none'">Cancelar</button><button type="submit"
+                class="btn-save">Agendar</button></div>
+          </form>
+        </div>
+      </div>
+      <div id="m-trein" class="modal">
+        <div class="mbox">
+          <div class="mtitle">?? Novo Treinamento<button class="btn-cancel" style="padding:4px 10px"
+              onclick="document.getElementById('m-trein').style.display='none'">?</button></div>
+          <form id="f-trein" class="mgrid"><input class="mi" style="grid-column:span 2" name="nome"
+              placeholder="Nome do Treinamento" required><input class="mi" name="nr_referencia" placeholder="NR"><select
+              class="mi" name="modalidade">
+              <option>Presencial</option>
+              <option>EAD</option>
+              <option>Híbrido</option>
+            </select><input class="mi" type="date" name="data_realizacao" required><input class="mi" type="date"
+              name="data_validade" required><input class="mi" type="number" name="participantes"
+              placeholder="Participantes"><select class="mi" name="status">
+              <option>Agendado</option>
+              <option>Em Andamento</option>
+              <option>Concluído</option>
+            </select><input class="mi" style="grid-column:span 2" name="responsavel" placeholder="Responsável">
+            <div class="mfoot"><button type="button" class="btn-cancel"
+                onclick="document.getElementById('m-trein').style.display='none'">Cancelar</button><button type="submit"
+                class="btn-save">Cadastrar</button></div>
+          </form>
+        </div>
+      </div>
+      <div id="m-epi" class="modal">
+        <div class="mbox">
+          <div class="mtitle">?? Novo EPI<button class="btn-cancel" style="padding:4px 10px"
+              onclick="document.getElementById('m-epi').style.display='none'">?</button></div>
+          <form id="f-epi" class="mgrid"><input class="mi" style="grid-column:span 2" name="nome"
+              placeholder="Nome do EPI" required><input class="mi" name="ca" placeholder="Número CA"><input class="mi"
+              type="number" name="quantidade" placeholder="Quantidade" required><input class="mi" type="number"
+              name="estoque_minimo" placeholder="Estoque Mínimo" value="5"><input class="mi" type="date"
+              name="validade">
+            <div class="mfoot"><button type="button" class="btn-cancel"
+                onclick="document.getElementById('m-epi').style.display='none'">Cancelar</button><button type="submit"
+                class="btn-save">Cadastrar</button></div>
+          </form>
+        </div>
+      </div>
+      <div id="m-laudo" class="modal">
+        <div class="mbox" style="max-width:580px">
+          <div class="mtitle">?? Laudo Gerado<div style="display:flex;gap:8px"><button class="btn-g"
+                style="font-size:11px;padding:4px 11px" onclick="window.print()">??? Imprimir</button><button
+                class="btn-cancel" style="padding:4px 10px"
+                onclick="document.getElementById('m-laudo').style.display='none'">?</button></div>
+          </div>
+          <div class="laudo-out" id="laudo-out">—</div>
+        </div>
+      </div>
+      <script> // -- THREE.JS 3D ENGINE --
 
-      if (renderers[id]) {
-        renderers[id].dispose();
-        delete renderers[id]
-      }
+        const scenes = {}
 
-      const el=document.getElementById(id);
-      if (el) el.innerHTML='';
-      delete scenes[id];
-    }
+          ,
+          renderers = {}
 
-    // ROSCA 3D — alto relevo com sombreamento branco na base/esquerda
-    function donut3d(id, labels, values, colors) {
-      clearScene(id);
-      const cont=document.getElementById(id);
-      if ( !cont) return;
-      let W=cont.offsetWidth,
-      H=cont.offsetHeight;
-      if ( !H) H=parseInt(cont.style.height) || 220;
-      if ( !W) W=cont.parentElement ? cont.parentElement.offsetWidth: 220;
+          ,
+          animIds = {}
 
-      if (W < 10 || H < 10) {
-        setTimeout(function () {
-            donut3d(id, labels, values, colors);
+          ;
+
+        function pc(c) {
+          const m = c.match(/rgba?\((\d+), \s*(\d+), \s*(\d+)/);
+          if (m) return new THREE.Color(parseInt(m[1]) / 255, parseInt(m[2]) / 255, parseInt(m[3]) / 255);
+
+          try {
+            return new THREE.Color(c)
           }
 
-          , 250);
-        return;
-      }
-
-      const scene=new THREE.Scene();
-      const cam=new THREE.PerspectiveCamera(40, W / H, 0.1, 50);
-      cam.position.set(0, 2.8, 5.2);
-      cam.lookAt(0, 0.1, 0);
-
-      const ren=new THREE.WebGLRenderer({
-        antialias: true, alpha: true
-      });
-    ren.setSize(W, H);
-    ren.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    ren.shadowMap.enabled=true;
-    ren.shadowMap.type=THREE.PCFSoftShadowMap;
-    cont.appendChild(ren.domElement);
-    renderers[id]=ren;
-    scenes[id]=scene;
-
-    // Luz ambiente suave
-    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-    // Luz principal (topo-direita-frente) - cria sombra
-    const dl=new THREE.DirectionalLight(0xffffff, 1.2);
-    dl.position.set(5, 8, 5);
-    dl.castShadow=true;
-    dl.shadow.mapSize.width=1024;
-    dl.shadow.mapSize.height=1024;
-    scene.add(dl);
-    // Luz de preenchimento branca INFERIOR-ESQUERDA — alto relevo
-    const fillLight=new THREE.DirectionalLight(0xffffff, 0.55);
-    fillLight.position.set(-4, -2, 3);
-    scene.add(fillLight);
-
-    // Luz de brilho pontual
-    scene.add(Object.assign(new THREE.PointLight(0xaaddff, 0.4, 22), {
-        position: new THREE.Vector3(-3, 2, 4)
-      }));
-
-    const total=values.reduce((a, b)=> a + b, 0) || 1;
-    const iR=0.45,
-    oR=1.0,
-    depth=0.38;
-    let sa=-Math.PI / 2;
-    const grp=new THREE.Group();
-    scene.add(grp);
-
-    values.forEach((v, i)=> {
-        if (v <=0) return;
-        const ang=(v / total) * Math.PI * 2;
-        const segs=Math.max(18, Math.round(ang * 28));
-        const shape=new THREE.Shape();
-        shape.moveTo(Math.cos(sa) * oR, Math.sin(sa) * oR);
-
-        for (let s=0; s <=segs; s++) {
-          const a=sa + (ang * s / segs); shape.lineTo(Math.cos(a) * oR, Math.sin(a) * oR)
+          catch (e) {
+            return new THREE.Color(0.5, 0.5, 0.5)
+          }
         }
 
-        for (let s=segs; s >=0; s--) {
-          const a=sa + (ang * s / segs); shape.lineTo(Math.cos(a) * iR, Math.sin(a) * iR)
+        function clearScene(id) {
+          if (animIds[id]) {
+            cancelAnimationFrame(animIds[id]);
+            delete animIds[id]
+          }
+
+          if (renderers[id]) {
+            renderers[id].dispose();
+            delete renderers[id]
+          }
+
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = '';
+          delete scenes[id];
         }
 
-        shape.closePath();
+        // ROSCA 3D — alto relevo com sombreamento branco na base/esquerda
+        function donut3d(id, labels, values, colors) {
+          clearScene(id);
+          const cont = document.getElementById(id);
+          if (!cont) return;
+          let W = cont.offsetWidth,
+            H = cont.offsetHeight;
+          if (!H) H = parseInt(cont.style.height) || 220;
+          if (!W) W = cont.parentElement ? cont.parentElement.offsetWidth : 220;
 
-        const geo=new THREE.ExtrudeGeometry(shape, {
-          depth, bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.03, bevelSegments: 5
-        });
+          if (W < 10 || H < 10) {
+            setTimeout(function () {
+              donut3d(id, labels, values, colors);
+            }
 
-      const mat=new THREE.MeshPhongMaterial({
-        color: pc(colors[i]), shininess: 180, specular: new THREE.Color(0.5, 0.5, 0.5)
-      });
-    const mesh=new THREE.Mesh(geo, mat);
-    mesh.rotation.x=-Math.PI / 2; mesh.castShadow=true; mesh.receiveShadow=true;
-    grp.add(mesh); sa +=ang;
-    });
+              , 250);
+            return;
+          }
 
-    // Plano base escuro dá profundidade
-    const floorGeo=new THREE.CircleGeometry(1.4, 48);
+          const scene = new THREE.Scene();
+          const cam = new THREE.PerspectiveCamera(40, W / H, 0.1, 50);
+          cam.position.set(0, 2.8, 5.2);
+          cam.lookAt(0, 0.1, 0);
 
-    const floorMat=new THREE.MeshPhongMaterial({
-      color: 0x050a14, transparent: true, opacity: 0.5, shininess: 0
-    });
-    const floor=new THREE.Mesh(floorGeo, floorMat);
-    floor.rotation.x=-Math.PI / 2;
-    floor.position.y=-0.22;
-    scene.add(floor);
+          const ren = new THREE.WebGLRenderer({
+            antialias: true, alpha: true
+          });
+          ren.setSize(W, H);
+          ren.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          ren.shadowMap.enabled = true;
+          ren.shadowMap.type = THREE.PCFSoftShadowMap;
+          cont.appendChild(ren.domElement);
+          renderers[id] = ren;
+          scenes[id] = scene;
 
-    // legenda
-    const legEl=document.getElementById('leg-' + id.replace('c-', ''));
+          // Luz ambiente suave
+          scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+          // Luz principal (topo-direita-frente) - cria sombra
+          const dl = new THREE.DirectionalLight(0xffffff, 1.2);
+          dl.position.set(5, 8, 5);
+          dl.castShadow = true;
+          dl.shadow.mapSize.width = 1024;
+          dl.shadow.mapSize.height = 1024;
+          scene.add(dl);
+          // Luz de preenchimento branca INFERIOR-ESQUERDA — alto relevo
+          const fillLight = new THREE.DirectionalLight(0xffffff, 0.55);
+          fillLight.position.set(-4, -2, 3);
+          scene.add(fillLight);
 
-    if (legEl) {
-      legEl.innerHTML=labels.map((l, i)=> `<div class="leg-item" ><div class="leg-dot" style="background:${colors[i]};border-radius:50%;box-shadow:0 0 5px ${colors[i]}88" ></div>$ {
+          // Luz de brilho pontual
+          scene.add(Object.assign(new THREE.PointLight(0xaaddff, 0.4, 22), {
+            position: new THREE.Vector3(-3, 2, 4)
+          }));
+
+          const total = values.reduce((a, b) => a + b, 0) || 1;
+          const iR = 0.45,
+            oR = 1.0,
+            depth = 0.38;
+          let sa = -Math.PI / 2;
+          const grp = new THREE.Group();
+          scene.add(grp);
+
+          values.forEach((v, i) => {
+            if (v <= 0) return;
+            const ang = (v / total) * Math.PI * 2;
+            const segs = Math.max(18, Math.round(ang * 28));
+            const shape = new THREE.Shape();
+            shape.moveTo(Math.cos(sa) * oR, Math.sin(sa) * oR);
+
+            for (let s = 0; s <= segs; s++) {
+              const a = sa + (ang * s / segs); shape.lineTo(Math.cos(a) * oR, Math.sin(a) * oR)
+            }
+
+            for (let s = segs; s >= 0; s--) {
+              const a = sa + (ang * s / segs); shape.lineTo(Math.cos(a) * iR, Math.sin(a) * iR)
+            }
+
+            shape.closePath();
+
+            const geo = new THREE.ExtrudeGeometry(shape, {
+              depth, bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.03, bevelSegments: 5
+            });
+
+            const mat = new THREE.MeshPhongMaterial({
+              color: pc(colors[i]), shininess: 180, specular: new THREE.Color(0.5, 0.5, 0.5)
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.rotation.x = -Math.PI / 2; mesh.castShadow = true; mesh.receiveShadow = true;
+            grp.add(mesh); sa += ang;
+          });
+
+          // Plano base escuro dá profundidade
+          const floorGeo = new THREE.CircleGeometry(1.4, 48);
+
+          const floorMat = new THREE.MeshPhongMaterial({
+            color: 0x050a14, transparent: true, opacity: 0.5, shininess: 0
+          });
+          const floor = new THREE.Mesh(floorGeo, floorMat);
+          floor.rotation.x = -Math.PI / 2;
+          floor.position.y = -0.22;
+          scene.add(floor);
+
+          // legenda
+          const legEl = document.getElementById('leg-' + id.replace('c-', ''));
+
+          if (legEl) {
+            legEl.innerHTML = labels.map((l, i) => `<div class="leg-item" ><div class="leg-dot" style="background:${colors[i]};border-radius:50%;box-shadow:0 0 5px ${colors[i]}88" ></div>$ {
           l
         }
 
@@ -1375,330 +2083,330 @@
         }
 
         </b></div>`).join('');
-    }
-
-    grp.position.y=-0.12;
-    let t=0;
-
-    function anim() {
-      animIds[id]=requestAnimationFrame(anim);
-      t+=0.006;
-      grp.rotation.y=t * 0.3;
-      ren.render(scene, cam);
-    }
-
-    anim();
-    }
-
-    // BARRAS 3D — alto relevo com sombreamento branco na base/esquerda
-    function bar3d(id, labels, values, colors) {
-      clearScene(id);
-      const cont=document.getElementById(id);
-      if ( !cont) return;
-      let W=cont.offsetWidth,
-      H=cont.offsetHeight;
-      if ( !H) H=parseInt(cont.style.height) || 220;
-      if ( !W) W=cont.parentElement ? cont.parentElement.offsetWidth: 300;
-
-      if (W < 10 || H < 10) {
-        setTimeout(function () {
-            bar3d(id, labels, values, colors);
           }
 
-          , 250);
-        return;
-      }
+          grp.position.y = -0.12;
+          let t = 0;
 
-      const scene=new THREE.Scene();
-      const cam=new THREE.PerspectiveCamera(36, W / H, 0.1, 60);
-      cam.position.set(0, 4.2, 10);
-      cam.lookAt(0, 1.0, 0);
+          function anim() {
+            animIds[id] = requestAnimationFrame(anim);
+            t += 0.006;
+            grp.rotation.y = t * 0.3;
+            ren.render(scene, cam);
+          }
 
-      const ren=new THREE.WebGLRenderer({
-        antialias: true, alpha: true
-      });
-    ren.setSize(W, H);
-    ren.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    ren.shadowMap.enabled=true;
-    ren.shadowMap.type=THREE.PCFSoftShadowMap;
-    cont.appendChild(ren.domElement);
-    renderers[id]=ren;
-    scenes[id]=scene;
+          anim();
+        }
 
-    // Luz ambiente suave
-    scene.add(new THREE.AmbientLight(0xffffff, 0.38));
-    // Luz principal (topo-direita) — define sombras
-    const dl=new THREE.DirectionalLight(0xffffff, 1.1);
-    dl.position.set(6, 9, 6);
-    dl.castShadow=true;
-    dl.shadow.mapSize.width=1024;
-    dl.shadow.mapSize.height=1024;
-    scene.add(dl);
-    // Luz de preenchimento branca INFERIOR-ESQUERDA — alto relevo
-    const fillLight=new THREE.DirectionalLight(0xffffff, 0.6);
-    fillLight.position.set(-5, -2, 4);
-    scene.add(fillLight);
-    // Rim light lateral branca
-    const rimLight=new THREE.DirectionalLight(0xffffff, 0.4);
-    rimLight.position.set(-6, 3, -2);
-    scene.add(rimLight);
+        // BARRAS 3D — alto relevo com sombreamento branco na base/esquerda
+        function bar3d(id, labels, values, colors) {
+          clearScene(id);
+          const cont = document.getElementById(id);
+          if (!cont) return;
+          let W = cont.offsetWidth,
+            H = cont.offsetHeight;
+          if (!H) H = parseInt(cont.style.height) || 220;
+          if (!W) W = cont.parentElement ? cont.parentElement.offsetWidth : 300;
 
-    // Point light colorida para brilho
-    scene.add(Object.assign(new THREE.PointLight(0x88ccff, 0.3, 35), {
-        position: new THREE.Vector3(-4, 5, 5)
-      }));
+          if (W < 10 || H < 10) {
+            setTimeout(function () {
+              bar3d(id, labels, values, colors);
+            }
 
-    const maxV=Math.max(...values, 1);
-    const bW=0.62,
-    gap=0.38,
-    totalW=(bW + gap) * values.length;
-    const sx=-totalW / 2+bW / 2;
-    const grp=new THREE.Group();
-    scene.add(grp);
+              , 250);
+            return;
+          }
 
-    values.forEach((v, i)=> {
-        const h=Math.max((v / maxV) * 3.5, 0.1);
-        const col=pc(colors[i % colors.length]);
+          const scene = new THREE.Scene();
+          const cam = new THREE.PerspectiveCamera(36, W / H, 0.1, 60);
+          cam.position.set(0, 4.2, 10);
+          cam.lookAt(0, 1.0, 0);
 
-        // Barra principal com cantos chanfrados
-        const geo=new THREE.BoxGeometry(bW, h, bW);
+          const ren = new THREE.WebGLRenderer({
+            antialias: true, alpha: true
+          });
+          ren.setSize(W, H);
+          ren.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          ren.shadowMap.enabled = true;
+          ren.shadowMap.type = THREE.PCFSoftShadowMap;
+          cont.appendChild(ren.domElement);
+          renderers[id] = ren;
+          scenes[id] = scene;
 
-        const mat=new THREE.MeshPhongMaterial({
-          color: col, shininess: 160,
-          specular: new THREE.Color(0.45, 0.45, 0.45)
-        });
-      const mesh=new THREE.Mesh(geo, mat);
-      mesh.position.set(sx + i * (bW + gap), h / 2, 0);
-      mesh.castShadow=true; mesh.receiveShadow=true; grp.add(mesh);
+          // Luz ambiente suave
+          scene.add(new THREE.AmbientLight(0xffffff, 0.38));
+          // Luz principal (topo-direita) — define sombras
+          const dl = new THREE.DirectionalLight(0xffffff, 1.1);
+          dl.position.set(6, 9, 6);
+          dl.castShadow = true;
+          dl.shadow.mapSize.width = 1024;
+          dl.shadow.mapSize.height = 1024;
+          scene.add(dl);
+          // Luz de preenchimento branca INFERIOR-ESQUERDA — alto relevo
+          const fillLight = new THREE.DirectionalLight(0xffffff, 0.6);
+          fillLight.position.set(-5, -2, 4);
+          scene.add(fillLight);
+          // Rim light lateral branca
+          const rimLight = new THREE.DirectionalLight(0xffffff, 0.4);
+          rimLight.position.set(-6, 3, -2);
+          scene.add(rimLight);
 
-      // Topo brilhante
-      const topG=new THREE.BoxGeometry(bW, 0.06, bW);
+          // Point light colorida para brilho
+          scene.add(Object.assign(new THREE.PointLight(0x88ccff, 0.3, 35), {
+            position: new THREE.Vector3(-4, 5, 5)
+          }));
 
-      const topM=new THREE.MeshPhongMaterial({
-        color: 0xffffff, emissive: col, emissiveIntensity: 0.3, shininess: 240, opacity: 0.85, transparent: true
-      });
+          const maxV = Math.max(...values, 1);
+          const bW = 0.62,
+            gap = 0.38,
+            totalW = (bW + gap) * values.length;
+          const sx = -totalW / 2 + bW / 2;
+          const grp = new THREE.Group();
+          scene.add(grp);
 
-    grp.add(Object.assign(new THREE.Mesh(topG, topM), {
-        position: new THREE.Vector3(sx + i * (bW + gap), h + 0.03, 0)
-      }));
+          values.forEach((v, i) => {
+            const h = Math.max((v / maxV) * 3.5, 0.1);
+            const col = pc(colors[i % colors.length]);
 
-    // Aresta branca esquerda (alto relevo)
-    const edgeG=new THREE.BoxGeometry(0.06, h, bW + 0.04);
+            // Barra principal com cantos chanfrados
+            const geo = new THREE.BoxGeometry(bW, h, bW);
 
-    const edgeM=new THREE.MeshPhongMaterial({
-      color: 0xffffff, emissiveIntensity: 0.15, emissive: new THREE.Color(1, 1, 1), opacity: 0.55, transparent: true, shininess: 200
-    });
+            const mat = new THREE.MeshPhongMaterial({
+              color: col, shininess: 160,
+              specular: new THREE.Color(0.45, 0.45, 0.45)
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(sx + i * (bW + gap), h / 2, 0);
+            mesh.castShadow = true; mesh.receiveShadow = true; grp.add(mesh);
 
-    grp.add(Object.assign(new THREE.Mesh(edgeG, edgeM), {
-        position: new THREE.Vector3(sx + i * (bW + gap) - bW / 2, h / 2, 0)
-      }));
+            // Topo brilhante
+            const topG = new THREE.BoxGeometry(bW, 0.06, bW);
 
-    // Label flutuante
-    const lc=document.createElement('canvas'); lc.width=140; lc.height=80;
-    const lx=lc.getContext('2d');
-    lx.clearRect(0, 0, 140, 80);
-    lx.fillStyle='rgba(255,255,255,0.8)'; lx.font='bold 17px sans-serif'; lx.textAlign='center';
-    lx.fillText(labels[i].substring(0, 8), 70, 26);
-    lx.fillStyle='rgba(255,220,80,0.95)'; lx.font='bold 22px sans-serif';
-    lx.fillText(v, 70, 54);
-    const tex=new THREE.CanvasTexture(lc);
+            const topM = new THREE.MeshPhongMaterial({
+              color: 0xffffff, emissive: col, emissiveIntensity: 0.3, shininess: 240, opacity: 0.85, transparent: true
+            });
 
-    const lm=new THREE.MeshBasicMaterial({
-      map: tex, transparent: true, depthWrite: false
-    });
+            grp.add(Object.assign(new THREE.Mesh(topG, topM), {
+              position: new THREE.Vector3(sx + i * (bW + gap), h + 0.03, 0)
+            }));
 
-    grp.add(Object.assign(new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.65), lm), {
-        position: new THREE.Vector3(sx + i * (bW + gap), -0.55, 0.45)
-      }));
-    });
+            // Aresta branca esquerda (alto relevo)
+            const edgeG = new THREE.BoxGeometry(0.06, h, bW + 0.04);
 
-    // Plano base com reflexo
-    const baseG=new THREE.BoxGeometry(totalW + 1.0, 0.08, 1.8);
+            const edgeM = new THREE.MeshPhongMaterial({
+              color: 0xffffff, emissiveIntensity: 0.15, emissive: new THREE.Color(1, 1, 1), opacity: 0.55, transparent: true, shininess: 200
+            });
 
-    const baseM=new THREE.MeshPhongMaterial({
-      color: new THREE.Color(0.03, 0.06, 0.14), shininess: 80, specular: new THREE.Color(0.2, 0.2, 0.3)
-    });
-    const base=new THREE.Mesh(baseG, baseM);
-    base.position.set(0, -0.04, 0);
-    base.receiveShadow=true;
-    grp.add(base);
+            grp.add(Object.assign(new THREE.Mesh(edgeG, edgeM), {
+              position: new THREE.Vector3(sx + i * (bW + gap) - bW / 2, h / 2, 0)
+            }));
 
-    // Sem ShadowMaterial (r128) — usa plano de cor para efeito de base
-    const sPlane=new THREE.Mesh(new THREE.PlaneGeometry(totalW + 2, 4),
-      new THREE.MeshPhongMaterial({
-        color: 0x030710, transparent: true, opacity: 0.45, shininess: 0
-      }));
-    sPlane.rotation.x=-Math.PI / 2;
-    sPlane.position.y=-0.085;
-    scene.add(sPlane);
+            // Label flutuante
+            const lc = document.createElement('canvas'); lc.width = 140; lc.height = 80;
+            const lx = lc.getContext('2d');
+            lx.clearRect(0, 0, 140, 80);
+            lx.fillStyle = 'rgba(255,255,255,0.8)'; lx.font = 'bold 17px sans-serif'; lx.textAlign = 'center';
+            lx.fillText(labels[i].substring(0, 8), 70, 26);
+            lx.fillStyle = 'rgba(255,220,80,0.95)'; lx.font = 'bold 22px sans-serif';
+            lx.fillText(v, 70, 54);
+            const tex = new THREE.CanvasTexture(lc);
 
-    let t=0;
+            const lm = new THREE.MeshBasicMaterial({
+              map: tex, transparent: true, depthWrite: false
+            });
 
-    function anim() {
-      animIds[id]=requestAnimationFrame(anim);
-      t+=0.004;
-      grp.rotation.y=Math.sin(t) * 0.10;
-      ren.render(scene, cam);
-    }
+            grp.add(Object.assign(new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.65), lm), {
+              position: new THREE.Vector3(sx + i * (bW + gap), -0.55, 0.45)
+            }));
+          });
 
-    anim();
-    }
+          // Plano base com reflexo
+          const baseG = new THREE.BoxGeometry(totalW + 1.0, 0.08, 1.8);
 
-    // GAUGE 3D (para IA)
-    function gauge3d(id, pct, color) {
-      clearScene(id);
-      const cont=document.getElementById(id);
-      if ( !cont) return;
-      const W=cont.offsetWidth || 200,
-      H=cont.offsetHeight || 180;
-      const scene=new THREE.Scene();
-      const cam=new THREE.PerspectiveCamera(42, W / H, 0.1, 50);
-      cam.position.set(0, 1.6, 4);
-      cam.lookAt(0, 0, 0);
+          const baseM = new THREE.MeshPhongMaterial({
+            color: new THREE.Color(0.03, 0.06, 0.14), shininess: 80, specular: new THREE.Color(0.2, 0.2, 0.3)
+          });
+          const base = new THREE.Mesh(baseG, baseM);
+          base.position.set(0, -0.04, 0);
+          base.receiveShadow = true;
+          grp.add(base);
 
-      const ren=new THREE.WebGLRenderer({
-        antialias: true, alpha: true
-      });
-    ren.setSize(W, H);
-    ren.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    ren.shadowMap.enabled=true;
-    cont.appendChild(ren.domElement);
-    renderers[id]=ren;
-    scenes[id]=scene;
+          // Sem ShadowMaterial (r128) — usa plano de cor para efeito de base
+          const sPlane = new THREE.Mesh(new THREE.PlaneGeometry(totalW + 2, 4),
+            new THREE.MeshPhongMaterial({
+              color: 0x030710, transparent: true, opacity: 0.45, shininess: 0
+            }));
+          sPlane.rotation.x = -Math.PI / 2;
+          sPlane.position.y = -0.085;
+          scene.add(sPlane);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+          let t = 0;
 
-    scene.add(Object.assign(new THREE.DirectionalLight(0xffffff, 1.0), {
-        position: new THREE.Vector3(4, 6, 4)
-      }));
+          function anim() {
+            animIds[id] = requestAnimationFrame(anim);
+            t += 0.004;
+            grp.rotation.y = Math.sin(t) * 0.10;
+            ren.render(scene, cam);
+          }
 
-    const grp=new THREE.Group();
-    scene.add(grp);
-    const val=Math.max(1, Math.min(100, pct || 0));
+          anim();
+        }
 
-    // fundo cinza
-    const bgS=new THREE.Shape();
-    bgS.moveTo(Math.cos(-Math.PI / 2) * 1.0, Math.sin(-Math.PI / 2) * 1.0);
+        // GAUGE 3D (para IA)
+        function gauge3d(id, pct, color) {
+          clearScene(id);
+          const cont = document.getElementById(id);
+          if (!cont) return;
+          const W = cont.offsetWidth || 200,
+            H = cont.offsetHeight || 180;
+          const scene = new THREE.Scene();
+          const cam = new THREE.PerspectiveCamera(42, W / H, 0.1, 50);
+          cam.position.set(0, 1.6, 4);
+          cam.lookAt(0, 0, 0);
 
-    for (let s=0; s <=40; s++) {
-      const a=-Math.PI / 2+(Math.PI * 2 * s / 40);
-      bgS.lineTo(Math.cos(a) * 1.0, Math.sin(a) * 1.0)
-    }
+          const ren = new THREE.WebGLRenderer({
+            antialias: true, alpha: true
+          });
+          ren.setSize(W, H);
+          ren.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          ren.shadowMap.enabled = true;
+          cont.appendChild(ren.domElement);
+          renderers[id] = ren;
+          scenes[id] = scene;
 
-    for (let s=40; s >=0; s--) {
-      const a=-Math.PI / 2+(Math.PI * 2 * s / 40);
-      bgS.lineTo(Math.cos(a) * 0.55, Math.sin(a) * 0.55)
-    }
+          scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-    bgS.closePath();
+          scene.add(Object.assign(new THREE.DirectionalLight(0xffffff, 1.0), {
+            position: new THREE.Vector3(4, 6, 4)
+          }));
 
-    grp.add(Object.assign(new THREE.Mesh(new THREE.ExtrudeGeometry(bgS, {
+          const grp = new THREE.Group();
+          scene.add(grp);
+          const val = Math.max(1, Math.min(100, pct || 0));
+
+          // fundo cinza
+          const bgS = new THREE.Shape();
+          bgS.moveTo(Math.cos(-Math.PI / 2) * 1.0, Math.sin(-Math.PI / 2) * 1.0);
+
+          for (let s = 0; s <= 40; s++) {
+            const a = -Math.PI / 2 + (Math.PI * 2 * s / 40);
+            bgS.lineTo(Math.cos(a) * 1.0, Math.sin(a) * 1.0)
+          }
+
+          for (let s = 40; s >= 0; s--) {
+            const a = -Math.PI / 2 + (Math.PI * 2 * s / 40);
+            bgS.lineTo(Math.cos(a) * 0.55, Math.sin(a) * 0.55)
+          }
+
+          bgS.closePath();
+
+          grp.add(Object.assign(new THREE.Mesh(new THREE.ExtrudeGeometry(bgS, {
             depth: 0.18, bevelEnabled: false
 
           }), new THREE.MeshPhongMaterial({
-          color: new THREE.Color(0.04, 0.08, 0.12), shininess: 40
+            color: new THREE.Color(0.04, 0.08, 0.12), shininess: 40
 
-        })), {
-    rotation: {
-      x: -Math.PI / 2
-    }
-    }));
+          })), {
+            rotation: {
+              x: -Math.PI / 2
+            }
+          }));
 
-    // preenchido
-    const fillAng=(val / 100) * Math.PI * 2;
-    const fs=new THREE.Shape();
-    fs.moveTo(Math.cos(-Math.PI / 2) * 1.0, Math.sin(-Math.PI / 2) * 1.0);
-    const fSegs=Math.max(5, Math.round(fillAng * 20));
+          // preenchido
+          const fillAng = (val / 100) * Math.PI * 2;
+          const fs = new THREE.Shape();
+          fs.moveTo(Math.cos(-Math.PI / 2) * 1.0, Math.sin(-Math.PI / 2) * 1.0);
+          const fSegs = Math.max(5, Math.round(fillAng * 20));
 
-    for (let s=0; s <=fSegs; s++) {
-      const a=-Math.PI / 2+(fillAng * s / fSegs);
-      fs.lineTo(Math.cos(a) * 1.0, Math.sin(a) * 1.0)
-    }
+          for (let s = 0; s <= fSegs; s++) {
+            const a = -Math.PI / 2 + (fillAng * s / fSegs);
+            fs.lineTo(Math.cos(a) * 1.0, Math.sin(a) * 1.0)
+          }
 
-    for (let s=fSegs; s >=0; s--) {
-      const a=-Math.PI / 2+(fillAng * s / fSegs);
-      fs.lineTo(Math.cos(a) * 0.55, Math.sin(a) * 0.55)
-    }
+          for (let s = fSegs; s >= 0; s--) {
+            const a = -Math.PI / 2 + (fillAng * s / fSegs);
+            fs.lineTo(Math.cos(a) * 0.55, Math.sin(a) * 0.55)
+          }
 
-    fs.closePath();
+          fs.closePath();
 
-    const fMesh=new THREE.Mesh(new THREE.ExtrudeGeometry(fs, {
-        depth: 0.25, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.01, bevelSegments: 2
+          const fMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(fs, {
+            depth: 0.25, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.01, bevelSegments: 2
 
-      }), new THREE.MeshPhongMaterial({
-      color: pc(color), shininess: 140, emissive: pc(color), emissiveIntensity: 0.1
-    }));
-    fMesh.rotation.x=-Math.PI / 2;
-    fMesh.castShadow=true;
-    grp.add(fMesh);
+          }), new THREE.MeshPhongMaterial({
+            color: pc(color), shininess: 140, emissive: pc(color), emissiveIntensity: 0.1
+          }));
+          fMesh.rotation.x = -Math.PI / 2;
+          fMesh.castShadow = true;
+          grp.add(fMesh);
 
-    let t=0;
+          let t = 0;
 
-    function anim() {
-      animIds[id]=requestAnimationFrame(anim);
-      t+=0.006;
-      grp.rotation.y=Math.sin(t) * 0.2;
-      ren.render(scene, cam)
-    }
+          function anim() {
+            animIds[id] = requestAnimationFrame(anim);
+            t += 0.006;
+            grp.rotation.y = Math.sin(t) * 0.2;
+            ren.render(scene, cam)
+          }
 
-    anim();
-    }
+          anim();
+        }
 
-    // ── DADOS ──
-    let empId=null,
-    dash=null;
+        // -- DADOS --
+        let empId = null,
+          dash = null;
 
-    function toast(m) {
-      const t=document.getElementById('toast');
-      t.textContent='✓ '+m;
-      t.classList.add('show');
-      setTimeout(()=> t.classList.remove('show'), 2600)
-    }
+        function toast(m) {
+          const t = document.getElementById('toast');
+          t.textContent = '? ' + m;
+          t.classList.add('show');
+          setTimeout(() => t.classList.remove('show'), 2600)
+        }
 
-    async function loadEmpresas() {
-      const data=await fetch('/api/empresas').then(r=> r.json()).catch(()=> []);
-      const sel=document.getElementById('empresaSelect');
+        async function loadEmpresas() {
+          const data = await fetch('/api/empresas').then(r => r.json()).catch(() => []);
+          const sel = document.getElementById('empresaSelect');
 
-      if ( !data.length) {
-        sel.innerHTML='<option value="">Nenhuma empresa</option>';
-        return
-      }
+          if (!data.length) {
+            sel.innerHTML = '<option value="">Nenhuma empresa</option>';
+            return
+          }
 
-      sel.innerHTML=data.map(e=> `<option value="${e.id}" >$ {
+          sel.innerHTML = data.map(e => `<option value="${e.id}" >$ {
           e.nome
         }
 
         </option>`).join('');
-      empId=data[0].id;
-      loadDashboard();
-    }
+          empId = data[0].id;
+          loadDashboard();
+        }
 
-    async function loadDashboard() {
-      empId=document.getElementById('empresaSelect').value;
-      if ( !empId) return;
-      document.getElementById('psub').textContent='Atualizando...';
+        async function loadDashboard() {
+          empId = document.getElementById('empresaSelect').value;
+          if (!empId) return;
+          document.getElementById('psub').textContent = 'Atualizando...';
 
-      const d=await fetch(`/api/dashboard/$ {
+          const d = await fetch(`/api/dashboard/$ {
           empId
         }
 
-        `).then(r=> r.json()).catch(()=> null);
-      if ( !d) return;
-      dash=d;
+        `).then(r => r.json()).catch(() => null);
+          if (!d) return;
+          dash = d;
 
-      document.getElementById('psub').textContent=(d.empresa?.nome || '')+' · '+d.kpis.total_funcionarios+' funcionários';
-      document.getElementById('kpi-t').textContent=d.kpis.treinamentos || 0;
-      document.getElementById('kpi-tsub').textContent='▲ '+(d.kpis.trein_concluidos || 0)+' concluídos';
-      document.getElementById('kpi-a').textContent=d.kpis.agendamentos_pendentes || 0;
-      document.getElementById('kpi-r').textContent=d.kpis.alto_risco || 0;
-      document.getElementById('kpi-e').textContent=d.kpis.epis_criticos || 0;
-      document.getElementById('notif-n').textContent=d.alertas.length;
-      document.getElementById('badge-aso').textContent=d.kpis.aso_vencidos || 0;
+          document.getElementById('psub').textContent = (d.empresa?.nome || '') + ' · ' + d.kpis.total_funcionarios + ' funcionários';
+          document.getElementById('kpi-t').textContent = d.kpis.treinamentos || 0;
+          document.getElementById('kpi-tsub').textContent = '? ' + (d.kpis.trein_concluidos || 0) + ' concluídos';
+          document.getElementById('kpi-a').textContent = d.kpis.agendamentos_pendentes || 0;
+          document.getElementById('kpi-r').textContent = d.kpis.alto_risco || 0;
+          document.getElementById('kpi-e').textContent = d.kpis.epis_criticos || 0;
+          document.getElementById('notif-n').textContent = d.alertas.length;
+          document.getElementById('badge-aso').textContent = d.kpis.aso_vencidos || 0;
 
-      if (d.kpis.aso_vencidos > 0) {
-        document.getElementById('alert-bar').classList.add('show');
+          if (d.kpis.aso_vencidos > 0) {
+            document.getElementById('alert-bar').classList.add('show');
 
-        document.getElementById('alert-txt').textContent=`$ {
+            document.getElementById('alert-txt').textContent = `$ {
           d.kpis.aso_vencidos
         }
 
@@ -1707,57 +2415,57 @@
         }
 
         próximo(s).`;
-      }
+          }
 
-      // IA info
-      const ia=d.ia || {}
+          // IA info
+          const ia = d.ia || {}
 
-      ;
-      document.getElementById('donut-pct').textContent=(ia.probabilidade_acidente || 0)+'%';
-      document.getElementById('ia-tend').textContent=ia.tendencia || '—';
-      document.getElementById('ia-setor').textContent=ia.setor_mais_critico || '—';
-      document.getElementById('ia-seg').textContent=(ia.indice_seguranca || 0)+'%';
-      document.getElementById('ia-rec').textContent='💡 '+(ia.recomendacao || 'Dentro dos parâmetros normais.');
+            ;
+          document.getElementById('donut-pct').textContent = (ia.probabilidade_acidente || 0) + '%';
+          document.getElementById('ia-tend').textContent = ia.tendencia || '—';
+          document.getElementById('ia-setor').textContent = ia.setor_mais_critico || '—';
+          document.getElementById('ia-seg').textContent = (ia.indice_seguranca || 0) + '%';
+          document.getElementById('ia-rec').textContent = '?? ' + (ia.recomendacao || 'Dentro dos parâmetros normais.');
 
-      // Gráficos dashboard
-      const alto=d.kpis.alto_risco || 0,
-      total=d.kpis.total_funcionarios || 1;
-      const medio=Math.round(total * 0.35),
-      baixo=Math.max(0, total - alto - medio);
+          // Gráficos dashboard
+          const alto = d.kpis.alto_risco || 0,
+            total = d.kpis.total_funcionarios || 1;
+          const medio = Math.round(total * 0.35),
+            baixo = Math.max(0, total - alto - medio);
 
-      setTimeout(()=> {
-          donut3d('c-risco', ['Alto Risco', 'Médio Risco', 'Baixo Risco'], [alto, medio, baixo], ['rgba(255,50,50,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,120,255,0.9)']);
-        }
+          setTimeout(() => {
+            donut3d('c-risco', ['Alto Risco', 'Médio Risco', 'Baixo Risco'], [alto, medio, baixo], ['rgba(255,50,50,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,120,255,0.9)']);
+          }
 
-        , 200);
+            , 200);
 
-      const setores=d.setores || {}
+          const setores = d.setores || {}
 
-      ;
-      const sKeys=Object.keys(setores),
-      sVals=Object.values(setores);
-      const sCols=['#0077ff',
-      '#00aaff',
-      '#aa66ff',
-      '#ffaa00',
-      '#ff6644',
-      '#00ddaa',
-      '#ff66aa'];
+            ;
+          const sKeys = Object.keys(setores),
+            sVals = Object.values(setores);
+          const sCols = ['#0077ff',
+            '#00aaff',
+            '#aa66ff',
+            '#ffaa00',
+            '#ff6644',
+            '#00ddaa',
+            '#ff66aa'];
 
-      setTimeout(()=> {
-          bar3d('c-setores', sKeys, sVals, sCols);
-        }
+          setTimeout(() => {
+            bar3d('c-setores', sKeys, sVals, sCols);
+          }
 
-        , 200);
+            , 200);
 
-      // Alertas
-      const ac= {
-        warning: '#ffcc00', danger: '#ff5555', info: '#66aaff', success: '#0077ff'
-      }
+          // Alertas
+          const ac = {
+            warning: '#ffcc00', danger: '#ff5555', info: '#66aaff', success: '#0077ff'
+          }
 
-      ;
+            ;
 
-      document.getElementById('alertas-list').innerHTML=(d.alertas || []).slice(0, 5).map(a=> `<div class="alerta-item" ><div class="al-dot" style="background:${ac[a.tipo] || '#888'}" ></div><div><div class="al-title" >$ {
+          document.getElementById('alertas-list').innerHTML = (d.alertas || []).slice(0, 5).map(a => `<div class="alerta-item" ><div class="al-dot" style="background:${ac[a.tipo] || '#888'}" ></div><div><div class="al-title" >$ {
           a.titulo || a.tipo
         }
 
@@ -1767,8 +2475,8 @@
 
         </div></div></div>`).join('') || '<span style="color:var(--muted);font-size:11px">Nenhum alerta</span>';
 
-      // Agendamentos preview
-      document.getElementById('agen-prev').innerHTML=(d.agendamentos || []).slice(0, 4).map(a=> `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
+          // Agendamentos preview
+          document.getElementById('agen-prev').innerHTML = (d.agendamentos || []).slice(0, 4).map(a => `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
           a.funcionario_nome
         }
 
@@ -1786,8 +2494,8 @@
 
         </span></td></tr>`).join('') || '<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:10px">Sem agendamentos</td></tr>';
 
-      // IA top
-      document.getElementById('ia-top').innerHTML=(d.top_risco || []).slice(0, 5).map(f=> `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
+          // IA top
+          document.getElementById('ia-top').innerHTML = (d.top_risco || []).slice(0, 5).map(f => `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
           f.nome
         }
 
@@ -1805,59 +2513,59 @@
 
         </span></td></tr>`).join('') || '<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:10px">Sem dados</td></tr>';
 
-      // Gauge IA
-      setTimeout(()=> {
-          gauge3d('c-ia-prob', d.ia?.probabilidade_acidente || 0, 'rgba(255,170,0,0.9)');
-          gauge3d('c-ia-seg', d.ia?.indice_seguranca || 0, 'rgba(0,200,60,0.9)');
-          bar3d('c-ia-dist', ['Alto', 'Médio', 'Baixo'], [alto, medio, baixo], ['rgba(255,50,50,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,120,255,0.9)']);
-          donut3d('c-ia-risco', ['Alto', 'Médio', 'Baixo'], [alto, medio, baixo], ['rgba(255,50,50,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,120,255,0.9)']);
-          document.getElementById('ia-prob-val').textContent=(d.ia?.probabilidade_acidente || 0) + '%';
-          document.getElementById('ia-seg-val').textContent=(d.ia?.indice_seguranca || 0) + '%';
+          // Gauge IA
+          setTimeout(() => {
+            gauge3d('c-ia-prob', d.ia?.probabilidade_acidente || 0, 'rgba(255,170,0,0.9)');
+            gauge3d('c-ia-seg', d.ia?.indice_seguranca || 0, 'rgba(0,200,60,0.9)');
+            bar3d('c-ia-dist', ['Alto', 'Médio', 'Baixo'], [alto, medio, baixo], ['rgba(255,50,50,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,120,255,0.9)']);
+            donut3d('c-ia-risco', ['Alto', 'Médio', 'Baixo'], [alto, medio, baixo], ['rgba(255,50,50,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,120,255,0.9)']);
+            document.getElementById('ia-prob-val').textContent = (d.ia?.probabilidade_acidente || 0) + '%';
+            document.getElementById('ia-seg-val').textContent = (d.ia?.indice_seguranca || 0) + '%';
+          }
+
+            , 250);
+
+          renderCal();
         }
 
-        , 250);
+        function renderCal() {
+          const days = ['D',
+            'S',
+            'T',
+            'Q',
+            'Q',
+            'S',
+            'S'];
 
-      renderCal();
-    }
-
-    function renderCal() {
-      const days=['D',
-      'S',
-      'T',
-      'Q',
-      'Q',
-      'S',
-      'S'];
-
-      document.getElementById('cal-head').innerHTML=days.map(d=> `<div class="cal-dh" >$ {
+          document.getElementById('cal-head').innerHTML = days.map(d => `<div class="cal-dh" >$ {
           d
         }
 
         </div>`).join('');
-      const first=new Date(2026, 2, 1).getDay(),
-      total=31;
-      let html='';
-      for (let i=0; i < first; i++) html+=`<div class="cal-d empty">·</div>`;
+          const first = new Date(2026, 2, 1).getDay(),
+            total = 31;
+          let html = '';
+          for (let i = 0; i < first; i++) html += `<div class="cal-d empty">·</div>`;
 
-      for (let d=1; d <=total; d++) html+=`<div class="cal-d${d === 1 ? ' today' : ''}">$ {
+          for (let d = 1; d <= total; d++) html += `<div class="cal-d${d === 1 ? ' today' : ''}">$ {
         d
       }
 
       </div>`;
-      document.getElementById('cal-body').innerHTML=html;
-    }
+          document.getElementById('cal-body').innerHTML = html;
+        }
 
-    async function loadFunc() {
-      if ( !empId) return;
+        async function loadFunc() {
+          if (!empId) return;
 
-      const d=await fetch(`/api/funcionarios/$ {
+          const d = await fetch(`/api/funcionarios/$ {
           empId
         }
 
-        `).then(r=> r.json()).catch(()=> []);
-      document.getElementById('func-sub').textContent=d.length+' funcionários';
+        `).then(r => r.json()).catch(() => []);
+          document.getElementById('func-sub').textContent = d.length + ' funcionários';
 
-      document.getElementById('func-table').innerHTML=d.map(f=> `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
+          document.getElementById('func-table').innerHTML = d.map(f => `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
           f.nome
         }
 
@@ -1887,44 +2595,44 @@
 
         </span></td></tr>`).join('') || nd(7);
 
-      // Gráficos funcionários
-      const ar=d.filter(f=> f.risco==='Alto').length,
-      mr=d.filter(f=> f.risco==='Medio').length,
-      br=d.filter(f=> f.risco==='Baixo').length;
+          // Gráficos funcionários
+          const ar = d.filter(f => f.risco === 'Alto').length,
+            mr = d.filter(f => f.risco === 'Medio').length,
+            br = d.filter(f => f.risco === 'Baixo').length;
 
-      const setMap= {}
+          const setMap = {}
 
-      ;
+            ;
 
-      d.forEach(f=> {
-          setMap[f.setor]=(setMap[f.setor] || 0) + 1
-        });
-      const sKeys=Object.keys(setMap),
-      sVals=Object.values(setMap);
-      const sCols=['rgba(0,200,60,0.9)',
-      'rgba(0,170,255,0.9)',
-      'rgba(170,100,255,0.9)',
-      'rgba(255,170,0,0.9)',
-      'rgba(255,100,60,0.9)'];
+          d.forEach(f => {
+            setMap[f.setor] = (setMap[f.setor] || 0) + 1
+          });
+          const sKeys = Object.keys(setMap),
+            sVals = Object.values(setMap);
+          const sCols = ['rgba(0,200,60,0.9)',
+            'rgba(0,170,255,0.9)',
+            'rgba(170,100,255,0.9)',
+            'rgba(255,170,0,0.9)',
+            'rgba(255,100,60,0.9)'];
 
-      setTimeout(()=> {
-          donut3d('c-func-risco', ['Alto', 'Médio', 'Baixo'], [ar, mr, br], ['rgba(255,50,50,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,120,255,0.9)']);
-          bar3d('c-func-setor', sKeys, sVals, sCols);
+          setTimeout(() => {
+            donut3d('c-func-risco', ['Alto', 'Médio', 'Baixo'], [ar, mr, br], ['rgba(255,50,50,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,120,255,0.9)']);
+            bar3d('c-func-setor', sKeys, sVals, sCols);
+          }
+
+            , 120);
         }
 
-        , 120);
-    }
+        async function loadAso() {
+          if (!empId) return;
 
-    async function loadAso() {
-      if ( !empId) return;
-
-      const d=await fetch(`/api/funcionarios/$ {
+          const d = await fetch(`/api/funcionarios/$ {
           empId
         }
 
-        `).then(r=> r.json()).catch(()=> []);
+        `).then(r => r.json()).catch(() => []);
 
-      document.getElementById('aso-table').innerHTML=d.map(f=> `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
+          document.getElementById('aso-table').innerHTML = d.map(f => `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
           f.nome
         }
 
@@ -1949,33 +2657,33 @@
         }
 
         </span></td></tr>`).join('') || nd(6);
-      const valido=d.filter(f=> f.aso_status==='valido').length;
-      const vencer=d.filter(f=> f.aso_status==='a_vencer' || f.aso_status==='vencer').length;
-      const vencido=d.filter(f=> f.aso_status==='vencido').length;
-      const ar=d.filter(f=> f.risco==='Alto').length,
-      mr=d.filter(f=> f.risco==='Medio').length,
-      br2=d.filter(f=> f.risco==='Baixo').length;
+          const valido = d.filter(f => f.aso_status === 'valido').length;
+          const vencer = d.filter(f => f.aso_status === 'a_vencer' || f.aso_status === 'vencer').length;
+          const vencido = d.filter(f => f.aso_status === 'vencido').length;
+          const ar = d.filter(f => f.risco === 'Alto').length,
+            mr = d.filter(f => f.risco === 'Medio').length,
+            br2 = d.filter(f => f.risco === 'Baixo').length;
 
-      setTimeout(()=> {
-          donut3d('c-aso-status', ['Válido', 'A Vencer', 'Vencido'], [valido, vencer, vencido], ['rgba(0,200,60,0.9)', 'rgba(255,160,0,0.9)', 'rgba(255,50,50,0.9)']);
-          bar3d('c-aso-venc', ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'], [0, 1, vencido, vencer, 0, 0], ['rgba(0,200,60,0.9)', 'rgba(0,200,60,0.9)', 'rgba(255,50,50,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,200,60,0.9)', 'rgba(0,200,60,0.9)']);
-          bar3d('c-aso-risco', ['Alto', 'Médio', 'Baixo'], [ar, mr, br2], ['rgba(255,50,50,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,200,60,0.9)']);
+          setTimeout(() => {
+            donut3d('c-aso-status', ['Válido', 'A Vencer', 'Vencido'], [valido, vencer, vencido], ['rgba(0,200,60,0.9)', 'rgba(255,160,0,0.9)', 'rgba(255,50,50,0.9)']);
+            bar3d('c-aso-venc', ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'], [0, 1, vencido, vencer, 0, 0], ['rgba(0,200,60,0.9)', 'rgba(0,200,60,0.9)', 'rgba(255,50,50,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,200,60,0.9)', 'rgba(0,200,60,0.9)']);
+            bar3d('c-aso-risco', ['Alto', 'Médio', 'Baixo'], [ar, mr, br2], ['rgba(255,50,50,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,200,60,0.9)']);
+          }
+
+            , 120);
         }
 
-        , 120);
-    }
+        async function loadAgen() {
+          if (!empId) return;
 
-    async function loadAgen() {
-      if ( !empId) return;
-
-      const d=await fetch(`/api/agendamentos/$ {
+          const d = await fetch(`/api/agendamentos/$ {
           empId
         }
 
-        `).then(r=> r.json()).catch(()=> []);
-      document.getElementById('agen-sub').textContent=d.length+' agendamentos';
+        `).then(r => r.json()).catch(() => []);
+          document.getElementById('agen-sub').textContent = d.length + ' agendamentos';
 
-      document.getElementById('agen-table').innerHTML=d.map(a=> `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
+          document.getElementById('agen-table').innerHTML = d.map(a => `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
           a.funcionario_nome
         }
 
@@ -1999,36 +2707,36 @@
           a.status
         }
 
-        </span></td><td><button onclick="confirmAgen(${a.id})" style="background:rgba(0,100,40,0.2);border:1px solid rgba(0,200,60,0.2);color:#00cc44;padding:2px 8px;border-radius:5px;cursor:pointer;font-size:10px" >✓</button></td></tr>`).join('') || nd(7);
-      const conf=d.filter(a=> a.status==='Confirmado').length,
-      pend=d.length - conf;
+        </span></td><td><button onclick="confirmAgen(${a.id})" style="background:rgba(0,100,40,0.2);border:1px solid rgba(0,200,60,0.2);color:#00cc44;padding:2px 8px;border-radius:5px;cursor:pointer;font-size:10px" >?</button></td></tr>`).join('') || nd(7);
+          const conf = d.filter(a => a.status === 'Confirmado').length,
+            pend = d.length - conf;
 
-      const tipos= {}
+          const tipos = {}
 
-      ;
+            ;
 
-      d.forEach(a=> {
-          tipos[a.tipo_exame]=(tipos[a.tipo_exame] || 0) + 1
-        });
+          d.forEach(a => {
+            tipos[a.tipo_exame] = (tipos[a.tipo_exame] || 0) + 1
+          });
 
-      setTimeout(()=> {
-          donut3d('c-agen-status', ['Confirmado', 'Pendente'], [conf, pend], ['rgba(0,200,60,0.9)', 'rgba(255,160,0,0.9)']);
-          bar3d('c-agen-tipo', Object.keys(tipos).map(k=> k.split(' ').pop()), Object.values(tipos), ['rgba(0,170,255,0.9)', 'rgba(170,100,255,0.9)', 'rgba(0,200,60,0.9)', 'rgba(255,160,0,0.9)']);
+          setTimeout(() => {
+            donut3d('c-agen-status', ['Confirmado', 'Pendente'], [conf, pend], ['rgba(0,200,60,0.9)', 'rgba(255,160,0,0.9)']);
+            bar3d('c-agen-tipo', Object.keys(tipos).map(k => k.split(' ').pop()), Object.values(tipos), ['rgba(0,170,255,0.9)', 'rgba(170,100,255,0.9)', 'rgba(0,200,60,0.9)', 'rgba(255,160,0,0.9)']);
+          }
+
+            , 120);
         }
 
-        , 120);
-    }
+        async function loadEpis() {
+          if (!empId) return;
 
-    async function loadEpis() {
-      if ( !empId) return;
-
-      const d=await fetch(`/api/epis/$ {
+          const d = await fetch(`/api/epis/$ {
           empId
         }
 
-        `).then(r=> r.json()).catch(()=> []);
+        `).then(r => r.json()).catch(() => []);
 
-      document.getElementById('epi-table').innerHTML=d.map(e=> `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
+          document.getElementById('epi-table').innerHTML = d.map(e => `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
           e.nome
         }
 
@@ -2053,27 +2761,27 @@
         }
 
         </span></td></tr>`).join('') || nd(6);
-      const ok=d.filter(e=> e.quantidade >=e.estoque_minimo).length,
-      crit=d.length - ok;
+          const ok = d.filter(e => e.quantidade >= e.estoque_minimo).length,
+            crit = d.length - ok;
 
-      setTimeout(()=> {
-          donut3d('c-epi-status', ['OK', 'Crítico'], [ok, crit], ['rgba(0,200,60,0.9)', 'rgba(255,50,50,0.9)']);
-          bar3d('c-epi-qtd', d.slice(0, 6).map(e=> e.nome.substring(0, 6)), d.slice(0, 6).map(e=> e.quantidade), d.slice(0, 6).map(e=> e.quantidade < e.estoque_minimo ? 'rgba(255,50,50,0.9)' : 'rgba(0,200,60,0.9)'));
+          setTimeout(() => {
+            donut3d('c-epi-status', ['OK', 'Crítico'], [ok, crit], ['rgba(0,200,60,0.9)', 'rgba(255,50,50,0.9)']);
+            bar3d('c-epi-qtd', d.slice(0, 6).map(e => e.nome.substring(0, 6)), d.slice(0, 6).map(e => e.quantidade), d.slice(0, 6).map(e => e.quantidade < e.estoque_minimo ? 'rgba(255,50,50,0.9)' : 'rgba(0,200,60,0.9)'));
+          }
+
+            , 120);
         }
 
-        , 120);
-    }
+        async function loadCats() {
+          if (!empId) return;
 
-    async function loadCats() {
-      if ( !empId) return;
-
-      const d=await fetch(`/api/cats/$ {
+          const d = await fetch(`/api/cats/$ {
           empId
         }
 
-        `).then(r=> r.json()).catch(()=> []);
+        `).then(r => r.json()).catch(() => []);
 
-      document.getElementById('cats-table').innerHTML=d.map(c=> `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
+          document.getElementById('cats-table').innerHTML = d.map(c => `<tr><td style="font-weight:600;color:rgba(255,255,255,0.8)" >$ {
           c.funcionario_nome
         }
 
@@ -2099,64 +2807,64 @@
 
         </td></tr>`).join('') || nd(6);
 
-      const gravs= {
-        Leve: 0, Moderado: 0, Grave: 0, Fatal: 0
-      }
+          const gravs = {
+            Leve: 0, Moderado: 0, Grave: 0, Fatal: 0
+          }
 
-      ;
+            ;
 
-      d.forEach(c=> {
-          if (gravs[c.gravidade] !==undefined) gravs[c.gravidade]++
-        });
+          d.forEach(c => {
+            if (gravs[c.gravidade] !== undefined) gravs[c.gravidade]++
+          });
 
-      const tipos= {}
+          const tipos = {}
 
-      ;
+            ;
 
-      d.forEach(c=> {
-          tipos[c.tipo]=(tipos[c.tipo] || 0) + 1
-        });
+          d.forEach(c => {
+            tipos[c.tipo] = (tipos[c.tipo] || 0) + 1
+          });
 
-      const setores2= {}
+          const setores2 = {}
 
-      ;
+            ;
 
-      d.forEach(c=> {
-          if (c.setor) setores2[c.setor]=(setores2[c.setor] || 0) + 1
-        });
+          d.forEach(c => {
+            if (c.setor) setores2[c.setor] = (setores2[c.setor] || 0) + 1
+          });
 
-      setTimeout(()=> {
-          donut3d('c-cat-grav', Object.keys(gravs), Object.values(gravs), ['rgba(0,200,60,0.9)', 'rgba(255,160,0,0.9)', 'rgba(255,80,0,0.9)', 'rgba(200,0,0,0.9)']);
-          bar3d('c-cat-tipo', Object.keys(tipos), Object.values(tipos), ['rgba(255,100,60,0.9)', 'rgba(255,160,0,0.9)', 'rgba(170,100,255,0.9)']);
-          if (Object.keys(setores2).length > 0) bar3d('c-cat-setor', Object.keys(setores2), Object.values(setores2), ['rgba(255,100,60,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,170,255,0.9)', 'rgba(170,100,255,0.9)']);
+          setTimeout(() => {
+            donut3d('c-cat-grav', Object.keys(gravs), Object.values(gravs), ['rgba(0,200,60,0.9)', 'rgba(255,160,0,0.9)', 'rgba(255,80,0,0.9)', 'rgba(200,0,0,0.9)']);
+            bar3d('c-cat-tipo', Object.keys(tipos), Object.values(tipos), ['rgba(255,100,60,0.9)', 'rgba(255,160,0,0.9)', 'rgba(170,100,255,0.9)']);
+            if (Object.keys(setores2).length > 0) bar3d('c-cat-setor', Object.keys(setores2), Object.values(setores2), ['rgba(255,100,60,0.9)', 'rgba(255,160,0,0.9)', 'rgba(0,170,255,0.9)', 'rgba(170,100,255,0.9)']);
+          }
+
+            , 120);
         }
 
-        , 120);
-    }
+        async function loadTrein() {
+          if (!empId) return;
 
-    async function loadTrein() {
-      if ( !empId) return;
-
-      const d=await fetch(`/api/treinamentos/$ {
+          const d = await fetch(`/api/treinamentos/$ {
           empId
         }
 
-        `).then(r=> r.json()).catch(()=> []);
-      document.getElementById('trein-sub').textContent=d.length+' treinamentos';
-      const conc=d.filter(t=> t.status==='Concluído').length;
-      const agen=d.filter(t=> t.status==='Agendado').length;
-      const anda=d.filter(t=> t.status==='Em Andamento').length;
-      const part=d.reduce((s, t)=> s + (parseInt(t.participantes) || 0), 0);
-      document.getElementById('t-tot').textContent=d.length;
-      document.getElementById('t-con').textContent=conc;
-      document.getElementById('t-age').textContent=agen;
-      document.getElementById('t-par').textContent=part;
+        `).then(r => r.json()).catch(() => []);
+          document.getElementById('trein-sub').textContent = d.length + ' treinamentos';
+          const conc = d.filter(t => t.status === 'Concluído').length;
+          const agen = d.filter(t => t.status === 'Agendado').length;
+          const anda = d.filter(t => t.status === 'Em Andamento').length;
+          const part = d.reduce((s, t) => s + (parseInt(t.participantes) || 0), 0);
+          document.getElementById('t-tot').textContent = d.length;
+          document.getElementById('t-con').textContent = conc;
+          document.getElementById('t-age').textContent = agen;
+          document.getElementById('t-par').textContent = part;
 
-      document.getElementById('trein-cards').innerHTML=d.map(t=> {
-          const pct=t.status==='Concluído' ? 100 : t.status==='Em Andamento' ? 50 : 0;
-          const sc=t.status==='Concluído' ? 'bg' : t.status==='Em Andamento' ? 'bb' : 'by';
+          document.getElementById('trein-cards').innerHTML = d.map(t => {
+            const pct = t.status === 'Concluído' ? 100 : t.status === 'Em Andamento' ? 50 : 0;
+            const sc = t.status === 'Concluído' ? 'bg' : t.status === 'Em Andamento' ? 'bb' : 'by';
 
-          return `<div class="trein-card" ><span class="trein-status bp ${sc}" >$ {
+            return `<div class="trein-card" ><span class="trein-status bp ${sc}" >$ {
             t.status
           }
 
@@ -2185,184 +2893,184 @@
           }
 
           </div></div></div>$ {
-            t.responsavel ? `<div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:8px" >👤 $ {
+            t.responsavel ? `< div style = "font-size:11px;color:rgba(255,255,255,0.3);margin-top:8px" >?? $ {
               t.responsavel
             }
 
-            </div>` : ''
+            </div > ` : ''
           }
 
           <div class="tprog" ><div class="tprog-bar" style="width:${pct}%" ></div></div></div>`;
-        }).join('') || '<div style="color:var(--muted);text-align:center;padding:20px;grid-column:span 2">Nenhum treinamento</div>';
+          }).join('') || '<div style="color:var(--muted);text-align:center;padding:20px;grid-column:span 2">Nenhum treinamento</div>';
 
-      setTimeout(()=> {
-          donut3d('c-trein-status', ['Concluído', 'Agendado', 'Em Andamento'], [conc, agen, anda], ['rgba(0,200,60,0.9)', 'rgba(0,170,255,0.9)', 'rgba(255,160,0,0.9)']);
-          bar3d('c-trein-part', d.slice(0, 6).map(t=> (t.nr_referencia || 'NR').substring(0, 6)), d.slice(0, 6).map(t=> parseInt(t.participantes) || 0), ['rgba(0,200,60,0.9)', 'rgba(0,170,255,0.9)', 'rgba(170,100,255,0.9)', 'rgba(255,160,0,0.9)', 'rgba(255,100,60,0.9)', 'rgba(0,220,170,0.9)']);
+          setTimeout(() => {
+            donut3d('c-trein-status', ['Concluído', 'Agendado', 'Em Andamento'], [conc, agen, anda], ['rgba(0,200,60,0.9)', 'rgba(0,170,255,0.9)', 'rgba(255,160,0,0.9)']);
+            bar3d('c-trein-part', d.slice(0, 6).map(t => (t.nr_referencia || 'NR').substring(0, 6)), d.slice(0, 6).map(t => parseInt(t.participantes) || 0), ['rgba(0,200,60,0.9)', 'rgba(0,170,255,0.9)', 'rgba(170,100,255,0.9)', 'rgba(255,160,0,0.9)', 'rgba(255,100,60,0.9)', 'rgba(0,220,170,0.9)']);
+          }
+
+            , 120);
         }
 
-        , 120);
-    }
+        async function confirmAgen(id) {
+          const fd = new FormData();
+          fd.append('status', 'Confirmado');
 
-    async function confirmAgen(id) {
-      const fd=new FormData();
-      fd.append('status', 'Confirmado');
-
-      await fetch(`/api/agendamentos/$ {
+          await fetch(`/api/agendamentos/$ {
           id
         }
 
         /status`, {
-        method: 'POST', body: fd
+            method: 'POST', body: fd
 
-      }).catch(()=> {});
-    toast('Agendamento confirmado');
-    loadAgen();
-    }
+          }).catch(() => { });
+          toast('Agendamento confirmado');
+          loadAgen();
+        }
 
-    function nav(name, el) {
-      document.querySelectorAll('.section').forEach(s=> s.classList.remove('active'));
-      document.getElementById('sec-' + name).classList.add('active');
-      document.querySelectorAll('.nav-item').forEach(n=> n.classList.remove('active'));
-      if (el) el.classList.add('active');
+        function nav(name, el) {
+          document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+          document.getElementById('sec-' + name).classList.add('active');
+          document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+          if (el) el.classList.add('active');
 
-      const t= {
-        dashboard: 'Dashboard', funcionarios: 'Funcionários', aso: 'ASO & Exames', agendamentos: 'Agendamentos', epis: 'EPIs & Estoque', cats: 'Acidentes (CAT)', treinamentos: 'Treinamentos', ia: 'Análise Preditiva', laudos: 'Laudos Automáticos'
-      }
+          const t = {
+            dashboard: 'Dashboard', funcionarios: 'Funcionários', aso: 'ASO & Exames', agendamentos: 'Agendamentos', epis: 'EPIs & Estoque', cats: 'Acidentes (CAT)', treinamentos: 'Treinamentos', ia: 'Análise Preditiva', laudos: 'Laudos Automáticos'
+          }
 
-      ;
-      document.getElementById('topTitle').textContent=t[name] || name;
-      if (name==='funcionarios') loadFunc();
-      if (name==='aso') loadAso();
-      if (name==='agendamentos') loadAgen();
-      if (name==='epis') loadEpis();
-      if (name==='cats') loadCats();
-      if (name==='treinamentos') loadTrein();
-      if (name==='laudos') loadDRPS();
-    }
+            ;
+          document.getElementById('topTitle').textContent = t[name] || name;
+          if (name === 'funcionarios') loadFunc();
+          if (name === 'aso') loadAso();
+          if (name === 'agendamentos') loadAgen();
+          if (name === 'epis') loadEpis();
+          if (name === 'cats') loadCats();
+          if (name === 'treinamentos') loadTrein();
+          if (name === 'laudos') loadDRPS();
+        }
 
-    // ── DRPS ──
-    let drpsData=null;
+        // -- DRPS --
+        let drpsData = null;
 
-    function copyLink() {
-      const link=document.getElementById('drps-link');
-      link.select();
-      document.execCommand('copy');
-      toast('Link copiado!');
-    }
+        function copyLink() {
+          const link = document.getElementById('drps-link');
+          link.select();
+          document.execCommand('copy');
+          toast('Link copiado!');
+        }
 
-    function openQuestionario() {
-      const link=document.getElementById('drps-link').value;
-      if (link) window.open(link, '_blank');
-    }
+        function openQuestionario() {
+          const link = document.getElementById('drps-link').value;
+          if (link) window.open(link, '_blank');
+        }
 
-    async function loadDRPS() {
-      if ( !empId) {
-        toast('Selecione uma empresa');
-        return
-      }
+        async function loadDRPS() {
+          if (!empId) {
+            toast('Selecione uma empresa');
+            return
+          }
 
-      document.getElementById('drps-link').value='https://digital-survey-craft.lovable.app/';
+          document.getElementById('drps-link').value = 'https://digital-survey-craft.lovable.app/';
 
-      try {
-        const d=await fetch(`/api/drps/resultados/$ {
+          try {
+            const d = await fetch(`/api/drps/resultados/$ {
             empId
           }
 
-          `).then(r=> r.json());
-        drpsData=d;
-        renderDRPSKPIs(d);
-        renderMatriz();
-        renderDRPSGraficos(d);
-        // Preencher setor filter
-        const setores=[...new Set((d.por_setor || []).map(s=> s.setor))];
-        const sel=document.getElementById('drps-setor-filter');
+          `).then(r => r.json());
+            drpsData = d;
+            renderDRPSKPIs(d);
+            renderMatriz();
+            renderDRPSGraficos(d);
+            // Preencher setor filter
+            const setores = [...new Set((d.por_setor || []).map(s => s.setor))];
+            const sel = document.getElementById('drps-setor-filter');
 
-        sel.innerHTML='<option value="">Todos os setores</option>'+setores.map(s=> `<option>$ {
+            sel.innerHTML = '<option value="">Todos os setores</option>' + setores.map(s => `<option>$ {
             s
           }
 
           </option>`).join('');
-      }
+          }
 
-      catch (e) {
-        // Dados demo para visualização
-        drpsData=gerarDRPSDemo();
-        renderDRPSKPIs(drpsData);
-        renderMatriz();
-        renderDRPSGraficos(drpsData);
-        toast('Dados de demonstração DRPS carregados');
-      }
-    }
+          catch (e) {
+            // Dados demo para visualização
+            drpsData = gerarDRPSDemo();
+            renderDRPSKPIs(drpsData);
+            renderMatriz();
+            renderDRPSGraficos(drpsData);
+            toast('Dados de demonstração DRPS carregados');
+          }
+        }
 
-    function gerarDRPSDemo() {
-      const TNOMES=['Assédio Moral',
-      'Carga Excssv.',
-      'Reconhecim.',
-      'Clima Org.',
-      'Autonomia',
-      'Pressão',
-      'Insegurança',
-      'Conflitos',
-      'Equilíbrio'];
-      const setores=['Produção',
-      'Financeiro',
-      'Administrativo',
-      'SESMT',
-      'Manutenção'];
+        function gerarDRPSDemo() {
+          const TNOMES = ['Assédio Moral',
+            'Carga Excssv.',
+            'Reconhecim.',
+            'Clima Org.',
+            'Autonomia',
+            'Pressão',
+            'Insegurança',
+            'Conflitos',
+            'Equilíbrio'];
+          const setores = ['Produção',
+            'Financeiro',
+            'Administrativo',
+            'SESMT',
+            'Manutenção'];
 
-      const por_setor=setores.map(s=> ({
+          const por_setor = setores.map(s => ({
 
-          setor: s,
-          respondentes: Math.floor(Math.random() * 8) + 2,
-          topicos: TNOMES.map((n, i)=> ({
+            setor: s,
+            respondentes: Math.floor(Math.random() * 8) + 2,
+            topicos: TNOMES.map((n, i) => ({
               id: i + 1, nome: n,
               media: Math.round((Math.random() * 3.5) * 10) / 10,
               nivel: ['Baixo', 'Médio', 'Alto', 'Crítico'][Math.floor(Math.random() * 4)]
             }))
-      }));
+          }));
 
-    return {
-      total_respostas: por_setor.reduce((a, s)=> a + s.respondentes, 0),
-        setores_avaliados: por_setor.length,
-        criticos: por_setor.reduce((a, s)=> a + s.topicos.filter(t=> t.nivel==='Crítico').length, 0),
-        baixos: por_setor.reduce((a, s)=> a + s.topicos.filter(t=> t.nivel==='Baixo').length, 0),
-        por_setor
-    }
+          return {
+            total_respostas: por_setor.reduce((a, s) => a + s.respondentes, 0),
+            setores_avaliados: por_setor.length,
+            criticos: por_setor.reduce((a, s) => a + s.topicos.filter(t => t.nivel === 'Crítico').length, 0),
+            baixos: por_setor.reduce((a, s) => a + s.topicos.filter(t => t.nivel === 'Baixo').length, 0),
+            por_setor
+          }
 
-    ;
-    }
+            ;
+        }
 
-    function renderDRPSKPIs(d) {
-      document.getElementById('drps-total').textContent=d.total_respostas || 0;
-      document.getElementById('drps-setores').textContent=d.setores_avaliados || 0;
-      document.getElementById('drps-criticos').textContent=d.criticos || 0;
-      document.getElementById('drps-ok').textContent=d.baixos || 0;
-    }
+        function renderDRPSKPIs(d) {
+          document.getElementById('drps-total').textContent = d.total_respostas || 0;
+          document.getElementById('drps-setores').textContent = d.setores_avaliados || 0;
+          document.getElementById('drps-criticos').textContent = d.criticos || 0;
+          document.getElementById('drps-ok').textContent = d.baixos || 0;
+        }
 
-    function renderMatriz() {
-      if ( !drpsData) return;
-      const filtro=document.getElementById('drps-setor-filter').value;
-      const setores=(drpsData.por_setor || []).filter(s=> !filtro || s.setor===filtro);
+        function renderMatriz() {
+          if (!drpsData) return;
+          const filtro = document.getElementById('drps-setor-filter').value;
+          const setores = (drpsData.por_setor || []).filter(s => !filtro || s.setor === filtro);
 
-      const nivelCls= {
-        Baixo: 'bg', Médio: 'by', Alto: 'br', Crítico: 'br'
-      }
+          const nivelCls = {
+            Baixo: 'bg', Médio: 'by', Alto: 'br', Crítico: 'br'
+          }
 
-      ;
+            ;
 
-      const nivelStyle= {
-        Baixo: 'color:#00cc44', Médio: 'color:#cccc00', Alto: 'color:#ffaa00', Crítico: 'color:#ff4444;font-weight:800'
-      }
+          const nivelStyle = {
+            Baixo: 'color:#00cc44', Médio: 'color:#cccc00', Alto: 'color:#ffaa00', Crítico: 'color:#ff4444;font-weight:800'
+          }
 
-      ;
+            ;
 
-      document.getElementById('drps-matriz-body').innerHTML=setores.map(s=> {
-          const ts=s.topicos || [];
-          const medias=ts.map(t=> t.media || 0);
-          const mediaGeral=medias.length ? Math.round(medias.reduce((a, b)=> a + b, 0) / medias.length * 10) / 10 : 0;
-          const ng=mediaGeral < 1.5 ? 'Baixo' : mediaGeral < 2.5 ? 'Médio' : mediaGeral < 3.2 ? 'Alto' : 'Crítico';
+          document.getElementById('drps-matriz-body').innerHTML = setores.map(s => {
+            const ts = s.topicos || [];
+            const medias = ts.map(t => t.media || 0);
+            const mediaGeral = medias.length ? Math.round(medias.reduce((a, b) => a + b, 0) / medias.length * 10) / 10 : 0;
+            const ng = mediaGeral < 1.5 ? 'Baixo' : mediaGeral < 2.5 ? 'Médio' : mediaGeral < 3.2 ? 'Alto' : 'Crítico';
 
-          return `<tr> <td style="font-weight:700;color:rgba(255,255,255,0.85)" >$ {
+            return `<tr> <td style="font-weight:700;color:rgba(255,255,255,0.85)" >$ {
             s.setor
           }
 
@@ -2371,15 +3079,15 @@
           }
 
           respostas</span></td> $ {
-            ts.map(t=> `<td style="text-align:center" ><span class="bp ${nivelCls[t.nivel] || 'by'}" style="${nivelStyle[t.nivel] || ''};font-size:10px" >$ {
-                t.nivel
-              }
+            ts.map(t=> `< td style = "text-align:center" > <span class="bp ${nivelCls[t.nivel] || 'by'}" style="${nivelStyle[t.nivel] || ''};font-size:10px" >$ {
+              t.nivel
+            }
 
               <br><span style="font-size:9px;opacity:.7" >$ {
                 t.media
               }
 
-              </span></span></td>`).join('')
+              </span></span></td > `).join('')
           }
 
           <td style="text-align:center" ><span class="bp ${nivelCls[ng]}" style="${nivelStyle[ng]};font-size:11px" >$ {
@@ -2391,64 +3099,64 @@
           }
 
           </span></span></td> </tr>`;
-        }).join('') || '<tr><td colspan="11" style="text-align:center;padding:14px;color:var(--muted)">Sem dados</td></tr>';
-    }
-
-    function renderDRPSGraficos(d) {
-      const TNOMES=['Assédio',
-      'Carga',
-      'Reconhec.',
-      'Clima',
-      'Autonomia',
-      'Pressão',
-      'Insegur.',
-      'Conflitos',
-      'Equilíbrio'];
-
-      // Calcular media por tópico (média de todos setores)
-      const mediasPorTopico=TNOMES.map((_, ti)=> {
-          const vals=(d.por_setor || []).map(s=> s.topicos?.[ti]?.media || 0);
-          return vals.length ? Math.round(vals.reduce((a, b)=> a + b, 0) / vals.length * 10) / 10 : 0;
-        });
-
-      const colors=mediasPorTopico.map(m=> {
-          if (m < 1.5) return 'rgba(0,200,60,0.9)';
-          if (m < 2.5) return 'rgba(200,200,0,0.9)';
-          if (m < 3.2) return 'rgba(255,160,0,0.9)';
-          return 'rgba(255,50,50,0.9)';
-        });
-
-      setTimeout(()=> {
-          bar3d('c-drps-bar', TNOMES, mediasPorTopico, colors);
-          // Distribuição geral
-          const baixo=(d.por_setor || []).reduce((a, s)=> a + s.topicos.filter(t=> t.nivel==='Baixo').length, 0);
-          const medio=(d.por_setor || []).reduce((a, s)=> a + s.topicos.filter(t=> t.nivel==='Médio').length, 0);
-          const alto=(d.por_setor || []).reduce((a, s)=> a + s.topicos.filter(t=> t.nivel==='Alto').length, 0);
-          const critico=(d.por_setor || []).reduce((a, s)=> a + s.topicos.filter(t=> t.nivel==='Crítico').length, 0);
-          donut3d('c-drps-dist', ['Baixo', 'Médio', 'Alto', 'Crítico'], [baixo, medio, alto, critico],
-            ['rgba(0,200,60,0.9)', 'rgba(200,200,0,0.9)', 'rgba(255,160,0,0.9)', 'rgba(255,50,50,0.9)']);
+          }).join('') || '<tr><td colspan="11" style="text-align:center;padding:14px;color:var(--muted)">Sem dados</td></tr>';
         }
 
-        , 120);
-    }
+        function renderDRPSGraficos(d) {
+          const TNOMES = ['Assédio',
+            'Carga',
+            'Reconhec.',
+            'Clima',
+            'Autonomia',
+            'Pressão',
+            'Insegur.',
+            'Conflitos',
+            'Equilíbrio'];
 
-    // ── LAUDOS COMPLETOS ──
-    function gerarLaudo(tipo) {
-      if ( !dash) {
-        toast('Carregue os dados primeiro');
-        return
-      }
+          // Calcular media por tópico (média de todos setores)
+          const mediasPorTopico = TNOMES.map((_, ti) => {
+            const vals = (d.por_setor || []).map(s => s.topicos?.[ti]?.media || 0);
+            return vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length * 10) / 10 : 0;
+          });
 
-      const d=dash,
-      emp=d.empresa?.nome || 'Empresa',
-      cnpj=d.empresa?.cnpj || '00.000.000/0000-00';
-      const hoje=new Date().toLocaleDateString('pt-BR');
-      const ano=new Date().getFullYear();
-      let txt='';
+          const colors = mediasPorTopico.map(m => {
+            if (m < 1.5) return 'rgba(0,200,60,0.9)';
+            if (m < 2.5) return 'rgba(200,200,0,0.9)';
+            if (m < 3.2) return 'rgba(255,160,0,0.9)';
+            return 'rgba(255,50,50,0.9)';
+          });
 
-      if (tipo==='PCMSO') {
-        txt=`PROGRAMA DE CONTROLE MÉDICO DE SAÚDE OCUPACIONAL $ {
-          '═' .repeat(62)
+          setTimeout(() => {
+            bar3d('c-drps-bar', TNOMES, mediasPorTopico, colors);
+            // Distribuição geral
+            const baixo = (d.por_setor || []).reduce((a, s) => a + s.topicos.filter(t => t.nivel === 'Baixo').length, 0);
+            const medio = (d.por_setor || []).reduce((a, s) => a + s.topicos.filter(t => t.nivel === 'Médio').length, 0);
+            const alto = (d.por_setor || []).reduce((a, s) => a + s.topicos.filter(t => t.nivel === 'Alto').length, 0);
+            const critico = (d.por_setor || []).reduce((a, s) => a + s.topicos.filter(t => t.nivel === 'Crítico').length, 0);
+            donut3d('c-drps-dist', ['Baixo', 'Médio', 'Alto', 'Crítico'], [baixo, medio, alto, critico],
+              ['rgba(0,200,60,0.9)', 'rgba(200,200,0,0.9)', 'rgba(255,160,0,0.9)', 'rgba(255,50,50,0.9)']);
+          }
+
+            , 120);
+        }
+
+        // -- LAUDOS COMPLETOS --
+        function gerarLaudo(tipo) {
+          if (!dash) {
+            toast('Carregue os dados primeiro');
+            return
+          }
+
+          const d = dash,
+            emp = d.empresa?.nome || 'Empresa',
+            cnpj = d.empresa?.cnpj || '00.000.000/0000-00';
+          const hoje = new Date().toLocaleDateString('pt-BR');
+          const ano = new Date().getFullYear();
+          let txt = '';
+
+          if (tipo === 'PCMSO') {
+            txt = `PROGRAMA DE CONTROLE MÉDICO DE SAÚDE OCUPACIONAL $ {
+          '-' .repeat(62)
         }
 
         EMPRESA: $ {
@@ -2472,10 +3180,10 @@
         }
 
         Norma Base: NR-7 (Portaria MTE nº 24/1994 e atualizações) $ {
-          '─' .repeat(62)
+          '-' .repeat(62)
         }
 
-        1. IDENTIFICAÇÃO DA EMPRESA ━━━━━━━━━━━━━━━━━━━━━━━━━━ • Razão Social: $ {
+        1. IDENTIFICAÇÃO DA EMPRESA ?????????????????????????? • Razão Social: $ {
           emp
         }
 
@@ -2491,12 +3199,12 @@
           d.ia?.setor_mais_critico || '—'
         }
 
-        • Médico Coordenador: ___________________________ CRM: _________ 2. OBJETIVO ━━━━━━━━━━━ Estabelecer a promoção e preservação da saúde dos trabalhadores,
-        em conformidade com a NR-7 e o perfil de riscos identificados no PGR e no DRPS (Diagnóstico de Riscos Psicossociais). 3. EXAMES MÉDICOS PROGRAMADOS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ▸ Admissional — obrigatório antes do início das atividades ▸ Periódico — conforme exposição a riscos (NR-7 §7.5.1) ▸ Retorno ao Trabalho — após afastamento ≥ 30 dias ▸ Mudança de Função — quando houver alteração de riscos ▸ Demissional — até a data do término do contrato 4. EXAMES COMPLEMENTARES (POR RISCO IDENTIFICADO) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Riscos Psicossociais (DRPS/NR-1): • Avaliação psicológica periódica (anual) • Rastreamento de Burnout (MBI — Maslach Burnout Inventory) • Rastreamento de Ansiedade (GAD-7) • Rastreamento de Depressão (PHQ-9) Riscos Físicos/Ergonômicos (conforme PGR): • Audiometria — trabalhadores expostos a ruído • Espirometria — exposição a poeiras/químicos • Acuidade visual — uso de telas/equipamentos 5. CRONOGRAMA DE EXAMES — $ {
+        • Médico Coordenador: ___________________________ CRM: _________ 2. OBJETIVO ??????????? Estabelecer a promoção e preservação da saúde dos trabalhadores,
+        em conformidade com a NR-7 e o perfil de riscos identificados no PGR e no DRPS (Diagnóstico de Riscos Psicossociais). 3. EXAMES MÉDICOS PROGRAMADOS ????????????????????????????? ? Admissional — obrigatório antes do início das atividades ? Periódico — conforme exposição a riscos (NR-7 §7.5.1) ? Retorno ao Trabalho — após afastamento = 30 dias ? Mudança de Função — quando houver alteração de riscos ? Demissional — até a data do término do contrato 4. EXAMES COMPLEMENTARES (POR RISCO IDENTIFICADO) ???????????????????????????????????????????????? Riscos Psicossociais (DRPS/NR-1): • Avaliação psicológica periódica (anual) • Rastreamento de Burnout (MBI — Maslach Burnout Inventory) • Rastreamento de Ansiedade (GAD-7) • Rastreamento de Depressão (PHQ-9) Riscos Físicos/Ergonômicos (conforme PGR): • Audiometria — trabalhadores expostos a ruído • Espirometria — exposição a poeiras/químicos • Acuidade visual — uso de telas/equipamentos 5. CRONOGRAMA DE EXAMES — $ {
           ano
         }
 
-        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ • ASOs a renovar: $ {
+        ??????????????????????????????? • ASOs a renovar: $ {
           d.kpis.aso_vencidos || 0
         }
 
@@ -2512,23 +3220,23 @@
           d.ia?.probabilidade_acidente || 0
         }
 
-        % 6. AÇÕES DE SAÚDE MENTAL (INTEGRADO AO DRPS) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ • Programa de apoio psicológico (PAE — Programa de Assistência ao Empregado) • Rodas de conversa sobre saúde mental — trimestral • Treinamento para líderes: sinais de adoecimento psíquico • Canal de escuta ativa e acolhimento • Campanhas: Janeiro Branco,
+        % 6. AÇÕES DE SAÚDE MENTAL (INTEGRADO AO DRPS) ??????????????????????????????????????????? • Programa de apoio psicológico (PAE — Programa de Assistência ao Empregado) • Rodas de conversa sobre saúde mental — trimestral • Treinamento para líderes: sinais de adoecimento psíquico • Canal de escuta ativa e acolhimento • Campanhas: Janeiro Branco,
         Setembro Amarelo,
-        Outubro Rosa 7. INDICADORES DE MONITORAMENTO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ • Taxa de absenteísmo por afastamentos psicossociais • Índice de conformidade com ASOs (meta: 100%) • Score de risco DRPS por setor (meta: < 2.0) • Número de encaminhamentos psicológicos • Redução de CATs por causas psicossociais $ {
-          '═' .repeat(62)
+        Outubro Rosa 7. INDICADORES DE MONITORAMENTO ?????????????????????????????? • Taxa de absenteísmo por afastamentos psicossociais • Índice de conformidade com ASOs (meta: 100%) • Score de risco DRPS por setor (meta: < 2.0) • Número de encaminhamentos psicológicos • Redução de CATs por causas psicossociais $ {
+          '-' .repeat(62)
         }
 
         ASSINATURAS $ {
-          '─' .repeat(62)
+          '-' .repeat(62)
         }
 
         Médico Coordenador PCMSO: Responsável pela Empresa: _______________________________ _______________________________ CRM: _______________ Cargo: ________________________ Psicólogo Responsável DRPS: _______________________________ CRP: _______________ [Documento gerado pelo SESMT PRO — IA Engine | NR-7 Compliance]`;
 
-      }
+          }
 
-      else if (tipo==='PGR') {
-        txt=`PROGRAMA DE GERENCIAMENTO DE RISCOS — PGR $ {
-          '═' .repeat(62)
+          else if (tipo === 'PGR') {
+            txt = `PROGRAMA DE GERENCIAMENTO DE RISCOS — PGR $ {
+          '-' .repeat(62)
         }
 
         EMPRESA: $ {
@@ -2552,10 +3260,10 @@
         }
 
         Norma Base: NR-1 §1.5 (Portaria MTE nº 672/2021 e atualizações) $ {
-          '─' .repeat(62)
+          '-' .repeat(62)
         }
 
-        1. INVENTÁRIO DE RISCOS OCUPACIONAIS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1 RISCOS PSICOSSOCIAIS (Identificados via DRPS — NR-1) Funcionários em Alto Risco: $ {
+        1. INVENTÁRIO DE RISCOS OCUPACIONAIS ??????????????????????????????????? 1.1 RISCOS PSICOSSOCIAIS (Identificados via DRPS — NR-1) Funcionários em Alto Risco: $ {
           d.kpis.alto_risco || 0
         }
 
@@ -2576,7 +3284,7 @@
         }
 
         1.2 RISCOS FÍSICOS • Ruído — avaliar postos de trabalho • Temperatura extrema — especialmente Produção/Manutenção • Iluminação inadequada 1.3 RISCOS ERGONÔMICOS • Postura forçada — trabalho em computador/esteira • Levantamento de peso — setores operacionais • Monotonia e repetitividade 1.4 RISCOS QUÍMICOS • Produtos de limpeza / solventes • Poeiras diversas — conforme atividade fim 1.5 RISCOS BIOLÓGICOS • Vírus,
-        bactérias — conforme setor • Protocolos de higiene e vacinação 2. AVALIAÇÃO E CLASSIFICAÇÃO DE RISCOS (Matriz NR-1) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ NÍVEL │ GRAVIDADE │ PROBABILIDADE │ AÇÃO ────────┼───────────┼───────────────┼────────────────── Baixo │ Baixa │ Baixa │ Monitorar Médio │ Média │ Média │ Controlar Alto │ Alta │ Alta │ Intervir (30d) Crítico │ Crítica │ Alta/Sempre │ AÇÃO IMEDIATA 3. MEDIDAS DE PREVENÇÃO E CONTROLE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ▸ Hierarquia de controles (ELIMINAÇÃO > SUBSTITUIÇÃO > CONTROLE ENG. > ADMINISTRATIVO > EPI) ▸ EPIs — $ {
+        bactérias — conforme setor • Protocolos de higiene e vacinação 2. AVALIAÇÃO E CLASSIFICAÇÃO DE RISCOS (Matriz NR-1) ??????????????????????????????????????????????????? NÍVEL ¦ GRAVIDADE ¦ PROBABILIDADE ¦ AÇÃO --------+-----------+---------------+------------------ Baixo ¦ Baixa ¦ Baixa ¦ Monitorar Médio ¦ Média ¦ Média ¦ Controlar Alto ¦ Alta ¦ Alta ¦ Intervir (30d) Crítico ¦ Crítica ¦ Alta/Sempre ¦ AÇÃO IMEDIATA 3. MEDIDAS DE PREVENÇÃO E CONTROLE ?????????????????????????????????? ? Hierarquia de controles (ELIMINAÇÃO > SUBSTITUIÇÃO > CONTROLE ENG. > ADMINISTRATIVO > EPI) ? EPIs — $ {
           d.kpis.total_epis || 0
         }
 
@@ -2584,24 +3292,24 @@
           d.kpis.epis_criticos || 0
         }
 
-        ▸ Treinamentos — $ {
+        ? Treinamentos — $ {
           d.kpis.treinamentos || 0
         }
 
-        realizados ▸ CATs registradas: $ {
+        realizados ? CATs registradas: $ {
           d.kpis.total_cats || 0
         }
 
-        ▸ SESMT ativo e operante 4. PLANO DE AÇÃO INTEGRADO ━━━━━━━━━━━━━━━━━━━━━━━━━━ $ {
-          d.kpis.alto_risco>0 ? '⚠️  URGENTE: '+d.kpis.alto_risco+' funcionários em alto risco — avaliar individualmente\n': ''
+        ? SESMT ativo e operante 4. PLANO DE AÇÃO INTEGRADO ?????????????????????????? $ {
+          d.kpis.alto_risco>0 ? '??  URGENTE: '+d.kpis.alto_risco+' funcionários em alto risco — avaliar individualmente\n': ''
         }
 
         $ {
-          d.kpis.aso_vencidos>0 ? '⚠️  URGENTE: Renovar '+d.kpis.aso_vencidos+' ASO(s) vencido(s)\n': ''
+          d.kpis.aso_vencidos>0 ? '??  URGENTE: Renovar '+d.kpis.aso_vencidos+' ASO(s) vencido(s)\n': ''
         }
 
         $ {
-          d.kpis.epis_criticos>0 ? '⚠️  Repor estoque de '+d.kpis.epis_criticos+' EPI(s) abaixo do mínimo\n': ''
+          d.kpis.epis_criticos>0 ? '??  Repor estoque de '+d.kpis.epis_criticos+' EPI(s) abaixo do mínimo\n': ''
         }
 
         • $ {
@@ -2611,21 +3319,21 @@
         • Revisar DRPS em 6 meses (próxima aplicação: $ {
             new Date(Date.now() + 180 * 864e5).toLocaleDateString('pt-BR')
 
-          }) • Atualizar PGR anualmente ou após mudanças significativas 5. MONITORAMENTO E REVISÃO ━━━━━━━━━━━━━━━━━━━━━━━━━━ • Frequência de revisão: Anual ou após acidentes • Responsável: SESMT / Psicólogo Responsável • Próxima revisão: $ {
+          }) • Atualizar PGR anualmente ou após mudanças significativas 5. MONITORAMENTO E REVISÃO ?????????????????????????? • Frequência de revisão: Anual ou após acidentes • Responsável: SESMT / Psicólogo Responsável • Próxima revisão: $ {
           new Date(Date.now() + 365 * 864e5).toLocaleDateString('pt-BR')
         }
 
         $ {
-          '═' .repeat(62)
+          '-' .repeat(62)
         }
 
         Responsável Técnico: __________________________ CREA/CRP: _________ Responsável pela Empresa: _________________________ [Documento gerado pelo SESMT PRO — NR-1 §1.5 Compliance]`;
 
-      }
+          }
 
-      else if (tipo==='PLANO') {
-        txt=`PLANO DE AÇÃO — MITIGAÇÃO DE RISCOS PSICOSSOCIAIS $ {
-          '═' .repeat(62)
+          else if (tipo === 'PLANO') {
+            txt = `PLANO DE AÇÃO — MITIGAÇÃO DE RISCOS PSICOSSOCIAIS $ {
+          '-' .repeat(62)
         }
 
         EMPRESA: $ {
@@ -2637,11 +3345,11 @@
         }
 
         | Base: DRPS+Matriz de Risco NR-1 $ {
-          '─' .repeat(62)
+          '-' .repeat(62)
         }
 
         TÓPICO 1 — ASSÉDIO MORAL E SEXUAL Ação: Implementar política de assédio com canal de denúncia Responsável: RH+Jurídico Prazo: 30 dias Indicador: Nº de denúncias x Nº de resoluções TÓPICO 2 — CARGA EXCESSIVA DE TRABALHO Ação: Mapeamento de jornada e redistribuição de demandas Responsável: Gestores de Setor+RH Prazo: 45 dias Indicador: Índice de horas extras / absenteísmo TÓPICO 3 — RECONHECIMENTO E RECOMPENSAS Ação: Programa de reconhecimento formal+feedback estruturado Responsável: Liderança+RH Prazo: 60 dias Indicador: Engajamento (eNPS) TÓPICO 4 — CLIMA ORGANIZACIONAL Ação: Pesquisa de clima+roda de conversa por setor Responsável: Psicólogo+RH Prazo: 30 dias Indicador: Score clima organizacional (meta > 7/10) TÓPICO 5 — AUTONOMIA E CONTROLE Ação: Revisar processos burocráticos e ampliar autonomia Responsável: Gestores Prazo: 60 dias Indicador: Satisfação com autonomia (próximo DRPS) TÓPICO 6 — PRESSÃO E METAS Ação: Revisão do sistema de metas+treinamento lideranças Responsável: Diretoria+Gestores Prazo: 30 dias Indicador: Taxa de atingimento x rotatividade TÓPICO 7 — INSEGURANÇA E AMEAÇAS Ação: Comunicação transparente sobre estabilidade e políticas de RH Responsável: Diretoria+RH Prazo: 15 dias Indicador: Score de segurança (próximo DRPS) TÓPICO 8 — CONFLITOS E COMUNICAÇÃO Ação: Programa de mediação de conflitos+treinamento assertividade Responsável: Psicólogo+RH Prazo: 45 dias Indicador: Nº de conflitos formalizados TÓPICO 9 — EQUILÍBRIO VIDA PESSOAL E PROFISSIONAL Ação: Política de desconexão digital+flexibilidade de jornada Responsável: RH+Gestores Prazo: 60 dias Indicador: Índice de afastamentos por burnout $ {
-          '═' .repeat(62)
+          '-' .repeat(62)
         }
 
         PRÓXIMO DRPS: $ {
@@ -2649,59 +3357,59 @@
         }
 
         MONITORAMENTO CONTÍNUO: SESMT PRO+IA Engine Responsável Psicólogo: __________________________ CRP: _________ Responsável pela Empresa: _________________________ [Gerado pelo SESMT PRO — NR-1 §1.5.5 | ESG Social Compliance]`;
-      }
+          }
 
-      if (txt) {
-        document.getElementById('laudo-out').textContent=txt;
-        document.getElementById('m-laudo').style.display='flex';
-      }
-    }
+          if (txt) {
+            document.getElementById('laudo-out').textContent = txt;
+            document.getElementById('m-laudo').style.display = 'flex';
+          }
+        }
 
-    function gerarLaudoDRPS() {
-      const d=drpsData || gerarDRPSDemo();
+        function gerarLaudoDRPS() {
+          const d = drpsData || gerarDRPSDemo();
 
-      if ( !dash) {
-        toast('Carregue os dados da empresa primeiro');
-        return
-      }
+          if (!dash) {
+            toast('Carregue os dados da empresa primeiro');
+            return
+          }
 
-      const emp=dash.empresa?.nome || 'Empresa';
-      const hoje=new Date().toLocaleDateString('pt-BR');
-      const cnpj=dash.empresa?.cnpj || '00.000.000/0000-00';
+          const emp = dash.empresa?.nome || 'Empresa';
+          const hoje = new Date().toLocaleDateString('pt-BR');
+          const cnpj = dash.empresa?.cnpj || '00.000.000/0000-00';
 
-      const TNOMES=['Assédio Moral e Sexual',
-      'Carga Excessiva de Trabalho',
-      'Reconhecimento e Recompensas',
-      'Clima Organizacional',
-      'Autonomia e Controle',
-      'Pressão e Metas',
-      'Insegurança e Ameaças',
-      'Conflitos e Comunicação',
-      'Equilíbrio Vida Pessoal/Profissional'];
-      const REFS=['MTE Fator 1 / NR-1 §1.5.4',
-      'MTE Fator 2 / OMS Burn-out ICD-11',
-      'MTE Fator 3 / ITRA',
-      'MTE Fator 4 / Psicodinâmica Dejours',
-      'MTE Fator 5 / Modelo Karasek',
-      'MTE Fator 6 / Escala ITRA',
-      'MTE Fator 7 / Modelo Siegrist',
-      'MTE Fator 8 / NR-1 §1.5.3',
-      'MTE Fator 9 / OMS ESG Social'];
-      const ACOES=[ 'Revisar política de assédio; implementar canal de denúncia; treinamento de líderes.',
-      'Redistribuir tarefas; revisar jornada; mapear sobrecarga por função.',
-      'Implantar programa de reconhecimento; feedback estruturado trimestral.',
-      'Pesquisa de clima; rodas de conversa; fortalecimento da cultura.',
-      'Reduzir burocracia; ampliar autonomia decisória; treinamento.',
-      'Revisar metas; comunicar claramente critérios; desenvolver lideranças.',
-      'Comunicação transparente sobre estabilidade; política de RH clara.',
-      'Programa de mediação; treinar comunicação assertiva; fortalecer RH.',
-      'Política de desconexão; flexibilidade de jornada; PAE (apoio psicológico).'
-      ];
+          const TNOMES = ['Assédio Moral e Sexual',
+            'Carga Excessiva de Trabalho',
+            'Reconhecimento e Recompensas',
+            'Clima Organizacional',
+            'Autonomia e Controle',
+            'Pressão e Metas',
+            'Insegurança e Ameaças',
+            'Conflitos e Comunicação',
+            'Equilíbrio Vida Pessoal/Profissional'];
+          const REFS = ['MTE Fator 1 / NR-1 §1.5.4',
+            'MTE Fator 2 / OMS Burn-out ICD-11',
+            'MTE Fator 3 / ITRA',
+            'MTE Fator 4 / Psicodinâmica Dejours',
+            'MTE Fator 5 / Modelo Karasek',
+            'MTE Fator 6 / Escala ITRA',
+            'MTE Fator 7 / Modelo Siegrist',
+            'MTE Fator 8 / NR-1 §1.5.3',
+            'MTE Fator 9 / OMS ESG Social'];
+          const ACOES = ['Revisar política de assédio; implementar canal de denúncia; treinamento de líderes.',
+            'Redistribuir tarefas; revisar jornada; mapear sobrecarga por função.',
+            'Implantar programa de reconhecimento; feedback estruturado trimestral.',
+            'Pesquisa de clima; rodas de conversa; fortalecimento da cultura.',
+            'Reduzir burocracia; ampliar autonomia decisória; treinamento.',
+            'Revisar metas; comunicar claramente critérios; desenvolver lideranças.',
+            'Comunicação transparente sobre estabilidade; política de RH clara.',
+            'Programa de mediação; treinar comunicação assertiva; fortalecer RH.',
+            'Política de desconexão; flexibilidade de jornada; PAE (apoio psicológico).'
+          ];
 
-      let tabelaSetores='';
+          let tabelaSetores = '';
 
-      (d.por_setor || []).forEach(s=> {
-          tabelaSetores +=`\n $ {
+          (d.por_setor || []).forEach(s => {
+            tabelaSetores += `\n $ {
             s.setor
           }
 
@@ -2711,10 +3419,10 @@
 
             respondentes):\n`;
 
-          (s.topicos || []).forEach((t, i)=> {
-              const icon=t.nivel==='Crítico' ? '🔴' : t.nivel==='Alto' ? '🟠' : t.nivel==='Médio' ? '🟡' : '🟢';
+            (s.topicos || []).forEach((t, i) => {
+              const icon = t.nivel === 'Crítico' ? '??' : t.nivel === 'Alto' ? '??' : t.nivel === 'Médio' ? '??' : '??';
 
-              tabelaSetores +=` T$ {
+              tabelaSetores += ` T$ {
                 t.id || i + 1
               }
 
@@ -2734,10 +3442,10 @@
                   t.media
                 })\n`;
             });
-        });
+          });
 
-      const txt=`DRPS — DIAGNÓSTICO DE RISCOS PSICOSSOCIAIS RELATÓRIO TÉCNICO $ {
-        '═' .repeat(62)
+          const txt = `DRPS — DIAGNÓSTICO DE RISCOS PSICOSSOCIAIS RELATÓRIO TÉCNICO $ {
+        '-' .repeat(62)
       }
 
       EMPRESA: $ {
@@ -2761,23 +3469,23 @@
       }
 
       $ {
-        '─' .repeat(62)
+        '-' .repeat(62)
       }
 
-      1. INTRODUÇÃO ━━━━━━━━━━━━━ A avaliação de riscos psicossociais no ambiente de trabalho é uma prática fundamental para garantir a saúde mental dos colaboradores e a qualidade do ambiente organizacional. O presente diagnóstico foi realizado em conformidade com: • NR-1 (Portaria MTE nº 672/2021) — Gestão de Riscos Psicossociais • Diretrizes OMS sobre Saúde Mental no Trabalho (2022) • Instrumentos validados: ITRA,
-      Psicodinâmica do Trabalho (Dejours) • Escala DRPS — 9 Tópicos / 90 questões / Likert 0-4 • Modelo Demanda-Controle (Karasek) e Esforço-Recompensa (Siegrist) 2. OBJETIVO ━━━━━━━━━━━ Identificar,
+      1. INTRODUÇÃO ????????????? A avaliação de riscos psicossociais no ambiente de trabalho é uma prática fundamental para garantir a saúde mental dos colaboradores e a qualidade do ambiente organizacional. O presente diagnóstico foi realizado em conformidade com: • NR-1 (Portaria MTE nº 672/2021) — Gestão de Riscos Psicossociais • Diretrizes OMS sobre Saúde Mental no Trabalho (2022) • Instrumentos validados: ITRA,
+      Psicodinâmica do Trabalho (Dejours) • Escala DRPS — 9 Tópicos / 90 questões / Likert 0-4 • Modelo Demanda-Controle (Karasek) e Esforço-Recompensa (Siegrist) 2. OBJETIVO ??????????? Identificar,
       avaliar e classificar os riscos psicossociais presentes na empresa $ {
         emp
       }
 
       ,
       com base em dados quantitativos coletados dos trabalhadores de forma anônima e confidencial,
-      gerando subsídios para ações corretivas e preventivas. 3. METODOLOGIA ━━━━━━━━━━━━━━ • Instrumento: Questionário DRPS — 9 tópicos,
-      90 questões • Escala de resposta: 0 (Nunca) a 4 (Sempre) — Likert • Lógica de pontuação: direta (maior=maior risco) e invertida • Cálculo de Gravidade: média das pontuações corrigidas por tópico • Classificação Gravidade: Baixo (0-1.5) | Médio (1.5-2.5) | Alto (2.5-3.2) | Crítico (3.2-4) • Probabilidade: avaliação qualitativa complementar do psicólogo • Nível de Risco Final: Matriz NR-1 (Gravidade × Probabilidade) • Base Normativa: NR-1 §1.5.4.4.2 — combinação Severidade × Probabilidade 4. ANÁLISE E RESULTADOS POR SETOR ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$ {
+      gerando subsídios para ações corretivas e preventivas. 3. METODOLOGIA ?????????????? • Instrumento: Questionário DRPS — 9 tópicos,
+      90 questões • Escala de resposta: 0 (Nunca) a 4 (Sempre) — Likert • Lógica de pontuação: direta (maior=maior risco) e invertida • Cálculo de Gravidade: média das pontuações corrigidas por tópico • Classificação Gravidade: Baixo (0-1.5) | Médio (1.5-2.5) | Alto (2.5-3.2) | Crítico (3.2-4) • Probabilidade: avaliação qualitativa complementar do psicólogo • Nível de Risco Final: Matriz NR-1 (Gravidade × Probabilidade) • Base Normativa: NR-1 §1.5.4.4.2 — combinação Severidade × Probabilidade 4. ANÁLISE E RESULTADOS POR SETOR ?????????????????????????????????$ {
         tabelaSetores
       }
 
-      5. RESUMO DA MATRIZ DE RISCO NR-1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ • Total de tópicos em risco CRÍTICO: $ {
+      5. RESUMO DA MATRIZ DE RISCO NR-1 ????????????????????????????????? • Total de tópicos em risco CRÍTICO: $ {
         d.criticos || 0
       }
 
@@ -2789,38 +3497,38 @@
         d.criticos>0 ? 'INTERVENÇÃO IMEDIATA nos tópicos críticos identificados.': 'Monitoramento e ações preventivas contínuas.'
       }
 
-      6. RECOMENDAÇÕES E PLANO DE AÇÃO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ $ {
+      6. RECOMENDAÇÕES E PLANO DE AÇÃO ???????????????????????????????? $ {
         TNOMES.map((n, i)=> `T$ {
-            i + 1
-          }
+              i + 1
+        }
 
           — $ {
-            n
-          }
+          n
+        }
 
-          \n Ref: $ {
-            REFS[i]
-          }
+        \n Ref: $ {
+          REFS[i]
+        }
 
-          \n Ação: $ {
-            ACOES[i]
-          }
+        \n Ação: $ {
+          ACOES[i]
+        }
 
-          \n Prazo: $ {
-            [15, 30, 60, 30, 45, 30, 15, 45, 60][i]
-          }
+        \n Prazo: $ {
+          [15, 30, 60, 30, 45, 30, 15, 45, 60][i]
+        }
 
-          dias\n`).join('\n')
+        dias\n`).join('\n')
       }
 
-      7. CONCLUSÃO ━━━━━━━━━━━ A implementação das ações corretivas e preventivas identificadas neste relatório é essencial para minimizar os riscos psicossociais e promover um ambiente de trabalho saudável,
+      7. CONCLUSÃO ??????????? A implementação das ações corretivas e preventivas identificadas neste relatório é essencial para minimizar os riscos psicossociais e promover um ambiente de trabalho saudável,
       seguro e produtivo,
       em conformidade com a NR-1 e as diretrizes da OMS. Recomenda-se nova aplicação do DRPS em: $ {
         new Date(Date.now() + 180 * 864e5).toLocaleDateString('pt-BR')
       }
 
       (6 meses) $ {
-        '═' .repeat(62)
+        '-' .repeat(62)
       }
 
       Carmen Lúcia Pereira de Santana — Mental & Mais (11) 99588-5181 Psicólogo Responsável: _________________________ CRP: ________________ Data: $ {
@@ -2828,65 +3536,68 @@
       }
 
       Assinatura do Responsável pela Empresa: _________________________ $ {
-        '─' .repeat(62)
+        '-' .repeat(62)
       }
 
       [Gerado pelo SESMT PRO — DRPS NR-1 Compliance Engine]`;
 
-      document.getElementById('laudo-out').textContent=txt;
-      document.getElementById('m-laudo').style.display='flex';
+        document.getElementById('laudo-out').textContent = txt;
+        document.getElementById('m-laudo').style.display = 'flex';
     }
 
-    function nd(c) {
-      return `<tr><td colspan="${c}" style="text-align:center;padding:14px;color:var(--muted)">Nenhum registro</td></tr>`
-    }
+        function nd(c) {
+          return `<tr><td colspan="${c}" style="text-align:center;padding:14px;color:var(--muted)">Nenhum registro</td></tr>`
+        }
 
-    async function submitForm(fid, url, mid, reload) {
-      document.getElementById(fid).addEventListener('submit', async e=> {
-          e.preventDefault();
-          const btn=e.target.querySelector('button[type=submit]');
-          const orig=btn.textContent; btn.textContent='Salvando...'; btn.disabled=true;
-          const fd=new FormData(e.target); fd.append('empresa_id', empId);
+        async function submitForm(fid, url, mid, reload) {
+          document.getElementById(fid).addEventListener('submit', async e => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type=submit]');
+            const orig = btn.textContent; btn.textContent = 'Salvando...'; btn.disabled = true;
+            const fd = new FormData(e.target); fd.append('empresa_id', empId);
 
-          await fetch(url, {
-            method: 'POST', body: fd
+            await fetch(url, {
+              method: 'POST', body: fd
 
-          }).catch(()=> {});
-        document.getElementById(mid).style.display='none';
-        e.target.reset(); btn.textContent=orig; btn.disabled=false;
-        toast('Salvo com sucesso!'); reload(); loadDashboard();
-      });
-    }
+            }).catch(() => { });
+            document.getElementById(mid).style.display = 'none';
+            e.target.reset(); btn.textContent = orig; btn.disabled = false;
+            toast('Salvo com sucesso!'); reload(); loadDashboard();
+          });
+        }
 
-    submitForm('f-func', '/api/funcionarios', 'm-func', loadFunc);
-    submitForm('f-cat', '/api/cats', 'm-cat', loadCats);
-    submitForm('f-trein', '/api/treinamentos', 'm-trein', loadTrein);
-    submitForm('f-agen', '/api/agendamentos', 'm-agen', loadAgen);
-    submitForm('f-epi', '/api/epis', 'm-epi', loadEpis);
+        submitForm('f-func', '/api/funcionarios', 'm-func', loadFunc);
+        submitForm('f-cat', '/api/cats', 'm-cat', loadCats);
+        submitForm('f-trein', '/api/treinamentos', 'm-trein', loadTrein);
+        submitForm('f-agen', '/api/agendamentos', 'm-agen', loadAgen);
+        submitForm('f-epi', '/api/epis', 'm-epi', loadEpis);
 
-    // Efeito afundar sidebar
-    document.querySelectorAll('.nav-item').forEach(b=> {
-        b.addEventListener('mousedown', ()=> {
-            b.style.transform='translateY(1px)'; b.style.boxShadow='inset 2px 2px 4px rgba(0,0,0,0.7)'
+        // Efeito afundar sidebar
+        document.querySelectorAll('.nav-item').forEach(b => {
+          b.addEventListener('mousedown', () => {
+            b.style.transform = 'translateY(1px)'; b.style.boxShadow = 'inset 2px 2px 4px rgba(0,0,0,0.7)'
           });
 
-        ['mouseup', 'mouseleave'].forEach(ev=> b.addEventListener(ev, ()=> {
-              b.style.transform=''; b.style.boxShadow=''
-            }));
-      });
+          ['mouseup', 'mouseleave'].forEach(ev => b.addEventListener(ev, () => {
+            b.style.transform = ''; b.style.boxShadow = ''
+          }));
+        });
 
-    loadEmpresas();
+        loadEmpresas();
 
-    </script><script>function toggleSidebar() {
-      var s=document.querySelector(".sidebar");
-      var o=document.getElementById("sb-overlay");
-      s.classList.toggle("open");
-      o.classList.toggle("open")
-    }
+      </script>
+      <script>function toggleSidebar() {
+          var s = document.querySelector(".sidebar");
+          var o = document.getElementById("sb-overlay");
+          s.classList.toggle("open");
+          o.classList.toggle("open")
+        }
 
-    function closeSidebar() {
-      document.querySelector(".sidebar").classList.remove("open");
-      document.getElementById("sb-overlay").classList.remove("open")
-    }
+        function closeSidebar() {
+          document.querySelector(".sidebar").classList.remove("open");
+          document.getElementById("sb-overlay").classList.remove("open")
+        }
 
-    </script></html>
+      </script>
+
+</html>

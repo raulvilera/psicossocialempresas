@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Painel Profissional  — Psicos</title>
+  <title>Painel Profissional — Psicos</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap"
     rel="stylesheet">
@@ -601,8 +601,8 @@
       color: #fff;
       font-weight: 600
     }
-  )responsive
-  
+  </style>
+
 </head>
 
 <body>
@@ -646,7 +646,9 @@
 
   <!-- MAIN -->
   <div class="main">
-    <button class=\"hamburger\" onclick=\"toggleSidebar()\" aria-label=\"Menu\">&#9776;</button><div class=\"sidebar-overlay\" id=\"sb-overlay\" onclick=\"closeSidebar()\"></div><div class="topbar">
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+    <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+    <div class="topbar">
       <div class="topbar-title" id="topTitle">PAINEL PROFISSIONAL</div>
       <div class="perfil-badge">🧠 Profissional</div>
       <button class="btn-topbar" onclick="loadAll()">&#8635; Atualizar Tudo</button>
@@ -1005,8 +1007,7 @@
 
     loadAll();
   </script>
-<script>function toggleSidebar(){var s=document.querySelector(".sidebar");var o=document.getElementById("sb-overlay");s.classList.toggle("open");o.classList.toggle("open")}function closeSidebar(){document.querySelector(".sidebar").classList.remove("open");document.getElementById("sb-overlay").classList.remove("open")}</script>
+  <script>function toggleSidebar() { var s = document.querySelector(".sidebar"); var o = document.getElementById("sb-overlay"); s.classList.toggle("open"); o.classList.toggle("open") } function closeSidebar() { document.querySelector(".sidebar").classList.remove("open"); document.getElementById("sb-overlay").classList.remove("open") }</script>
 
 
 </html>
-
