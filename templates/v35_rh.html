@@ -923,13 +923,23 @@
       <span class="icon">📝</span> Questionários
     </div>
 
-    <div class="nav-section">Segurança</div>
-    <div class="nav-item" onclick="showSection('epis',this)">
-      <span class="icon">🦺</span> EPIs & Estoque
-      <span class="nav-badge" id="badge-epi">0</span>
+    <div class="nav-section">Sistema</div>
+    <div class="nav-item" onclick="showSection('empresas',this)">
+      <span class="icon">🏢</span> Empresas
     </div>
-    <div class="nav-item" onclick="showSection('cats',this)">
-      <span class="icon">⚠️</span> Acidentes (CAT)
+    <div class="nav-item" onclick="showSection('usuarios',this)">
+      <span class="icon">👥</span> Usuários
+    </div>
+
+    <div class="nav-section">Ações Rápidas</div>
+    <div class="nav-item" onclick="window.location.href='/dashboard'">
+      <span class="icon">🖥️</span> Ir ao Dashboard
+    </div>
+    <div class="nav-item" onclick="window.location.href='/rh'">
+      <span class="icon">🏢</span> Ir ao Painel RH
+    </div>
+    <div class="nav-item" onclick="window.location.href='/cadastro-empresa'">
+      <span class="icon">➕</span> Nova Empresa
     </div>
 
     <div class="sidebar-footer">
@@ -1239,12 +1249,23 @@
     }
 
     async function init() {
+      const userStr = localStorage.getItem('user');
+      const userData = userStr ? JSON.parse(userStr) : null;
+
       const emps = await fetch('/api/empresas').then(r => r.json()).catch(() => []);
       const sel = document.getElementById('empresaSelect');
-      if (emps.length) {
-        sel.innerHTML = emps.map(e => `<option value="${e.id}">${e.nome}</option>`).join('');
-        empresaId = emps[0].id;
-        loadDash();
+      const box = document.querySelector('.empresa-box');
+
+      if (userData && userData.role === 'rh') {
+        if (box) box.style.display = 'none';
+        empresaId = userData.empresa_id;
+        if (empresaId) loadDash();
+      } else {
+        if (emps.length) {
+          sel.innerHTML = emps.map(e => `<option value="${e.id}">${e.nome}</option>`).join('');
+          empresaId = emps[0].id;
+          loadDash();
+        }
       }
     }
 

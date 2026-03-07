@@ -628,26 +628,26 @@
 
     <div class="nav-section">Principal</div>
     <div class="nav-item active" onclick="showSection('overview',this)">
-      <span class="icon">&#128202;</span> Visão Geral
+      <span class="icon">📊</span> Visão Geral
     </div>
 
     <div class="nav-section">Sistema</div>
     <div class="nav-item" onclick="showSection('empresas',this)">
-      <span class="icon">&#127970;</span> Empresas
+      <span class="icon">🏢</span> Empresas
     </div>
     <div class="nav-item" onclick="showSection('usuarios',this)">
-      <span class="icon">&#128101;</span> Usuários
+      <span class="icon">👥</span> Usuários
     </div>
 
     <div class="nav-section">Ações Rápidas</div>
     <div class="nav-item" onclick="window.location.href='/dashboard'">
-      <span class="icon">&#128202;</span> Ir ao Dashboard
+      <span class="icon">🖥️</span> Ir ao Dashboard
     </div>
     <div class="nav-item" onclick="window.location.href='/rh'">
-      <span class="icon">&#127970;</span> Ir ao Painel RH
+      <span class="icon">🏢</span> Ir ao Painel RH
     </div>
     <div class="nav-item" onclick="window.location.href='/cadastro-empresa'">
-      <span class="icon">&#10133;</span> Nova Empresa
+      <span class="icon">➕</span> Nova Empresa
     </div>
 
     <div class="sidebar-footer">
@@ -795,8 +795,7 @@
       <div id="sec-usuarios" class="section">
         <div class="page-header">
           <div>
-            <div class="topbar-title">ADMINISTRAÇÃO CENTRAL <span
-                style="font-size:10px; color:var(--muted);">v3.6.2</span></div>
+            <div class="topbar-title" id="topTitle">ADMINISTRAÇÃO CENTRAL</div>
             <div class="page-sub">Contas de acesso à plataforma</div>
           </div>
           <button class="btn-add" onclick="window.location.href='/signup'">+ Novo Usuário</button>
