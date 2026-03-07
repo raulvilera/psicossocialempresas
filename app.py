@@ -15,7 +15,7 @@ from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-# Build trigger: Deploy Update 2026-03-07
+# Build trigger: Force Redeploy 2026-03-07 12:43
 app = FastAPI(title="Psico Pro")
 
 BASE_DIR = Path(__file__).parent
