@@ -1,32 +1,20 @@
 {
-    "headers": [
-        {
-            "source": "/sw.js",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "no-cache, no-store, must-revalidate"
-                },
-                {
-                    "key": "Service-Worker-Allowed",
-                    "value": "/"
-                }
-            ]
-        },
-        {
-            "source": "/manifest.json",
-            "headers": [
-                {
-                    "key": "Content-Type",
-                    "value": "application/manifest+json"
-                }
-            ]
-        }
-    ],
-    "rewrites": [
-        {
-            "source": "/((?!sw\\.js|manifest\\.json|pwa-.*\\.png|assets/.*).*)",
-            "destination": "/index.html"
-        }
-    ]
+  "name": "psicossocialempresas",
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb",
+        "runtime": "python3.11"
+      }
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/index.py"
+    }
+  ]
 }

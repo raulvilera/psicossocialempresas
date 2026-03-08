@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Área RH — S Psicos v3.6.2</title>
+  <meta name="theme-color" content="#0077ff">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/static/app_icon.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    /* scrollbar azul premium */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, .3)
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 119, 255, 0.5);
+      border-radius: 4px;
+      border: 2px solid #000
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 204, 255, 0.8)
+    }
+
+    :root {
+      --acc: #00d2ff;
+      --acc2: #0072ff;
+      --bg: #000000;
+      --card: #050c1a;
+      --bdr: rgba(0, 162, 255, .16);
+      --txt: #ffffff;
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--txt);
+      display: flex;
+      height: 100vh
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: linear-gradient(180deg, #000000, #020510 50%, #000000);
+      border-right: 1px solid var(--bdr);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto
+    }
+
+    .sidebar-logo {
+      padding: 20px 16px 16px;
+      border-bottom: 1px solid var(--bdr);
+      background: linear-gradient(135deg, #000510, #000a20)
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #001f3f, #003366);
+      border: 1px solid rgba(0, 162, 255, .4);
+      color: #00d2ff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 7px;
+      margin-bottom: 8px;
+      letter-spacing: 1px
+    }
+
+    .sidebar h2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2
+    }
+
+    .sidebar h2 em {
+      color: var(--acc);
+      font-style: normal
+    }
+
+    .sidebar-sub {
+      font-size: 9px;
+      color: rgba(0, 162, 255, .3);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 3px
+    }
+
+    .empresa-box {
+      margin: 10px;
+      background: rgba(0, 0, 0, .35);
+      border: 1px solid var(--bdr);
+      border-radius: 10px;
+      padding: 10px
+    }
+
+    .empresa-label {
+      font-size: 10px;
+      color: rgba(0, 162, 255, .45);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 5px
+    }
+
+    .empresa-select {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      outline: none
+    }
+
+    .empresa-select option {
+      background: #050c1a;
+      color: #fff
+    }
+
+    .nav-section {
+      padding: 12px 14px 5px;
+      font-size: 9px;
+      color: rgba(0, 162, 255, .25);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 2px 8px;
+      padding: 10px 12px;
+      color: rgba(255, 255, 255, .45);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 9px;
+      border: 1px solid transparent;
+      background: linear-gradient(145deg, #050a1a, #020510);
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
+      transition: all .15s;
+      user-select: none
+    }
+
+    .nav-item:hover {
+      color: rgba(255, 255, 255, .8);
+      border-color: rgba(0, 162, 255, .2)
+    }
+
+    .nav-item.active {
+      color: var(--acc);
+      background: linear-gradient(135deg, #002d5f, #003a7a, #001f3f);
+      border-color: rgba(0, 162, 255, .4);
+      box-shadow: 0 0 14px rgba(0, 114, 255, .2);
+      font-weight: 600
+    }
+
+    .nav-item .icon {
+      font-size: 14px;
+      width: 16px;
+      text-align: center
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: rgba(0, 162, 255, .2);
+      color: #00d2ff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 162, 255, .3)
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 14px;
+      border-top: 1px solid var(--bdr)
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 9px;
+      border: 1px solid rgba(200, 0, 0, .2);
+      background: linear-gradient(145deg, #1a0505, #100303);
+      color: rgba(255, 120, 120, .6);
+      font-size: 13px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all .15s
+    }
+
+    .btn-logout:hover {
+      color: #ff6060;
+      border-color: rgba(200, 0, 0, .4)
+    }
+
+    /* MAIN */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 70% 10%, rgba(0, 114, 255, .07) 0%, transparent 50%), var(--bg)
+    }
+
+    /* TOPBAR */
+    .topbar {
+      background: linear-gradient(90deg, #000000, #02081a);
+      border-bottom: 1px solid var(--bdr);
+      padding: 11px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0
+    }
+
+    .topbar-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px;
+      flex: 1
+    }
+
+    .perfil-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 30, 80, .4);
+      border: 1px solid rgba(0, 162, 255, .25);
+      color: var(--acc);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px
+    }
+
+    .btn-topbar {
+      background: linear-gradient(135deg, #001020, #001f3f);
+      border: 1px solid rgba(0, 162, 255, .3);
+      color: var(--acc);
+      padding: 7px 14px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 1px;
+      transition: all .15s
+    }
+
+    .btn-topbar:hover {
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(0, 114, 255, .3)
+    }
+
+    .btn-add {
+      padding: 8px 14px;
+      background: linear-gradient(135deg, #001020, #001f3f);
+      border: 1px solid rgba(0, 162, 255, .3);
+      color: var(--acc);
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 1px;
+      transition: all .15s
+    }
+
+    .btn-add:hover {
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(0, 114, 255, .3)
+    }
+
+    /* CONTENT COM SCROLL VISÍVEL */
+    .content {
+      flex: 1;
+      padding: 22px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      min-height: 0;
+      height: 0
+    }
+
+    /* PAGE HEADERS */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px
+    }
+
+    .page-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px
+    }
+
+    .page-sub {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .45);
+      margin-top: 2px
+    }
+
+    /* KPIs */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px
+    }
+
+    .kpi-card {
+      background: linear-gradient(145deg, #050c1a, #020510);
+      border: 1px solid var(--bdr);
+      border-radius: 13px;
+      padding: 16px;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, .5);
+      position: relative;
+      overflow: hidden
+    }
+
+    .kpi-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 56px;
+      height: 56px;
+      background: radial-gradient(circle, rgba(0, 162, 255, .08), transparent 70%);
+      border-radius: 50%
+    }
+
+    .kpi-icon {
+      font-size: 20px;
+      margin-bottom: 8px
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .5);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px
+    }
+
+    .kpi-value {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      margin-top: 2px
+    }
+
+    .kpi-sub {
+      font-size: 11px;
+      margin-top: 5px;
+      color: rgba(255, 255, 255, .4)
+    }
+
+    .kpi-sub.up {
+      color: #00cc44
+    }
+
+    .kpi-sub.down {
+      color: #ff4444
+    }
+
+    .kpi-sub.warn {
+      color: #ffaa00
+    }
+
+    /* ALERT */
+    .alert-banner {
+      background: linear-gradient(135deg, rgba(200, 100, 0, .15), rgba(200, 80, 0, .1));
+      border: 1px solid rgba(200, 100, 0, .3);
+      border-radius: 11px;
+      padding: 12px 16px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .alert-text {
+      font-size: 13px;
+      color: #ffaa44;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .btn-alert {
+      padding: 6px 12px;
+      background: rgba(200, 100, 0, .3);
+      border: 1px solid rgba(200, 100, 0, .4);
+      color: #ffaa44;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      transition: all .15s
+    }
+
+    /* CHARTS */
+    .charts-row {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px
+    }
+
+    .cols-2 {
+      grid-template-columns: 1fr 1fr
+    }
+
+    .cols-3 {
+      grid-template-columns: 1fr 1fr 1fr
+    }
+
+    .chart-card {
+      background: linear-gradient(145deg, #050c1a, #020510);
+      border: 1px solid var(--bdr);
+      border-radius: 13px;
+      padding: 18px;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, .5), -6px 6px 22px rgba(255, 255, 255, 0.06)
+    }
+
+    .chart-card.span2 {
+      grid-column: span 2
+    }
+
+    .chart-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px
+    }
+
+    .chart-title .sub {
+      font-size: 10px;
+      color: rgba(255, 255, 255, .35);
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .h180 {
+      height: 180px
+    }
+
+    .h200 {
+      height: 200px
+    }
+
+    .h240 {
+      height: 240px
+    }
+
+    .donut-center {
+      position: absolute;
+      text-align: center;
+      pointer-events: none
+    }
+
+    .donut-center .val {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff
+    }
+
+    .donut-center .lbl {
+      font-size: 9px;
+      color: rgba(255, 255, 255, .4);
+      letter-spacing: 1px;
+      text-transform: uppercase
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px
+    }
+
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, .7)
+    }
+
+    .leg-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      flex-shrink: 0
+    }
+
+    /* TABELAS */
+    .table-card {
+      background: linear-gradient(145deg, #050c1a, #020510);
+      border: 1px solid var(--bdr);
+      border-radius: 13px;
+      overflow: hidden;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, .5);
+      margin-bottom: 16px
+    }
+
+    .table-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--bdr);
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .table-header h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: .8px
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px
+    }
+
+    th {
+      background: rgba(0, 0, 0, .3);
+      color: rgba(255, 255, 255, .45);
+      font-weight: 600;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 9px 14px;
+      text-align: left
+    }
+
+    td {
+      padding: 10px 14px;
+      color: #fff;
+      border-top: 1px solid rgba(0, 162, 255, .06)
+    }
+
+    tr:hover td {
+      background: rgba(0, 30, 80, .1)
+    }
+
+    .badge-pill {
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600
+    }
+
+    .b-red {
+      background: rgba(200, 0, 0, .2);
+      color: #ff6060;
+      border: 1px solid rgba(200, 0, 0, .3)
+    }
+
+    .b-green {
+      background: rgba(0, 150, 40, .2);
+      color: #00cc44;
+      border: 1px solid rgba(0, 150, 40, .3)
+    }
+
+    .b-yellow {
+      background: rgba(200, 150, 0, .2);
+      color: #ffcc00;
+      border: 1px solid rgba(200, 150, 0, .3)
+    }
+
+    .b-blue {
+      background: rgba(0, 100, 200, .2);
+      color: #66aaff;
+      border: 1px solid rgba(0, 100, 200, .3)
+    }
+
+    /* SECTIONS */
+    .section {
+      display: none
+    }
+
+    .section.active {
+      display: block
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      backdrop-filter: blur(4px)
+    }
+
+    .modal-overlay.open {
+      display: flex
+    }
+
+    .modal-box {
+      background: linear-gradient(145deg, #050c1a, #020510);
+      border: 1px solid rgba(0, 162, 255, .2);
+      border-radius: 18px;
+      padding: 28px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, .8)
+    }
+
+    .modal-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 18px;
+      letter-spacing: 1px
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px
+    }
+
+    .modal-input {
+      padding: 11px 13px;
+      background: rgba(0, 0, 0, .4);
+      border: 1px solid rgba(0, 162, 255, .18);
+      border-radius: 9px;
+      font-size: 13px;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color .2s;
+      width: 100%
+    }
+
+    .modal-input:focus {
+      border-color: rgba(0, 162, 255, .45)
+    }
+
+    .modal-input::placeholder {
+      color: rgba(255, 255, 255, .2)
+    }
+
+    .modal-input option {
+      background: #050c1a;
+      color: #fff
+    }
+
+    .modal-footer {
+      grid-column: span 2;
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 6px
+    }
+
+    .btn-cancel {
+      padding: 10px 18px;
+      background: rgba(0, 0, 0, .4);
+      border: 1px solid rgba(255, 255, 255, .1);
+      color: rgba(255, 255, 255, .4);
+      border-radius: 9px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all .15s
+    }
+
+    .btn-save {
+      padding: 10px 18px;
+      background: linear-gradient(135deg, #001020, #001f3f);
+      border: 1px solid rgba(0, 162, 255, .3);
+      color: #00d2ff;
+      border-radius: 9px;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      transition: all .15s
+    }
+
+    .btn-save:hover {
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(0, 114, 255, .3)
+    }
+
+    /* 📱 MOBILE RESPONSIVENESS */
+    @media (max-width: 900px) {
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-overlay.open {
+        display: block;
+      }
+
+      .main {
+        width: 100%;
+      }
+
+      .topbar {
+        padding: 10px 15px;
+      }
+
+      .topbar-title {
+        font-size: 14px;
+      }
+
+      .hamburger {
+        display: block;
+        font-size: 24px;
+        background: none;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        padding: 5px;
+      }
+
+      .content {
+        padding: 15px;
+      }
+
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .charts-row.cols-3,
+      .charts-row.cols-2 {
+        grid-template-columns: 1fr !important;
+      }
+
+      .chart-card.span2 {
+        grid-column: span 1 !important;
+      }
+
+      .table-card {
+        overflow-x: auto;
+      }
+
+      table {
+        min-width: 600px;
+      }
+
+      .modal-box {
+        width: 95%;
+        padding: 20px;
+      }
+
+      .modal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-footer {
+        grid-column: span 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .btn-cancel,
+      .btn-save {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        gap: 8px;
+      }
+
+      .perfil-badge {
+        display: none;
+      }
+
+      .btn-topbar {
+        display: none;
+      }
+
+      /* Hide secondary buttons on tiny mobile */
+      .page-title {
+        font-size: 20px;
+      }
+    }
+
+    .hamburger {
+      display: none;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 999;
+      backdrop-filter: blur(2px);
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-badge">🏢 RH</div>
+      <h2>Área de<br><em>Recursos Humanos</em></h2>
+      <div class="sidebar-sub">Gestão de Pessoas</div>
+    </div>
+
+    <div class="empresa-box">
+      <div class="empresa-label">Empresa Ativa</div>
+      <select class="empresa-select" id="empresaSelect" onchange="onEmpresaChange()">
+        <option value="">Carregando...</option>
+      </select>
+    </div>
+
+    <div class="nav-section">Principal</div>
+    <div class="nav-item active" onclick="showSection('dashboard',this)">
+      <span class="icon">📊</span> Dashboard RH
+    </div>
+
+    <div class="nav-section">Colaboradores</div>
+    <div class="nav-item" onclick="showSection('funcionarios',this)">
+      <span class="icon">👥</span> Funcionários
+    </div>
+    <div class="nav-item" onclick="showSection('aso',this)">
+      <span class="icon">🩺</span> ASO & Exames
+      <span class="nav-badge" id="badge-aso">0</span>
+    </div>
+    <div class="nav-item" onclick="showSection('agendamentos',this)">
+      <span class="icon">📅</span> Agendamentos
+    </div>
+    <div class="nav-item" onclick="showSection('setores',this)">
+      <span class="icon">🏭</span> Gestão de Setores
+    </div>
+    <div class="nav-item" onclick="showSection('questionarios',this)">
+      <span class="icon">📝</span> Questionários
+    </div>
+
+    <div class="nav-section">Sistema</div>
+    <div class="nav-item" onclick="showSection('empresas',this)">
+      <span class="icon">🏢</span> Empresas
+    </div>
+    <div class="nav-item" onclick="showSection('usuarios',this)">
+      <span class="icon">👥</span> Usuários
+    </div>
+
+    <div class="nav-section">Ações Rápidas</div>
+    <div class="nav-item" onclick="window.location.href='/dashboard'">
+      <span class="icon">🖥️</span> Ir ao Dashboard
+    </div>
+    <div class="nav-item" onclick="window.location.href='/rh'">
+      <span class="icon">🏢</span> Ir ao Painel RH
+    </div>
+    <div class="nav-item" onclick="window.location.href='/cadastro-empresa'">
+      <span class="icon">➕</span> Nova Empresa
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="window.location.href='/login'">🚪 Sair</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topTitle">DASHBOARD RH</div>
+      <div class="perfil-badge">🏢 RH</div>
+      <button class="btn-topbar" onclick="window.location.href='/dashboard'">📊 Painel Completo</button>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD RH -->
+      <div id="sec-dashboard" class="section active">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Dashboard RH</div>
+            <div class="page-sub" id="sub-dash">Carregando dados...</div>
+          </div>
+          <button class="btn-add" onclick="loadDash()">🔄 Atualizar</button>
+        </div>
+
+        <div id="alert-banner" class="alert-banner" style="display:none">
+          <div class="alert-text">🚨 <span id="alert-text">Atenção requerida</span></div>
+          <button class="btn-alert" onclick="showSection('aso',null)">Ver ASOs →</button>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon">👥</div>
+            <div class="kpi-label">Funcionários</div>
+            <div class="kpi-value" id="kpi-func">—</div>
+            <div class="kpi-sub up">▲ Total ativo</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">🩺</div>
+            <div class="kpi-label">ASOs Vencidos</div>
+            <div class="kpi-value" id="kpi-aso" style="color:#ff4444">—</div>
+            <div class="kpi-sub down">▼ Requer ação</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">📚</div>
+            <div class="kpi-label">Treinamentos</div>
+            <div class="kpi-value" id="kpi-trein" style="color:#00d2ff">—</div>
+            <div class="kpi-sub up">▲ Total ativo</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">🛡️</div>
+            <div class="kpi-label">Índice Seg.</div>
+            <div class="kpi-value" id="kpi-score" style="color:#00d2ff">—</div>
+            <div class="kpi-sub up">▲ Score IA</div>
+          </div>
+        </div>
+
+        <div class="charts-row cols-3">
+          <div class="chart-card">
+            <div class="chart-title">👥 Distribuição de Risco</div>
+            <div style="position:relative;display:flex;justify-content:center">
+              <div id="chartRisco" style="height:180px;width:180px"></div>
+              <div
+                style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none">
+                <div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#fff" id="dnt-risco">
+                  —</div>
+                <div style="font-size:9px;color:rgba(0,162,255,.4);letter-spacing:1px;text-transform:uppercase">Total
+                </div>
+              </div>
+            </div>
+            <div class="chart-legend" id="leg-risco"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">🩺 Status de ASOs</div>
+            <div style="position:relative;display:flex;justify-content:center">
+              <div id="chartAso" style="height:180px;width:180px"></div>
+              <div
+                style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none">
+                <div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#fff" id="dnt-aso">—
+                </div>
+                <div style="font-size:9px;color:rgba(0,162,255,.4);letter-spacing:1px;text-transform:uppercase">Total
+                </div>
+              </div>
+            </div>
+            <div class="chart-legend" id="leg-aso"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">📚 Treinamentos</div>
+            <div id="chartTrein" style="height:180px"></div>
+          </div>
+        </div>
+
+        <div class="charts-row cols-2">
+          <div class="chart-card">
+            <div class="chart-title">🏭 Funcionários por Setor</div>
+            <div id="chartSetores" style="height:200px"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">🦺 EPIs por Status</div>
+            <div id="chartCats" style="height:200px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FUNCIONÁRIOS -->
+      <div id="sec-funcionarios" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Funcionários</div>
+            <div class="page-sub">Gerenciar colaboradores da empresa</div>
+          </div>
+          <button class="btn-add" onclick="document.getElementById('modal-func').classList.add('open')">+ Novo</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Cargo</th>
+                <th>Setor</th>
+                <th>Risco</th>
+                <th>Score IA</th>
+                <th>ASO</th>
+              </tr>
+            </thead>
+            <tbody id="tb-func">
+              <tr>
+                <td colspan="6" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- GESTÃO DE SETORES -->
+      <div id="sec-setores" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Gestão de Setores</div>
+            <div class="page-sub">Cadastro de funcionários por setor</div>
+          </div>
+          <button class="btn-add" onclick="document.getElementById('modal-setor').classList.add('open')">+ Novo
+            Setor</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Setor</th>
+                <th>Cadastrados</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tb-setores">
+              <tr>
+                <td colspan="4" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Carregando...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- QUESTIONÁRIOS -->
+      <div id="sec-questionarios" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Disparo de Questionários</div>
+            <div class="page-sub">Enviar links de pesquisa para os setores</div>
+          </div>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-card" style="grid-column: span 4; background: linear-gradient(135deg, #001a33, #000810);">
+            <div class="kpi-label">Link Base do Questionário (Lovable)</div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+              <input class="modal-input" id="lovable-link" value="https://digital-survey-craft.lovable.app" readonly>
+              <button class="btn-save"
+                onclick="copyToClipboard('https://digital-survey-craft.lovable.app')">Copiar</button>
+            </div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-header">
+            <h3>Links por Setor</h3>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Setor</th>
+                <th>Link Personalizado</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody id="tb-links-questionarios">
+              <tr>
+                <td colspan="3" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Carregando setores...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAIS -->
+  <div id="modal-setor" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">CADASTRAR SETOR</div>
+      <form id="form-setor" class="modal-grid">
+        <input class="modal-input" style="grid-column:span 2" name="setor" placeholder="Nome do Setor (ex: Produção)"
+          required>
+        <input class="modal-input" type="number" name="colaboradores" placeholder="Qtd. de Funcionários Estimada"
+          required style="grid-column:span 2">
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel"
+            onclick="document.getElementById('modal-setor').classList.remove('open')">Cancelar</button>
+          <button type="submit" class="btn-save">SALVAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-func" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">NOVO FUNCIONÁRIO</div>
+      <form id="form-func" class="modal-grid">
+        <input class="modal-input" style="grid-column:span 2" name="nome" placeholder="Nome completo" required>
+        <input class="modal-input" name="cargo" placeholder="Cargo" required>
+        <input class="modal-input" name="setor" placeholder="Setor" required>
+        <select class="modal-input" name="risco" required>
+          <option value="">Nível de Risco</option>
+          <option>Alto</option>
+          <option>Medio</option>
+          <option>Baixo</option>
+        </select>
+        <input class="modal-input" name="cpf" placeholder="CPF">
+        <input class="modal-input" type="date" name="admissao" required>
+        <input class="modal-input" type="date" name="aso_vencimento" required>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel"
+            onclick="document.getElementById('modal-func').classList.remove('open')">Cancelar</button>
+          <button type="submit" class="btn-save">SALVAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ── TRATAMENTO DE ERROS GLOBAL ──
+    window.onerror = function (msg, url, line) {
+      const errDiv = document.createElement('div');
+      errDiv.style = "position:fixed;top:0;left:0;width:100%;background:rgba(255,0,0,0.9);color:white;padding:10px;z-index:10000;font-family:sans-serif;font-size:12px;";
+      errDiv.innerHTML = `<b>Erro RH:</b> ${msg} <br> <small>Linha: ${line} | ${url}</small>`;
+      document.body.appendChild(errDiv);
+    };
+
+    let empresaId = null;
+    const _rens = {}, _scenes = {}, _anims = {};
+    const PAL = ['#0072ff', '#00aaff', '#aa66ff', '#ffaa00', '#ff6644', '#00ddaa'];
+    const pal = i => PAL[i % PAL.length];
+    const noData = cols => `<tr><td colspan="${cols}" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Nenhum registro</td></tr>`;
+
+    function _clr(id) {
+      if (_anims[id]) { cancelAnimationFrame(_anims[id]); delete _anims[id]; }
+      if (_rens[id]) { _rens[id].dispose(); delete _rens[id]; }
+      const el = document.getElementById(id); if (el) el.innerHTML = '';
+    }
+
+    // Three.js Charts
+    function donut3d(id, labels, values, colors) {
+      if (typeof THREE === 'undefined') return;
+      _clr(id);
+      const cont = document.getElementById(id); if (!cont) return;
+      const W = cont.offsetWidth, H = cont.offsetHeight;
+      const scene = new THREE.Scene();
+      const cam = new THREE.PerspectiveCamera(42, W / H, 0.1, 50);
+      cam.position.set(0, 2.2, 4.2); cam.lookAt(0, 0, 0);
+      const ren = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      ren.setSize(W, H); cont.appendChild(ren.domElement);
+      _rens[id] = ren;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+      const total = values.reduce((a, b) => a + b, 0) || 1;
+      let sa = -Math.PI / 2;
+      const grp = new THREE.Group(); scene.add(grp);
+
+      values.forEach((v, i) => {
+        if (v <= 0) return;
+        const ang = (v / total) * Math.PI * 2;
+        const shape = new THREE.Shape();
+        shape.absarc(0, 0, 1, sa, sa + ang, false);
+        shape.absarc(0, 0, 0.6, sa + ang, sa, true);
+        const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.3, bevelEnabled: true, bevelThickness: 0.05 });
+        const mat = new THREE.MeshPhongMaterial({ color: colors[i] });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.rotation.x = -Math.PI / 2; grp.add(mesh); sa += ang;
+      });
+
+      function anim() { _anims[id] = requestAnimationFrame(anim); grp.rotation.y += 0.005; ren.render(scene, cam); }
+      anim();
+    }
+
+    async function init() {
+      const userStr = localStorage.getItem('user');
+      const userData = userStr ? JSON.parse(userStr) : null;
+
+      const emps = await fetch('/api/empresas').then(r => r.json()).catch(() => []);
+      const sel = document.getElementById('empresaSelect');
+      const box = document.querySelector('.empresa-box');
+
+      if (userData && userData.role === 'rh') {
+        if (box) box.style.display = 'none';
+        empresaId = userData.empresa_id;
+        if (empresaId) loadDash();
+      } else {
+        if (emps.length) {
+          sel.innerHTML = emps.map(e => `<option value="${e.id}">${e.nome}</option>`).join('');
+          empresaId = emps[0].id;
+          loadDash();
+        }
+      }
+    }
+
+    function onEmpresaChange() {
+      empresaId = document.getElementById('empresaSelect').value;
+      loadDash();
+    }
+
+    async function loadDash() {
+      if (!empresaId) return;
+      const d = await fetch('/api/dashboard/' + empresaId).then(r => r.json());
+      document.getElementById('sub-dash').textContent = d.empresa.nome;
+      document.getElementById('kpi-func').textContent = d.kpis.total_funcionarios;
+      document.getElementById('kpi-aso').textContent = d.kpis.aso_vencidos;
+      document.getElementById('kpi-trein').textContent = d.kpis.treinamentos;
+      document.getElementById('kpi-score').textContent = d.kpis.score_seguranca + '%';
+
+      donut3d('chartRisco', ['Alto', 'Médio', 'Baixo'], [d.kpis.alto_risco, 5, 10], ['#ff3232', '#ffaa00', '#00c84a']);
+    }
+
+    function showSection(name, el) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById('sec-' + name).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if (el) el.classList.add('active');
+      if (name === 'setores' || name === 'questionarios') loadSetoresArea();
+    }
+
+    async function loadSetoresArea() {
+      const res = await fetch('/api/setores/por-empresa?empresa_id=' + empresaId).then(r => r.json());
+      const tb = document.getElementById('tb-setores');
+      const tbQuest = document.getElementById('tb-links-questionarios');
+      if (res.success && res.setores) {
+        tb.innerHTML = res.setores.map(s => `<tr><td style="font-weight:600;color:#fff">${s}</td><td>—</td><td><span class="badge-pill b-blue">Ativo</span></td><td>...</td></tr>`).join('');
+        tbQuest.innerHTML = res.setores.map(s => {
+          const l = `https://digital-survey-craft.lovable.app?empresa_id=${empresaId}&setor=${encodeURIComponent(s)}`;
+          return `<tr><td style="font-weight:600;color:#fff">${s}</td><td><code style="font-size:10px">${l}</code></td><td><button class="btn-save" onclick="copyToClipboard('${l}')">Copiar</button></td></tr>`;
+        }).join('');
+      }
+    }
+
+    function copyToClipboard(t) { navigator.clipboard.writeText(t).then(() => alert('Copiado!')); }
+
+    init();
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+  </script>
+</body>
+
+</html>

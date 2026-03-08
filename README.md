@@ -1,20 +1,72 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+*Supabase
 
-# Run and deploy your AI Studio app
+Plataforma de Segurança do Trabalho com IA e banco de dados em nuvem.
 
-This contains everything you need to run your app locally.
+---
 
-View your app in AI Studio: https://ai.studio/apps/drive/1aytBedq_arLaF_iCub4ZRU_f_iEnNXiE
+ Como Rodar (3 passos)
 
-## Run Locally
+### 1. Instalar dependências
+```bash
+pip install -r requirements.txt
+```
 
-**Prerequisites:**  Node.js
+### 2. Iniciar o servidor
+```bash
+python app.py
+```
 
+### 3. Abrir no navegador
+```
+http://localhost:8000
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+---
+
+## 🗄️ Banco de Dados
+
+| Item | Valor |
+|---|---|
+| Plataforma | Supabase (PostgreSQL) |
+| Projeto ID | vzszzdeqbrjrepbzeiqq |
+| URL | https://vzszzdeqbrjrepbzeiqq.supabase.co |
+| Tipo | Nuvem — dados persistem permanentemente |
+
+### Tabelas criadas:
+- `empresas` — cadastro multi-tenant
+- `funcionarios` — colaboradores com score de risco IA
+- `cats` — acidentes de trabalho
+- `treinamentos` — treinamentos por NR
+- `agendamentos` — exames e consultas
+- `epis` — estoque de EPIs
+- `alertas` — notificações inteligentes
+
+---
+
+## ✨ Diferença vs. versão SQLite
+
+| Recurso | SQLite (v2) | Supabase (v3) |
+|---|---|---|
+| Dados persistem | ✅ Sim | ✅ Sim |
+| Acesso remoto | ❌ Só local | ✅ Qualquer lugar |
+| Backup automático | ❌ Manual | ✅ Automático |
+| Escalabilidade | ⚠️ Limitada | ✅ Ilimitada |
+| Dashboard web Supabase | ❌ | ✅ app.supabase.com |
+| Multi-usuário simultâneo | ⚠️ Limitado | ✅ Nativo |
+
+---
+
+## 📡 API REST
+
+Documentação Swagger: `http://localhost:8000/docs`
+
+---
+
+## 🔧 Próximas Evoluções
+
+- [ ] Autenticação com Supabase Auth (login/senha)
+- [ ] Row Level Security (RLS) por empresa
+- [ ] Realtime updates via Supabase Realtime
+- [ ] Notificações WhatsApp via Z-API
+- [ ] Export PDF dos laudos
+- [ ] Deploy no Railway/Render (produção)

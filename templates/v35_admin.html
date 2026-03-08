@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Admin — Psicos v3.6.2</title>
+  <meta name="theme-color" content="#0077ff">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/static/app_icon.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    /* scrollbar dourada */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, .3)
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 114, 255, .45);
+      border-radius: 4px
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 162, 255, .65)
+    }
+
+    :root {
+      --acc: #00d2ff;
+      --acc2: #0072ff;
+      --bg: #000000;
+      --card: #050c1a;
+      --bdr: rgba(0, 162, 255, .16);
+      --txt: #ffffff;
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--txt);
+      display: flex;
+      height: 100vh
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: linear-gradient(180deg, #000000, #020510 50%, #000000);
+      border-right: 1px solid var(--bdr);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto
+    }
+
+    .sidebar-logo {
+      padding: 20px 16px 16px;
+      border-bottom: 1px solid var(--bdr);
+      background: linear-gradient(135deg, #000510, #000a20)
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #001f3f, #003366);
+      border: 1px solid rgba(0, 162, 255, .4);
+      color: #00d2ff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 7px;
+      margin-bottom: 8px;
+      letter-spacing: 1px
+    }
+
+    .sidebar h2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2
+    }
+
+    .sidebar h2 em {
+      color: var(--acc);
+      font-style: normal
+    }
+
+    .sidebar-sub {
+      font-size: 9px;
+      color: rgba(0, 162, 255, .3);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 3px
+    }
+
+    .nav-section {
+      padding: 12px 14px 5px;
+      font-size: 9px;
+      color: rgba(0, 162, 255, .25);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 2px 8px;
+      padding: 10px 12px;
+      color: rgba(255, 255, 255, .45);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 9px;
+      border: 1px solid transparent;
+      background: linear-gradient(145deg, #050a1a, #020510);
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
+      transition: all .15s;
+      user-select: none
+    }
+
+    .nav-item:hover {
+      color: rgba(255, 255, 255, .8);
+      border-color: rgba(0, 162, 255, .2)
+    }
+
+    .nav-item.active {
+      color: var(--acc);
+      background: linear-gradient(135deg, #002d5f, #003a7a, #001f3f);
+      border-color: rgba(0, 162, 255, .4);
+      box-shadow: 0 0 14px rgba(0, 114, 255, .2);
+      font-weight: 600
+    }
+
+    .nav-item .icon {
+      font-size: 14px;
+      width: 16px;
+      text-align: center
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 14px;
+      border-top: 1px solid var(--bdr)
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 9px;
+      border: 1px solid rgba(200, 0, 0, .2);
+      background: linear-gradient(145deg, #1a0505, #100303);
+      color: rgba(255, 120, 120, .6);
+      font-size: 13px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all .15s
+    }
+
+    .btn-logout:hover {
+      color: #ff6060;
+      border-color: rgba(200, 0, 0, .4)
+    }
+
+    /* MAIN */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 60% 10%, rgba(0, 114, 255, .08) 0%, transparent 50%), var(--bg)
+    }
+
+    /* TOPBAR */
+    .topbar {
+      background: linear-gradient(90deg, #000000, #02081a);
+      border-bottom: 1px solid var(--bdr);
+      padding: 11px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0
+    }
+
+    .topbar-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px;
+      flex: 1
+    }
+
+    .perfil-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 30, 80, .5);
+      border: 1px solid rgba(0, 162, 255, .3);
+      color: var(--acc);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px
+    }
+
+    .btn-topbar {
+      background: linear-gradient(135deg, #001020, #001f3f);
+      border: 1px solid rgba(0, 162, 255, .3);
+      color: var(--acc);
+      padding: 7px 14px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 1px;
+      transition: all .15s
+    }
+
+    .btn-topbar:hover {
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(0, 114, 255, .3)
+    }
+
+    .btn-add {
+      padding: 8px 14px;
+      background: linear-gradient(135deg, #001020, #001f3f);
+      border: 1px solid rgba(0, 162, 255, .3);
+      color: var(--acc);
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 1px;
+      transition: all .15s
+    }
+
+    .btn-add:hover {
+      color: #fff
+    }
+
+    /* CONTENT COM SCROLL VISÍVEL */
+    .content {
+      flex: 1;
+      padding: 22px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      min-height: 0;
+      height: 0
+    }
+
+    /* PAGE HEADERS */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px
+    }
+
+    .page-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px
+    }
+
+    .page-sub {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .45);
+      margin-top: 2px
+    }
+
+    /* KPIs */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px
+    }
+
+    .kpi-card {
+      background: linear-gradient(145deg, #050c1a, #020510);
+      border: 1px solid var(--bdr);
+      border-radius: 13px;
+      padding: 16px;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, .5);
+      position: relative;
+      overflow: hidden
+    }
+
+    .kpi-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 56px;
+      height: 56px;
+      background: radial-gradient(circle, rgba(0, 162, 255, .08), transparent 70%);
+      border-radius: 50%
+    }
+
+    .kpi-icon {
+      font-size: 20px;
+      margin-bottom: 8px
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .5);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px
+    }
+
+    .kpi-value {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      margin-top: 2px
+    }
+
+    .kpi-sub {
+      font-size: 11px;
+      margin-top: 5px;
+      color: rgba(255, 255, 255, .4)
+    }
+
+    /* CHARTS */
+    .charts-row {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px
+    }
+
+    .cols-2 {
+      grid-template-columns: 1fr 1fr
+    }
+
+    .cols-3 {
+      grid-template-columns: 1fr 1fr 1fr
+    }
+
+    .chart-card {
+      background: linear-gradient(145deg, #050c1a, #020510);
+      border: 1px solid var(--bdr);
+      border-radius: 13px;
+      padding: 18px;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, .5), -6px 6px 22px rgba(255, 255, 255, 0.06)
+    }
+
+    .chart-card.span2 {
+      grid-column: span 2
+    }
+
+    .chart-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px
+    }
+
+    .chart-title .sub {
+      font-size: 10px;
+      color: rgba(255, 255, 255, .35);
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .h180 {
+      height: 180px
+    }
+
+    .h200 {
+      height: 200px
+    }
+
+    .h240 {
+      height: 240px
+    }
+
+    .donut-center {
+      position: absolute;
+      text-align: center;
+      pointer-events: none
+    }
+
+    .donut-center .val {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff
+    }
+
+    .donut-center .lbl {
+      font-size: 9px;
+      color: rgba(255, 255, 255, .4);
+      letter-spacing: 1px;
+      text-transform: uppercase
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px
+    }
+
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, .7)
+    }
+
+    .leg-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      flex-shrink: 0
+    }
+
+    /* TABELAS */
+    .table-card {
+      background: linear-gradient(145deg, #050c1a, #020510);
+      border: 1px solid var(--bdr);
+      border-radius: 13px;
+      overflow: hidden;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, .5);
+      margin-bottom: 16px
+    }
+
+    .table-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--bdr);
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .table-header h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: .8px
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px
+    }
+
+    th {
+      background: rgba(0, 0, 0, .3);
+      color: rgba(255, 255, 255, .45);
+      font-weight: 600;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 9px 14px;
+      text-align: left
+    }
+
+    td {
+      padding: 10px 14px;
+      color: #fff;
+      border-top: 1px solid rgba(0, 162, 255, .07)
+    }
+
+    tr:hover td {
+      background: rgba(0, 30, 80, .1)
+    }
+
+    .badge-pill {
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600
+    }
+
+    .b-red {
+      background: rgba(200, 0, 0, .2);
+      color: #ff6060;
+      border: 1px solid rgba(200, 0, 0, .3)
+    }
+
+    .b-green {
+      background: rgba(0, 150, 40, .2);
+      color: #00cc44;
+      border: 1px solid rgba(0, 150, 40, .3)
+    }
+
+    .b-yellow {
+      background: rgba(200, 150, 0, .2);
+      color: #ffcc00;
+      border: 1px solid rgba(200, 150, 0, .3)
+    }
+
+    .b-gold {
+      background: rgba(0, 114, 255, .2);
+      color: #00d2ff;
+      border: 1px solid rgba(0, 114, 255, .3)
+    }
+
+    /* SECTIONS */
+    .section {
+      display: none
+    }
+
+    .section.active {
+      display: block
+    }
+
+    /* INFO CARD */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 18px
+    }
+
+    .info-card {
+      background: linear-gradient(145deg, #050c1a, #020510);
+      border: 1px solid var(--bdr);
+      border-radius: 13px;
+      padding: 18px
+    }
+
+    .info-card h4 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--acc);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 12px
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0, 162, 255, .07);
+      font-size: 13px
+    }
+
+    .info-row:last-child {
+      border-bottom: none
+    }
+
+    .info-row .label {
+      color: rgba(255, 255, 255, .5)
+    }
+
+    .info-row .value {
+      color: #fff;
+      font-weight: 600
+    }
+  </style>
+
+</head>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js');
+    });
+  }
+</script>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-badge">&#9881; Admin</div>
+      <h2>Painel<br><em>Administrativo</em></h2>
+      <div class="sidebar-sub">Controle Total</div>
+    </div>
+
+    <div class="nav-section">Principal</div>
+    <div class="nav-item active" onclick="showSection('overview',this)">
+      <span class="icon">📊</span> Visão Geral
+    </div>
+
+    <div class="nav-section">Sistema</div>
+    <div class="nav-item" onclick="showSection('empresas',this)">
+      <span class="icon">🏢</span> Empresas
+    </div>
+    <div class="nav-item" onclick="showSection('usuarios',this)">
+      <span class="icon">👥</span> Usuários
+    </div>
+
+    <div class="nav-section">Ações Rápidas</div>
+    <div class="nav-item" onclick="window.location.href='/dashboard'">
+      <span class="icon">🖥️</span> Ir ao Dashboard
+    </div>
+    <div class="nav-item" onclick="window.location.href='/rh'">
+      <span class="icon">🏢</span> Ir ao Painel RH
+    </div>
+    <div class="nav-item" onclick="window.location.href='/cadastro-empresa'">
+      <span class="icon">➕</span> Nova Empresa
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="window.location.href='/login'">&#128682; Sair</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+    <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+    <div class="topbar">
+      <div class="topbar-title" id="topTitle">PAINEL ADMINISTRATIVO</div>
+      <div class="perfil-badge">&#9881; Administrador</div>
+      <button class="btn-topbar" onclick="loadAll()">&#8635; Atualizar Tudo</button>
+    </div>
+
+    <div class="content">
+
+      <!-- OVERVIEW -->
+      <div id="sec-overview" class="section active">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Visão Geral do Sistema</div>
+            <div class="page-sub">Controle administrativo completo da plataforma</div>
+          </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon">&#127970;</div>
+            <div class="kpi-label">Empresas</div>
+            <div class="kpi-value" id="kpi-emp" style="color:#00d2ff">—</div>
+            <div class="kpi-sub">Cadastradas</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">&#128101;</div>
+            <div class="kpi-label">Colaboradores</div>
+            <div class="kpi-value" id="kpi-col">—</div>
+            <div class="kpi-sub">Total na plataforma</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">&#9888;</div>
+            <div class="kpi-label">Alto Risco</div>
+            <div class="kpi-value" id="kpi-risk" style="color:#ff6060">—</div>
+            <div class="kpi-sub">Funcionários críticos</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">&#128737;</div>
+            <div class="kpi-label">Score Médio</div>
+            <div class="kpi-value" id="kpi-score" style="color:#00d2ff">—</div>
+            <div class="kpi-sub">Segurança geral</div>
+          </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="charts-row cols-3">
+          <div class="chart-card">
+            <div class="chart-title">&#127970; Status das Empresas</div>
+            <div class="chart-wrap h180">
+              <canvas id="chartStatus"></canvas>
+              <div class="donut-center">
+                <div class="val" id="dnt-emp">—</div>
+                <div class="lbl">empresas</div>
+              </div>
+            </div>
+            <div class="chart-legend" id="leg-status"></div>
+          </div>
+          <div class="chart-card span2">
+            <div class="chart-title">&#128200; Score de Segurança por Empresa</div>
+            <div class="chart-wrap h180"><canvas id="chartScoreEmp"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Tabela todas empresas -->
+        <div class="table-card">
+          <div class="table-header">
+            <h3>&#127970; Todas as Empresas</h3>
+            <button class="btn-add" onclick="window.location.href='/cadastro-empresa'">+ Nova Empresa</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Empresa</th>
+                <th>CNPJ</th>
+                <th>Colaboradores</th>
+                <th>Alto Risco</th>
+                <th>ASO Vencidos</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody id="tb-empresas">
+              <tr>
+                <td colspan="7" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Carregando...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EMPRESAS -->
+      <div id="sec-empresas" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Gerenciar Empresas</div>
+            <div class="page-sub">Todas as empresas cadastradas na plataforma</div>
+          </div>
+          <button class="btn-add" onclick="window.location.href='/cadastro-empresa'">+ Nova Empresa</button>
+        </div>
+        <div class="charts-row cols-2">
+          <div class="chart-card">
+            <div class="chart-title">&#128202; Colaboradores por Empresa</div>
+            <div class="chart-wrap h200"><canvas id="chartColEmp"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">&#9888; Alto Risco por Empresa</div>
+            <div class="chart-wrap h200"><canvas id="chartRiskEmp"></canvas></div>
+          </div>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Empresa</th>
+                <th>CNPJ</th>
+                <th>Colaboradores</th>
+                <th>Alto Risco</th>
+                <th>ASO Vencidos</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody id="tb-emp2">
+              <tr>
+                <td colspan="7" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Carregando...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- USUÁRIOS -->
+      <div id="sec-usuarios" class="section">
+        <div class="page-header">
+          <div>
+            <div class="topbar-title" id="topTitle">ADMINISTRAÇÃO CENTRAL</div>
+            <div class="page-sub">Contas de acesso à plataforma</div>
+          </div>
+          <button class="btn-add" onclick="window.location.href='/signup'">+ Novo Usuário</button>
+        </div>
+        <div class="info-grid">
+          <div class="info-card">
+            <h4>&#9881; Credenciais Admin</h4>
+            <div class="info-row"><span class="label">E-mail</span><span class="value">raulvilera@gmail.com</span></div>
+            <div class="info-row"><span class="label">Perfil</span><span class="value"><span
+                  class="badge-pill b-gold">Administrador</span></span></div>
+            <div class="info-row"><span class="label">Acesso</span><span class="value">/admin</span></div>
+          </div>
+          <div class="info-card">
+            <h4>&#129504; Credenciais Consultor</h4>
+            <div class="info-row"><span class="label">E-mail</span><span
+                class="value">carmensantanapsico@gmail.com</span></div>
+            <div class="info-row"><span class="label">Perfil</span><span class="value"><span
+                  class="badge-pill b-yellow">Consultor</span></span></div>
+            <div class="info-row"><span class="label">Acesso</span><span class="value">/dashboard</span></div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-header">
+            <h3>&#128101; Usuários Cadastrados</h3>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Perfil</th>
+                <th>Empresa</th>
+              </tr>
+            </thead>
+            <tbody id="tb-usuarios">
+              <tr>
+                <td colspan="4" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Carregando...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ── TRATAMENTO DE ERROS GLOBAL ──
+    window.onerror = function (msg, url, line) {
+      const errDiv = document.createElement('div');
+      errDiv.style = "position:fixed;top:0;left:0;width:100%;background:rgba(255,0,0,0.9);color:white;padding:10px;z-index:10000;font-family:sans-serif;font-size:12px;";
+      errDiv.innerHTML = `<b>Erro de Sistema:</b> ${msg} <br> <small>Linha: ${line} | ${url}</small>`;
+      document.body.appendChild(errDiv);
+    };
+
+    // ── ESTADO ──
+    let renderers = {}, scenes = {}, animIds = {};
+    let allEmpresas = [], allDash = [];
+    const PAL = ['#0072ff', '#00c6ff', '#00dbde', '#fc00ff', '#7855ff', '#ff5050'];
+    const pal = i => PAL[i % PAL.length];
+
+    function clearScene(id) {
+      if (animIds[id]) cancelAnimationFrame(animIds[id]);
+      const el = document.getElementById(id); if (!el) return;
+      while (el.firstChild) el.removeChild(el.firstChild);
+      if (renderers[id]) { renderers[id].dispose(); delete renderers[id]; }
+    }
+    const pc = c => new THREE.Color(c);
+
+    // DONUT 3D
+    function donut3d(id, labels, values, colors) {
+      if (typeof THREE === 'undefined') {
+        console.error('Three.js não carregado.');
+        return;
+      }
+      clearScene(id);
+      const cont = document.getElementById(id); if (!cont) return;
+      const W = cont.offsetWidth || 180, H = cont.offsetHeight || 180;
+      const scene = new THREE.Scene();
+      const cam = new THREE.PerspectiveCamera(40, W / H, 0.1, 50);
+      cam.position.set(0, 2.5, 4.5); cam.lookAt(0, 0, 0);
+      const ren = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      ren.setSize(W, H); ren.setPixelRatio(window.devicePixelRatio);
+      cont.appendChild(ren.domElement);
+      renderers[id] = ren; scenes[id] = scene;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+      const dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(3, 5, 2); scene.add(dl);
+
+      const grp = new THREE.Group(); scene.add(grp);
+      const total = values.reduce((a, b) => a + b, 0) || 1;
+      let sa = -Math.PI / 2;
+
+      values.forEach((v, i) => {
+        const ang = (v / total) * Math.PI * 2; if (ang <= 0) return;
+        const shape = new THREE.Shape();
+        shape.absarc(0, 0, 1.0, sa, sa + ang, false);
+        shape.absarc(0, 0, 0.6, sa + ang, sa, true);
+        const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.25, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.02, bevelSegments: 3 });
+        const mat = new THREE.MeshPhongMaterial({ color: pc(colors[i % colors.length]), shininess: 100 });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.rotation.x = -Math.PI / 2; grp.add(mesh); sa += ang;
+      });
+
+      const legEl = document.getElementById('leg-' + id.replace('chart-', ''));
+      if (legEl) legEl.innerHTML = labels.map((l, i) => `<div class="leg-item"><div class="leg-dot" style="background:${colors[i % colors.length]}"></div>${l}: <b>${values[i]}</b></div>`).join('');
+
+      let t = 0;
+      function anim() { animIds[id] = requestAnimationFrame(anim); t += 0.008; grp.rotation.y = t * 0.4; ren.render(scene, cam) }
+      anim();
+    }
+
+    // BARRAS 3D VERTICAIS
+    function bar3d(id, labels, values, colors) {
+      if (typeof THREE === 'undefined') return;
+      clearScene(id);
+      const cont = document.getElementById(id); if (!cont) return;
+      const W = cont.offsetWidth || 300, H = cont.offsetHeight || 200;
+      const scene = new THREE.Scene();
+      const cam = new THREE.PerspectiveCamera(38, W / H, 0.1, 50);
+      cam.position.set(0, 3, 7); cam.lookAt(0, 0.5, 0);
+      const ren = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      ren.setSize(W, H); ren.setPixelRatio(window.devicePixelRatio);
+      cont.appendChild(ren.domElement);
+      renderers[id] = ren; scenes[id] = scene;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+      const dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(5, 7, 5); scene.add(dl);
+
+      const maxV = Math.max(...values, 1);
+      const bW = 0.6, gap = 0.4, tw = (bW + gap) * values.length;
+      const sx = -tw / 2 + bW / 2;
+      const grp = new THREE.Group(); scene.add(grp);
+
+      values.forEach((v, i) => {
+        const h = Math.max((v / maxV) * 3.5, 0.1);
+        const geo = new THREE.BoxGeometry(bW, h, bW);
+        const mat = new THREE.MeshPhongMaterial({ color: pc(colors[i % colors.length]), shininess: 110 });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(sx + i * (bW + gap), h / 2, 0);
+        grp.add(mesh);
+
+        // Label value
+        const lc = document.createElement('canvas'); lc.width = 64; lc.height = 64;
+        const lx = lc.getContext('2d');
+        lx.fillStyle = '#fff'; lx.font = 'bold 24px Rajdhani'; lx.textAlign = 'center';
+        lx.fillText(v, 32, 40);
+        const tex = new THREE.CanvasTexture(lc);
+        const pm = new THREE.MeshBasicMaterial({ map: tex, transparent: true });
+        const pmesh = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.8), pm);
+        pmesh.position.set(sx + i * (bW + gap), h + 0.5, 0.2);
+        grp.add(pmesh);
+      });
+
+      let t = 0;
+      function anim() { animIds[id] = requestAnimationFrame(anim); t += 0.005; grp.rotation.y = Math.sin(t) * 0.15; ren.render(scene, cam) }
+      anim();
+    }
+
+    // ── CARREGA TUDO ──────────────────────────────────────────────────────────────
+    async function loadAll() {
+      try {
+        console.log('Iniciando carga de dados...');
+        allEmpresas = await fetch('/api/empresas').then(r => r.json()).catch(err => { console.error('Erro /api/empresas:', err); return []; });
+
+        if (allEmpresas.length === 0) {
+          console.warn('Nenhuma empresa encontrada.');
+          document.getElementById('tb-empresas').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;">Nenhuma empresa cadastrada.</td></tr>';
+          return;
+        }
+
+        allDash = await Promise.all(allEmpresas.map(e =>
+          fetch('/api/dashboard/' + e.id)
+            .then(r => r.json())
+            .catch(err => { console.error(`Erro dashboard ${e.id}:`, err); return { kpis: {} }; })
+        ));
+
+        let totFunc = 0, totRisk = 0, totScore = 0;
+        allDash.forEach(d => { totFunc += d.kpis.total_funcionarios || 0; totRisk += d.kpis.alto_risco || 0; totScore += d.kpis.score_seguranca || 0; });
+        const scoreM = allEmpresas.length ? Math.round(totScore / allEmpresas.length) : 0;
+
+        document.getElementById('kpi-emp').textContent = allEmpresas.length;
+        document.getElementById('kpi-col').textContent = totFunc;
+        document.getElementById('kpi-risk').textContent = totRisk;
+        document.getElementById('kpi-score').textContent = scoreM + '%';
+        document.getElementById('dnt-emp').textContent = allEmpresas.length;
+
+        // Donut status
+        const comRisco = allDash.filter(d => (d.kpis.alto_risco || 0) > 0).length;
+        const semRisco = allEmpresas.length - comRisco;
+        donut3d('chartStatus', ['Com Risco', 'Seguras'], [comRisco, semRisco], ['#ff5050', '#0072ff']);
+
+        // Barras 3D score
+        const labels = allEmpresas.map(e => e.nome.substring(0, 10));
+        bar3d('chartScoreEmp', labels, allDash.map(d => d.kpis.score_seguranca || 0), allEmpresas.map((_, i) => pal(i)));
+        bar3d('chartColEmp', labels, allDash.map(d => d.kpis.total_funcionarios || 0), allEmpresas.map((_, i) => pal(i)));
+        bar3d('chartRiskEmp', labels, allDash.map(d => d.kpis.alto_risco || 0), allEmpresas.map(() => '#ff5050'));
+
+        // Tabelas
+        const rows = allEmpresas.map((e, i) => {
+          const d = allDash[i];
+          return `<tr>
+        <td style="color:rgba(255,255,255,.45)">${e.id}</td>
+        <td style="font-weight:600;color:#fff">${e.nome}</td>
+        <td style="color:rgba(255,255,255,.45)">${e.cnpj || '—'}</td>
+        <td>${d.kpis.total_funcionarios || 0}</td>
+        <td style="color:#ff6060;font-weight:700">${d.kpis.alto_risco || 0}</td>
+        <td><span class="badge-pill ${(d.kpis.aso_vencidos || 0) > 0 ? 'b-red' : 'b-green'}">${d.kpis.aso_vencidos || 0}</span></td>
+        <td style="color:#00d2ff;font-weight:700">${d.kpis.score_seguranca || 0}%</td>
+      </tr>`;
+        }).join('') || '<tr><td colspan="7" style="text-align:center;padding:20px;">Nenhum dado disponível.</td></tr>';
+        document.getElementById('tb-empresas').innerHTML = rows;
+        document.getElementById('tb-emp2').innerHTML = rows;
+
+        // Usuários
+        loadUsuarios();
+      } catch (globalErr) {
+        console.error('Erro global loadAll:', globalErr);
+      }
+    }
+
+    async function loadUsuarios() {
+      try {
+        const u = await fetch('/api/admin/usuarios').then(r => r.json()).catch(() => []);
+        document.getElementById('tb-usuarios').innerHTML = u.map(us =>
+          `<tr>
+        <td style="font-weight:600;color:#fff">${us.nome || us.email}</td>
+        <td style="color:rgba(255,255,255,.6)">${us.email || '—'}</td>
+        <td><span class="badge-pill b-gold">${us.perfil || 'RH'}</span></td>
+        <td>${us.empresa_id || '—'}</td>
+      </tr>`
+        ).join('') || '<tr><td colspan="4" style="text-align:center;padding:20px;">Nenhum usuário cadastrado.</td></tr>';
+      } catch (uErr) {
+        console.error('Erro loadUsuarios:', uErr);
+      }
+    }
+
+    // ── SEÇÕES ────────────────────────────────────────────────────────────────────
+    function showSection(name, el) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById('sec-' + name).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if (el) el.classList.add('active');
+      const T = { overview: 'PAINEL ADMINISTRATIVO', empresas: 'GERENCIAR EMPRESAS', usuarios: 'USUÁRIOS DO SISTEMA' };
+      document.getElementById('topTitle').textContent = T[name] || name;
+      if (name === 'empresas') {
+        const labels = allEmpresas.map(e => e.nome.substring(0, 10));
+        bar3d('chartColEmp', labels, allDash.map(d => d.kpis.total_funcionarios || 0), allEmpresas.map((_, i) => pal(i)));
+        bar3d('chartRiskEmp', labels, allDash.map(d => d.kpis.alto_risco || 0), allEmpresas.map(() => '#ff5050'));
+      }
+      if (name === 'usuarios') loadUsuarios();
+    }
+
+    loadAll();
+  </script>
+  <script>function toggleSidebar() { var s = document.querySelector(".sidebar"); var o = document.getElementById("sb-overlay"); s.classList.toggle("open"); o.classList.toggle("open") } function closeSidebar() { document.querySelector(".sidebar").classList.remove("open"); document.getElementById("sb-overlay").classList.remove("open") }</script>
+
+
+</html>
