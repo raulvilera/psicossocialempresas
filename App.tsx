@@ -345,6 +345,7 @@ const App = () => {
       const { data: incData, error } = await supabase
         .from('incidents')
         .select('*')
+        .eq('school', 'LKM')
         .order('created_at', { ascending: false });
       if (!error && incData) {
         const mapped: Incident[] = incData.map(i => ({
@@ -411,7 +412,8 @@ const App = () => {
           status: item.status,
           source: item.source,
           pdf_url: item.pdfUrl,
-          author_email: item.authorEmail
+          author_email: item.authorEmail,
+          school: 'LKM'
         });
 
         if (!error) {
@@ -494,7 +496,8 @@ const App = () => {
             status: item.status,
             source: item.source,
             pdf_url: item.pdfUrl,
-            author_email: item.authorEmail
+            author_email: item.authorEmail,
+            school: 'LKM'
           });
 
           if (error) {
