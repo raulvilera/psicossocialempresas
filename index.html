@@ -614,7 +614,8 @@
             email: studentEmail,
             turma: studentClass,
             nota: finalGrade,
-            spreadsheetId: '1F1qUYkW9--r8U2eCHvOpruZue-HdQRh9T5HroiE5Rws'
+            respostas: Array.from({length: totalQuestions}, (_, i) => formData.get(`q${i+1}`) || ""),
+            spreadsheetId: '1DyI5mZ8V3jBYubazxcScyaZxHlrgNjEn0yL_2KoCHfQ'
         };
 
         // Enviar a requisição para o Web App
