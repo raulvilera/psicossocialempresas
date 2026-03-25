@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { fetchTurmas, fetchAlunosByTurma, Aluno, saveOcorrencia, Ocorrencia } from '../services/sheetsService';
+import { fetchTurmas, fetchAlunosByTurma, saveOcorrencia } from '../services/sheetsService';
+import type { Aluno, Ocorrencia } from '../services/sheetsService';
+
 
 interface ProfessorViewProps {
     userEmail: string;
