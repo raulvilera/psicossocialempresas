@@ -1,16 +1,19 @@
 /**
- * Código para o Google Apps Script para registrar as notas da atividade.
- * Instruções:
- * 1. Abra sua planilha Google Sheets com o ID: 1F1qUYkW9--r8U2eCHvOpruZue-HdQRh9T5HroiE5Rws
- * 2. Vá em Extensões > Apps Script.
- * 3. Apague o código que estiver lá e cole este.
- * 4. Clique em "Implantar" > "Nova implantação".
- * 5. Selecione o tipo "App da Web".
- * 6. Em "Quem pode acessar", escolha "Qualquer pessoa".
- * 7. Copie o URL gerado e atualize no index.html se for necessário.
+ * FUNÇÃO DE TESTE: Selecione esta função e clique em "Executar" para testar o acesso.
  */
+function testarConexao() {
+  var id = '1F1qUYkW9--r8U2eCHvOpruZue-HdQRh9T5HroiE5Rws';
+  try {
+    var ss = SpreadsheetApp.openById(id);
+    Logger.log("Conexão bem-sucedida!");
+    Logger.log("Abas encontradas: " + ss.getSheets().map(s => s.getName()).join(", "));
+  } catch (e) {
+    Logger.log("Erro ao acessar planilha: " + e.message);
+  }
+}
 
 function doPost(e) {
+  var log = [];
   try {
     var contents = e.postData ? e.postData.contents : "{}";
     var data = JSON.parse(contents);
@@ -18,44 +21,48 @@ function doPost(e) {
     var spreadsheetId = data.spreadsheetId || '1F1qUYkW9--r8U2eCHvOpruZue-HdQRh9T5HroiE5Rws';
     var ss = SpreadsheetApp.openById(spreadsheetId);
     
-    // Normalização para lidar com caracteres como º, ª, e acentos
+    // Normalização agressiva
     var normalize = function(str) {
-      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+      if (!str) return "";
+      return str.toString().normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[ºª]/g, "") // Remove º e ª explicitamente
+                .toLowerCase()
+                .trim();
     };
     
     var turmaRaw = (data.turma || "").trim();
     var turmaNorm = normalize(turmaRaw);
     
-    // Tenta encontrar a aba por diversos nomes possíveis
     var sheets = ss.getSheets();
     var sheet = null;
     
     for (var i = 0; i < sheets.length; i++) {
       var sName = normalize(sheets[i].getName());
+      // Busca por "8 a", "8 b", "serie a", etc.
       if (sName === turmaNorm || 
-          (turmaNorm.includes("a") && sName.includes("serie a")) || 
-          (turmaNorm.includes("a") && sName.includes("ano a")) ||
-          (turmaNorm.includes("b") && sName.includes("serie b")) ||
-          (turmaNorm.includes("b") && sName.includes("ano b"))) {
+          (turmaNorm.includes("a") && sName.includes("a")) || 
+          (turmaNorm.includes("b") && sName.includes("b"))) {
         sheet = sheets[i];
         break;
       }
     }
     
     if (!sheet) {
-      return ContentService.createTextOutput("Erro: Aba para a turma '" + turmaRaw + "' não encontrada. Verifique se o nome na planilha é exatamente '8º Ano A' ou '8ªSérie A'.").setMimeType(ContentService.MimeType.TEXT);
+      return ContentService.createTextOutput("Erro: Aba não encontrada para '" + turmaRaw + "'. Verifique os nomes das abas.").setMimeType(ContentService.MimeType.TEXT);
     }
     
     var nome = (data.nome || "").trim();
     var nota = data.nota;
     var sheetNameActual = sheet.getName();
     
-    // Determinar a coluna de notas:
-    var colNota = 24; 
-    if (normalize(sheetNameActual).includes("a")) {
-      colNota = 27; // Coluna AA
-    } else if (normalize(sheetNameActual).includes("b")) {
-      colNota = 25; // Coluna Y
+    // Mapeamento de Colunas (AA = 27, Y = 25)
+    var colNota = normalize(sheetNameActual).includes("a") ? 27 : 25;
+    
+    // GARANTIR QUE A COLUNA EXISTE (Evita erro de Range se a planilha for pequena)
+    var maxCols = sheet.getMaxColumns();
+    if (maxCols < colNota) {
+      sheet.insertColumnsAfter(maxCols, colNota - maxCols);
     }
     
     var lastRow = Math.max(sheet.getLastRow(), 5);
@@ -64,7 +71,7 @@ function doPost(e) {
     
     var nomeBusca = normalize(nome);
     for (var i = 0; i < dataRange.length; i++) {
-      var valorCelula = normalize((dataRange[i][0] || "").toString());
+      var valorCelula = normalize(dataRange[i][0]);
       if (valorCelula === nomeBusca) {
         rowIndex = i + 5; 
         break;
@@ -73,17 +80,17 @@ function doPost(e) {
     
     if (rowIndex !== -1) {
       sheet.getRange(rowIndex, colNota).setValue(nota);
-      return ContentService.createTextOutput("Sucesso: Nota " + nota + " registrada para " + nome + " na linha " + rowIndex).setMimeType(ContentService.MimeType.TEXT);
+      return ContentService.createTextOutput("OK: Nota " + nota + " gravada na linha " + rowIndex).setMimeType(ContentService.MimeType.TEXT);
     } else {
       var nextRow = sheet.getLastRow() + 1;
       if (nextRow < 5) nextRow = 5;
       sheet.getRange(nextRow, 2).setValue(nome); 
       sheet.getRange(nextRow, colNota).setValue(nota);
-      return ContentService.createTextOutput("Sucesso: Aluno não estava na lista. Novo registro criado na linha " + nextRow).setMimeType(ContentService.MimeType.TEXT);
+      return ContentService.createTextOutput("OK: Aluno novo adicionado na linha " + nextRow).setMimeType(ContentService.MimeType.TEXT);
     }
     
   } catch (err) {
-    return ContentService.createTextOutput("Erro Crítico no Script: " + err.stack).setMimeType(ContentService.MimeType.TEXT);
+    return ContentService.createTextOutput("Erro Crítico: " + err.toString()).setMimeType(ContentService.MimeType.TEXT);
   }
 }
 
