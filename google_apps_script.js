@@ -48,8 +48,10 @@ function doPost(e) {
     
     var nome = (data.nome || "").trim();
     var nota = data.nota;
-    var sheetNameActual = sheet.getName();
-    var colNota = normalize(sheetNameActual).indexOf("a") !== -1 ? 27 : 25;
+    
+    // Conforme especificado pelo usuário: Coluna X (24)
+    var colNota = 24; 
+
     
     var maxCols = sheet.getMaxColumns();
     if (maxCols < colNota) {
