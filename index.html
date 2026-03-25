@@ -60,6 +60,31 @@
             box-sizing: border-box;
         }
 
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 0;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group-small {
+            flex: 0 0 100px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .form-group-small {
+                flex: 1;
+            }
+        }
+
+
         .question {
             background-color: #ffffff;
             margin-bottom: 40px;
@@ -163,94 +188,105 @@
     
     <form id="quizForm">
         <div class="student-info">
-            <label for="studentNumber">Nº de Chamada:</label>
-            <input type="number" id="studentNumber" name="studentNumber" min="1" max="50" placeholder="Ex: 5" required>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="studentName">Nome Completo:</label>
+                    <select id="studentName" name="studentName" required>
+                        <option value="">Selecione seu nome</option>
+                        <optgroup label="8º Ano A">
+                            <option value="ALICE CARDOSO DE ALCANTARA">ALICE CARDOSO DE ALCANTARA</option>
+                            <option value="ANA LUIZA VALENCA PAIVA">ANA LUIZA VALENCA PAIVA</option>
+                            <option value="BRYAN DINIZ SILVA">BRYAN DINIZ SILVA</option>
+                            <option value="CARLOS EDUARDO MENEZES MACHADO">CARLOS EDUARDO MENEZES MACHADO</option>
+                            <option value="EVANDRO CUTOLO TEIXEIRA">EVANDRO CUTOLO TEIXEIRA</option>
+                            <option value="GABRIELA SANTOS COSTA">GABRIELA SANTOS COSTA</option>
+                            <option value="GUILHERME CARMO RODRIGUES">GUILHERME CARMO RODRIGUES</option>
+                            <option value="GUSTAVO HENRIQUE DA SILVA">GUSTAVO HENRIQUE DA SILVA</option>
+                            <option value="ISAAC FERNANDES DE ANDRADE">ISAAC FERNANDES DE ANDRADE</option>
+                            <option value="KELVIN DUARTE GONCALVES">KELVIN DUARTE GONCALVES</option>
+                            <option value="LAURA VITORIA ROCHA">LAURA VITORIA ROCHA</option>
+                            <option value="LETICIA CUSTODIO LIMA">LETICIA CUSTODIO LIMA</option>
+                            <option value="LUCAS EDUARDO DA SILVA SANTANA">LUCAS EDUARDO DA SILVA SANTANA</option>
+                            <option value="MIGUEL LIMA DE MESQUITA">MIGUEL LIMA DE MESQUITA</option>
+                            <option value="NICOLAS ROCHA SILVA">NICOLAS ROCHA SILVA</option>
+                            <option value="RADYLA MICHELLINE DOS SANTOS MARQUES">RADYLA MICHELLINE DOS SANTOS MARQUES</option>
+                            <option value="PEDRO HENRIQUE CORREA DE BRITO">PEDRO HENRIQUE CORREA DE BRITO</option>
+                            <option value="RAPHAEL MATHIAS NUNES MIRANDA">RAPHAEL MATHIAS NUNES MIRANDA</option>
+                            <option value="RYAN GABRIEL PEREIRA DE SOUSA">RYAN GABRIEL PEREIRA DE SOUSA</option>
+                            <option value="SAMUEL ALVES DA COSTA">SAMUEL ALVES DA COSTA</option>
+                            <option value="SOFIA AZEREDO CUBAS">SOFIA AZEREDO CUBAS</option>
+                            <option value="SOPHIA LACERDA ANDRADE">SOPHIA LACERDA ANDRADE</option>
+                            <option value="THAYLLA DUANNY VENANCIO SCAQUITO">THAYLLA DUANNY VENANCIO SCAQUITO</option>
+                            <option value="THAYS RODRIGUES DA SILVA">THAYS RODRIGUES DA SILVA</option>
+                            <option value="VICTOR HENRIQUE BENVINDO">VICTOR HENRIQUE BENVINDO</option>
+                            <option value="KAROLAYNE DOS SANTOS BISSORNIA">KAROLAYNE DOS SANTOS BISSORNIA</option>
+                            <option value="ANA VICTORIA RAGACINI DE OLIVEIRA">ANA VICTORIA RAGACINI DE OLIVEIRA</option>
+                            <option value="RODOLFO RAFAEL GOLZENLEUCHTER MORENO JUNIOR">RODOLFO RAFAEL GOLZENLEUCHTER MORENO JUNIOR</option>
+                            <option value="RAQUEL BARGAS TAVARES DOS SANTOS">RAQUEL BARGAS TAVARES DOS SANTOS</option>
+                            <option value="LEONARDO MENCIA">LEONARDO MENCIA</option>
+                            <option value="MATHEUS KAUA DOS SANTOS NASCIMENTO">MATHEUS KAUA DOS SANTOS NASCIMENTO</option>
+                            <option value="MAYARA CAETANO DE OLIVEIRA PINA">MAYARA CAETANO DE OLIVEIRA PINA</option>
+                            <option value="ANA CLARA VILA NOVA GONCALVES">ANA CLARA VILA NOVA GONCALVES</option>
+                        </optgroup>
+                        <optgroup label="8º Ano B">
+                            <option value="ANGELLO GABRIEL CUTOLO TEIXEIRA">ANGELLO GABRIEL CUTOLO TEIXEIRA</option>
+                            <option value="ARTHUR HENRIQUE MARQUES ENDRES">ARTHUR HENRIQUE MARQUES ENDRES</option>
+                            <option value="BIANCA CRISTINA DA SILVA SANTOS">BIANCA CRISTINA DA SILVA SANTOS</option>
+                            <option value="BRAYAN DA SILVA FERREIRA">BRAYAN DA SILVA FERREIRA</option>
+                            <option value="BRAYAN DUARTE DA SILVA">BRAYAN DUARTE DA SILVA</option>
+                            <option value="BRUNO LUIZ NASCIMENTO DA SILVA">BRUNO LUIZ NASCIMENTO DA SILVA</option>
+                            <option value="CRISTIANO MARQUES BATISTA DE SOUZA">CRISTIANO MARQUES BATISTA DE SOUZA</option>
+                            <option value="DANIEL RODRIGUES SANTOS DIAS">DANIEL RODRIGUES SANTOS DIAS</option>
+                            <option value="DIEGO BARRIO NOVO AMARAL DE ANDRADE">DIEGO BARRIO NOVO AMARAL DE ANDRADE</option>
+                            <option value="FABRICIO LORENZO PARMA">FABRICIO LORENZO PARMA</option>
+                            <option value="GABRIELA PAULINA FERREIRA MARTINS">GABRIELA PAULINA FERREIRA MARTINS</option>
+                            <option value="EMILLY VICTORIA NERIS DE FRANÇA">EMILLY VICTORIA NERIS DE FRANÇA</option>
+                            <option value="JHONAS KYMBISON TROCATO DA SILVA">JHONAS KYMBISON TROCATO DA SILVA</option>
+                            <option value="JULIA VITORIA SILVA LINS">JULIA VITORIA SILVA LINS</option>
+                            <option value="KENIA DOS SANTOS SILVA">KENIA DOS SANTOS SILVA</option>
+                            <option value="LAURA BORGES AZEVEDO">LAURA BORGES AZEVEDO</option>
+                            <option value="LUAN DANTAS NEDELECO">LUAN DANTAS NEDELECO</option>
+                            <option value="LUAN RIBEIRO SILVA">LUAN RIBEIRO SILVA</option>
+                            <option value="MANUELA ANGELICA TRIANA DA SILVA">MANUELA ANGELICA TRIANA DA SILVA</option>
+                            <option value="MARCELO GOMES THOMAZ">MARCELO GOMES THOMAZ</option>
+                            <option value="MARCOS CELIO DE JESUS">MARCOS CELIO DE JESUS</option>
+                            <option value="PAULO CESAR LAMBERT GONÇALVES">PAULO CESAR LAMBERT GONÇALVES</option>
+                            <option value="PEDRO HENRIQUE OLIVEIRA GOMES">PEDRO HENRIQUE OLIVEIRA GOMES</option>
+                            <option value="PIETRO MARTINS NOBRE">PIETRO MARTINS NOBRE</option>
+                            <option value="SOPHIA FRANCA DE CARVALHO">SOPHIA FRANCA DE CARVALHO</option>
+                            <option value="VICTOR HUGO PRADO SANTOS DE BARROS">VICTOR HUGO PRADO SANTOS DE BARROS</option>
+                            <option value="WALLIF LEANDRO DE JESUS LESSA">WALLIF LEANDRO DE JESUS LESSA</option>
+                            <option value="VITORIA JOLIE RODRIGUES RAPOSO">VITORIA JOLIE RODRIGUES RAPOSO</option>
+                            <option value="ISAAC BONFIM VIDOTTO">ISAAC BONFIM VIDOTTO</option>
+                            <option value="MATEUS DE JESUS JACINTO DOS SANTOS">MATEUS DE JESUS JACINTO DOS SANTOS</option>
+                            <option value="KHIARA DE OLIVEIRA SILVA">KHIARA DE OLIVEIRA SILVA</option>
+                            <option value="MARIA EDUARDA MACHADO DE LIMA">MARIA EDUARDA MACHADO DE LIMA</option>
+                            <option value="ESTER CODINA DE JESUS">ESTER CODINA DE JESUS</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="form-group-small">
+                    <label for="studentNumber">Nº:</label>
+                    <input type="number" id="studentNumber" name="studentNumber" min="1" max="50" placeholder="Ex: 5" required>
+                </div>
+            </div>
 
-            <label for="studentName">Nome Completo:</label>
-            <select id="studentName" name="studentName" required>
-                <option value="">Selecione seu nome</option>
-                <optgroup label="8º Ano A">
-                    <option value="ALICE CARDOSO DE ALCANTARA">ALICE CARDOSO DE ALCANTARA</option>
-                    <option value="ANA LUIZA VALENCA PAIVA">ANA LUIZA VALENCA PAIVA</option>
-                    <option value="BRYAN DINIZ SILVA">BRYAN DINIZ SILVA</option>
-                    <option value="CARLOS EDUARDO MENEZES MACHADO">CARLOS EDUARDO MENEZES MACHADO</option>
-                    <option value="EVANDRO CUTOLO TEIXEIRA">EVANDRO CUTOLO TEIXEIRA</option>
-                    <option value="GABRIELA SANTOS COSTA">GABRIELA SANTOS COSTA</option>
-                    <option value="GUILHERME CARMO RODRIGUES">GUILHERME CARMO RODRIGUES</option>
-                    <option value="GUSTAVO HENRIQUE DA SILVA">GUSTAVO HENRIQUE DA SILVA</option>
-                    <option value="ISAAC FERNANDES DE ANDRADE">ISAAC FERNANDES DE ANDRADE</option>
-                    <option value="KELVIN DUARTE GONCALVES">KELVIN DUARTE GONCALVES</option>
-                    <option value="LAURA VITORIA ROCHA">LAURA VITORIA ROCHA</option>
-                    <option value="LETICIA CUSTODIO LIMA">LETICIA CUSTODIO LIMA</option>
-                    <option value="LUCAS EDUARDO DA SILVA SANTANA">LUCAS EDUARDO DA SILVA SANTANA</option>
-                    <option value="MIGUEL LIMA DE MESQUITA">MIGUEL LIMA DE MESQUITA</option>
-                    <option value="NICOLAS ROCHA SILVA">NICOLAS ROCHA SILVA</option>
-                    <option value="RADYLA MICHELLINE DOS SANTOS MARQUES">RADYLA MICHELLINE DOS SANTOS MARQUES</option>
-                    <option value="PEDRO HENRIQUE CORREA DE BRITO">PEDRO HENRIQUE CORREA DE BRITO</option>
-                    <option value="RAPHAEL MATHIAS NUNES MIRANDA">RAPHAEL MATHIAS NUNES MIRANDA</option>
-                    <option value="RYAN GABRIEL PEREIRA DE SOUSA">RYAN GABRIEL PEREIRA DE SOUSA</option>
-                    <option value="SAMUEL ALVES DA COSTA">SAMUEL ALVES DA COSTA</option>
-                    <option value="SOFIA AZEREDO CUBAS">SOFIA AZEREDO CUBAS</option>
-                    <option value="SOPHIA LACERDA ANDRADE">SOPHIA LACERDA ANDRADE</option>
-                    <option value="THAYLLA DUANNY VENANCIO SCAQUITO">THAYLLA DUANNY VENANCIO SCAQUITO</option>
-                    <option value="THAYS RODRIGUES DA SILVA">THAYS RODRIGUES DA SILVA</option>
-                    <option value="VICTOR HENRIQUE BENVINDO">VICTOR HENRIQUE BENVINDO</option>
-                    <option value="KAROLAYNE DOS SANTOS BISSORNIA">KAROLAYNE DOS SANTOS BISSORNIA</option>
-                    <option value="ANA VICTORIA RAGACINI DE OLIVEIRA">ANA VICTORIA RAGACINI DE OLIVEIRA</option>
-                    <option value="RODOLFO RAFAEL GOLZENLEUCHTER MORENO JUNIOR">RODOLFO RAFAEL GOLZENLEUCHTER MORENO JUNIOR</option>
-                    <option value="RAQUEL BARGAS TAVARES DOS SANTOS">RAQUEL BARGAS TAVARES DOS SANTOS</option>
-                    <option value="LEONARDO MENCIA">LEONARDO MENCIA</option>
-                    <option value="MATHEUS KAUA DOS SANTOS NASCIMENTO">MATHEUS KAUA DOS SANTOS NASCIMENTO</option>
-                    <option value="MAYARA CAETANO DE OLIVEIRA PINA">MAYARA CAETANO DE OLIVEIRA PINA</option>
-                    <option value="ANA CLARA VILA NOVA GONCALVES">ANA CLARA VILA NOVA GONCALVES</option>
-                </optgroup>
-                <optgroup label="8º Ano B">
-                    <option value="ANGELLO GABRIEL CUTOLO TEIXEIRA">ANGELLO GABRIEL CUTOLO TEIXEIRA</option>
-                    <option value="ARTHUR HENRIQUE MARQUES ENDRES">ARTHUR HENRIQUE MARQUES ENDRES</option>
-                    <option value="BIANCA CRISTINA DA SILVA SANTOS">BIANCA CRISTINA DA SILVA SANTOS</option>
-                    <option value="BRAYAN DA SILVA FERREIRA">BRAYAN DA SILVA FERREIRA</option>
-                    <option value="BRAYAN DUARTE DA SILVA">BRAYAN DUARTE DA SILVA</option>
-                    <option value="BRUNO LUIZ NASCIMENTO DA SILVA">BRUNO LUIZ NASCIMENTO DA SILVA</option>
-                    <option value="CRISTIANO MARQUES BATISTA DE SOUZA">CRISTIANO MARQUES BATISTA DE SOUZA</option>
-                    <option value="DANIEL RODRIGUES SANTOS DIAS">DANIEL RODRIGUES SANTOS DIAS</option>
-                    <option value="DIEGO BARRIO NOVO AMARAL DE ANDRADE">DIEGO BARRIO NOVO AMARAL DE ANDRADE</option>
-                    <option value="FABRICIO LORENZO PARMA">FABRICIO LORENZO PARMA</option>
-                    <option value="GABRIELA PAULINA FERREIRA MARTINS">GABRIELA PAULINA FERREIRA MARTINS</option>
-                    <option value="EMILLY VICTORIA NERIS DE FRANÇA">EMILLY VICTORIA NERIS DE FRANÇA</option>
-                    <option value="JHONAS KYMBISON TROCATO DA SILVA">JHONAS KYMBISON TROCATO DA SILVA</option>
-                    <option value="JULIA VITORIA SILVA LINS">JULIA VITORIA SILVA LINS</option>
-                    <option value="KENIA DOS SANTOS SILVA">KENIA DOS SANTOS SILVA</option>
-                    <option value="LAURA BORGES AZEVEDO">LAURA BORGES AZEVEDO</option>
-                    <option value="LUAN DANTAS NEDELECO">LUAN DANTAS NEDELECO</option>
-                    <option value="LUAN RIBEIRO SILVA">LUAN RIBEIRO SILVA</option>
-                    <option value="MANUELA ANGELICA TRIANA DA SILVA">MANUELA ANGELICA TRIANA DA SILVA</option>
-                    <option value="MARCELO GOMES THOMAZ">MARCELO GOMES THOMAZ</option>
-                    <option value="MARCOS CELIO DE JESUS">MARCOS CELIO DE JESUS</option>
-                    <option value="PAULO CESAR LAMBERT GONÇALVES">PAULO CESAR LAMBERT GONÇALVES</option>
-                    <option value="PEDRO HENRIQUE OLIVEIRA GOMES">PEDRO HENRIQUE OLIVEIRA GOMES</option>
-                    <option value="PIETRO MARTINS NOBRE">PIETRO MARTINS NOBRE</option>
-                    <option value="SOPHIA FRANCA DE CARVALHO">SOPHIA FRANCA DE CARVALHO</option>
-                    <option value="VICTOR HUGO PRADO SANTOS DE BARROS">VICTOR HUGO PRADO SANTOS DE BARROS</option>
-                    <option value="WALLIF LEANDRO DE JESUS LESSA">WALLIF LEANDRO DE JESUS LESSA</option>
-                    <option value="VITORIA JOLIE RODRIGUES RAPOSO">VITORIA JOLIE RODRIGUES RAPOSO</option>
-                    <option value="ISAAC BONFIM VIDOTTO">ISAAC BONFIM VIDOTTO</option>
-                    <option value="MATEUS DE JESUS JACINTO DOS SANTOS">MATEUS DE JESUS JACINTO DOS SANTOS</option>
-                    <option value="KHIARA DE OLIVEIRA SILVA">KHIARA DE OLIVEIRA SILVA</option>
-                    <option value="MARIA EDUARDA MACHADO DE LIMA">MARIA EDUARDA MACHADO DE LIMA</option>
-                    <option value="ESTER CODINA DE JESUS">ESTER CODINA DE JESUS</option>
-                </optgroup>
-            </select>
-            
-            <label for="studentEmail">E-mail (Google Institucional ou Microsoft):</label>
-            <input type="email" id="studentEmail" name="studentEmail" placeholder="seu.nome@aluno.educacao.sp.gov.br" required>
-            
-            <label for="studentClass">Série:</label>
-            <select id="studentClass" name="studentClass" required>
-                <option value="">Selecione sua turma</option>
-                <option value="8º Ano A">8º Ano A</option>
-                <option value="8º Ano B">8º Ano B</option>
-            </select>
+            <div class="form-row">
+                <div class="form-group-small">
+                    <label for="studentClass">Série:</label>
+                    <select id="studentClass" name="studentClass" required>
+                        <option value="">Selecione...</option>
+                        <option value="8º Ano A">8º Ano A</option>
+                        <option value="8º Ano B">8º Ano B</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="studentEmail">E-mail (Google ou Microsoft):</label>
+                    <input type="email" id="studentEmail" name="studentEmail" placeholder="seu.nome@aluno.educacao.sp.gov.br" required>
+                </div>
+            </div>
         </div>
+
 
         <div id="questionsContainer">
             <!-- Questão 1 -->
