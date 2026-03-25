@@ -12,51 +12,59 @@
 
 function doPost(e) {
   try {
-    // Captura o conteúdo do POST de forma segura
     var contents = e.postData ? e.postData.contents : "{}";
     var data = JSON.parse(contents);
     
-    var ss = SpreadsheetApp.openById('1F1qUYkW9--r8U2eCHvOpruZue-HdQRh9T5HroiE5Rws');
+    var spreadsheetId = data.spreadsheetId || '1F1qUYkW9--r8U2eCHvOpruZue-HdQRh9T5HroiE5Rws';
+    var ss = SpreadsheetApp.openById(spreadsheetId);
+    
+    // Normalização para lidar com caracteres como º, ª, e acentos
+    var normalize = function(str) {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+    };
+    
     var turmaRaw = (data.turma || "").trim();
+    var turmaNorm = normalize(turmaRaw);
     
-    // Tenta encontrar a aba pelo nome exato enviado
-    var sheet = ss.getSheetByName(turmaRaw);
+    // Tenta encontrar a aba por diversos nomes possíveis
+    var sheets = ss.getSheets();
+    var sheet = null;
     
-    // Fallback: se não encontrar, tenta os nomes conhecidos (8º Ano ou 8ªSérie)
-    if (!sheet) {
-      if (turmaRaw.includes("A")) {
-        sheet = ss.getSheetByName("8ªSérie A") || ss.getSheetByName("8º Ano A");
-      } else if (turmaRaw.includes("B")) {
-        sheet = ss.getSheetByName("8ªSérie B") || ss.getSheetByName("8º Ano B");
+    for (var i = 0; i < sheets.length; i++) {
+      var sName = normalize(sheets[i].getName());
+      if (sName === turmaNorm || 
+          (turmaNorm.includes("a") && sName.includes("serie a")) || 
+          (turmaNorm.includes("a") && sName.includes("ano a")) ||
+          (turmaNorm.includes("b") && sName.includes("serie b")) ||
+          (turmaNorm.includes("b") && sName.includes("ano b"))) {
+        sheet = sheets[i];
+        break;
       }
     }
     
     if (!sheet) {
-      return ContentService.createTextOutput("Erro: Aba para a turma '" + turmaRaw + "' não foi encontrada na planilha.").setMimeType(ContentService.MimeType.TEXT);
+      return ContentService.createTextOutput("Erro: Aba para a turma '" + turmaRaw + "' não encontrada. Verifique se o nome na planilha é exatamente '8º Ano A' ou '8ªSérie A'.").setMimeType(ContentService.MimeType.TEXT);
     }
     
     var nome = (data.nome || "").trim();
     var nota = data.nota;
     var sheetNameActual = sheet.getName();
     
-    // Determinar a coluna de notas com base no nome real da aba encontrada:
-    // "8ªSérie A" ou "8º Ano A" -> Coluna AA (27)
-    // "8ªSérie B" ou "8º Ano B" -> Coluna Y (25)
-    var colNota = 24; // Padrão
-    if (sheetNameActual.includes("A")) {
-      colNota = 27;
-    } else if (sheetNameActual.includes("B")) {
-      colNota = 25;
+    // Determinar a coluna de notas:
+    var colNota = 24; 
+    if (normalize(sheetNameActual).includes("a")) {
+      colNota = 27; // Coluna AA
+    } else if (normalize(sheetNameActual).includes("b")) {
+      colNota = 25; // Coluna Y
     }
     
-    // Localizar o nome do aluno na coluna B (começando da linha 5)
     var lastRow = Math.max(sheet.getLastRow(), 5);
     var dataRange = sheet.getRange("B5:B" + lastRow).getValues();
     var rowIndex = -1;
     
-    var nomeBusca = nome.toLowerCase();
+    var nomeBusca = normalize(nome);
     for (var i = 0; i < dataRange.length; i++) {
-      var valorCelula = (dataRange[i][0] || "").toString().toLowerCase().trim();
+      var valorCelula = normalize((dataRange[i][0] || "").toString());
       if (valorCelula === nomeBusca) {
         rowIndex = i + 5; 
         break;
@@ -64,20 +72,19 @@ function doPost(e) {
     }
     
     if (rowIndex !== -1) {
-      // Grava a nota na coluna mapeada
       sheet.getRange(rowIndex, colNota).setValue(nota);
-      return ContentService.createTextOutput("Sucesso: Nota registrada para " + nome).setMimeType(ContentService.MimeType.TEXT);
+      return ContentService.createTextOutput("Sucesso: Nota " + nota + " registrada para " + nome + " na linha " + rowIndex).setMimeType(ContentService.MimeType.TEXT);
     } else {
-      // Se não achar o nome, adiciona no final da lista
       var nextRow = sheet.getLastRow() + 1;
       if (nextRow < 5) nextRow = 5;
       sheet.getRange(nextRow, 2).setValue(nome); 
       sheet.getRange(nextRow, colNota).setValue(nota);
-      return ContentService.createTextOutput("Sucesso: Novo aluno adicionado e nota registrada.").setMimeType(ContentService.MimeType.TEXT);
+      return ContentService.createTextOutput("Sucesso: Aluno não estava na lista. Novo registro criado na linha " + nextRow).setMimeType(ContentService.MimeType.TEXT);
     }
     
   } catch (err) {
-    return ContentService.createTextOutput("Erro no Script: " + err.message).setMimeType(ContentService.MimeType.TEXT);
+    return ContentService.createTextOutput("Erro Crítico no Script: " + err.stack).setMimeType(ContentService.MimeType.TEXT);
   }
 }
+
 
