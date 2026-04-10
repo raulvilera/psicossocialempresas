@@ -251,29 +251,6 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-[#2c3e50] via-[#4a5568] to-[#1e3a8a] p-8 font-sans relative overflow-x-hidden">
-      
-      {/* Botão de Acesso à Plataforma no Topo */}
-      <div className="fixed top-0 left-0 w-full z-50 p-6 flex justify-end items-center pointer-events-auto">
-        <a 
-          href="https://github.com/raulvilera/public-landing" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="group relative flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur-xl px-6 py-3 rounded-2xl border border-white/20 transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_8px_32px_rgba(0,0,0,0.3)] overflow-hidden"
-        >
-          {/* Efeito de Brilho (Shimmer) */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none"></div>
-          
-          <span className="text-white text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em]">Acessar Plataforma</span>
-          
-          <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/40 transition-colors">
-            <svg className="w-4 h-4 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </div>
-        </a>
-      </div>
-
-      {/* Decorative dot grid (Top Right) */}
       <div className="absolute top-10 right-10 opacity-20 pointer-events-none select-none">
         <svg width="100" height="100" viewBox="0 0 100 100" fill="white">
           <circle cx="10" cy="10" r="2" /> <circle cx="30" cy="10" r="2" /> <circle cx="50" cy="10" r="2" /> <circle cx="70" cy="10" r="2" /> <circle cx="90" cy="10" r="2" />
