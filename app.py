@@ -54,7 +54,7 @@ SB_HEADERS = {
 # ── credenciais fixas ──────────────────────────────────────────────────────────
 
 ADMIN_EMAIL    = "raulvilera@gmail.com"
-ADMIN_PASSWORD = "Psicos@2026"
+ADMIN_PASSWORD = "25262526Ae@"
 
 CONSULTOR_EMAIL    = "carmensantanapsico@gmail.com"
 CONSULTOR_PASSWORD = "Ca817725@"
