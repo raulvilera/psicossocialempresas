@@ -333,33 +333,31 @@ async def profissional_redirect():
 async def api_login(
     email:    str = Form(...),
     password: str = Form(...),
-    role:     str = Form(default="consultor"),
+    role:     str = Form(default=""),
 ):
-    """Autentica por credenciais fixas ou banco Supabase."""
+    """
+    Autentica por credenciais e determina o redirecionamento automaticamente.
+    O campo 'role' é ignorado — o perfil é definido pelas credenciais do usuário.
+    """
     email = email.strip().lower()
 
-    # admin fixo
+    # ── Admin fixo → /admin ────────────────────────────────────────────────────
     if email == ADMIN_EMAIL.lower() and password == ADMIN_PASSWORD:
-        destino = {"admin": "/admin", "consultor": "/dashboard", "rh": "/rh"}
-        return {"success": True, "redirect": destino.get(role, "/admin"), "perfil": role or "admin"}
+        return {"success": True, "redirect": "/admin", "perfil": "admin"}
 
-    # consultora fixa
+    # ── Consultora fixa → /dashboard ───────────────────────────────────────────
     if email == CONSULTOR_EMAIL.lower() and password == CONSULTOR_PASSWORD:
-        if role == "admin":
-            return {"success": False, "message": "Sem permissão para perfil Admin."}
-        return {"success": True, "redirect": "/rh" if role == "rh" else "/dashboard", "perfil": role}
+        return {"success": True, "redirect": "/dashboard", "perfil": "consultor"}
 
-    # banco de dados
+    # ── Usuários do banco Supabase → destino por role salvo no banco ───────────
     try:
         users = await sb_get("users", {"email": f"eq.{email}", "password": f"eq.{password}", "select": "*"})
         if not users:
             return {"success": False, "message": "E-mail ou senha incorretos."}
-        u       = users[0]
-        db_role = u.get("role", "rh")
-        if role == "admin"     and db_role != "admin": return {"success": False, "message": "Sem permissão para Admin."}
-        if role == "consultor" and db_role == "rh":    return {"success": False, "message": "Sem permissão para Consultor."}
-        destino = {"admin": "/admin", "consultor": "/dashboard", "rh": "/rh"}
-        return {"success": True, "redirect": destino.get(role, "/rh"), "perfil": role}
+        u        = users[0]
+        db_role  = u.get("role", "rh")
+        destinos = {"admin": "/admin", "consultor": "/dashboard", "rh": "/rh"}
+        return {"success": True, "redirect": destinos.get(db_role, "/rh"), "perfil": db_role}
     except Exception:
         return {"success": False, "message": "Erro ao processar login. Tente novamente."}
 
