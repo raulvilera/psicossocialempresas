@@ -4,59 +4,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Criar Conta — S Psicos</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap"
-    rel="stylesheet">
+  <title>Criar Conta — Mental & Mais · S Psicos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
       padding: 0;
-      box-sizing: border-box
+      box-sizing: border-box;
+    }
+
+    :root {
+      --navy: #0B0B2E;
+      --navy2: #151846;
+      --ink: #181A33;
+      --ink-soft: #565C7C;
+      --paper: #F3F5FA;
+      --surface: #FFFFFF;
+      --line: #DEE2EE;
+      --teal: #20C4C6;
+      --teal-dark: #0E8B8D;
+      --teal-tint: #E3FAFA;
+      --pink: #E85D75;
+      --pink-tint: #FDEBEF;
+      --green: #2FA97A;
+      --amber: #EDA23B;
+      --red: #D6503F;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --font-serif: 'Lora', 'Georgia', serif;
     }
 
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-sans);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #000000;
+      background: var(--paper);
+      background-image: radial-gradient(ellipse at 20% 30%, rgba(11, 11, 46, .05) 0%, transparent 55%),
+                        radial-gradient(ellipse at 80% 70%, rgba(32, 196, 198, .08) 0%, transparent 55%);
       overflow-y: auto;
       padding: 20px;
-      background-image: radial-gradient(ellipse at 80% 30%, rgba(0, 114, 255, .07) 0%, transparent 55%), radial-gradient(ellipse at 20% 70%, rgba(0, 162, 255, .05) 0%, transparent 45%)
-    }
-
-    .bg-grid {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image: linear-gradient(rgba(0, 162, 255, .025) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 162, 255, .025) 1px, transparent 1px);
-      background-size: 44px 44px
     }
 
     .card {
       position: relative;
       z-index: 1;
-      background: linear-gradient(145deg, #050c1a, #0a1020);
-      border: 1px solid rgba(0, 162, 255, .15);
-      border-radius: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 20px;
       padding: 44px 40px;
       width: 100%;
-      max-width: 440px;
-      box-shadow: 0 0 60px rgba(0, 114, 255, .08), 0 30px 60px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(0, 162, 255, .1);
-      animation: up .45s ease both
+      max-width: 450px;
+      box-shadow: 0 8px 40px rgba(11, 11, 46, .08), 0 2px 8px rgba(11, 11, 46, .04);
+      animation: up .45s ease both;
     }
 
     @keyframes up {
       from {
         opacity: 0;
-        transform: translateY(20px)
+        transform: translateY(20px);
       }
-
       to {
         opacity: 1;
-        transform: translateY(0)
+        transform: translateY(0);
       }
     }
 
@@ -64,91 +74,93 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 30px
+      margin-bottom: 28px;
     }
 
-    .logo-icon {
-      width: 68px;
-      height: 68px;
-      background: linear-gradient(135deg, #001020, #001f3f);
-      border: 2px solid rgba(0, 162, 255, .3);
-      border-radius: 20px;
-      display: flex;
+    .logo-badge {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      font-size: 30px;
-      margin-bottom: 14px;
-      box-shadow: 0 0 20px rgba(0, 114, 255, .12)
+      gap: 7px;
+      background: var(--navy);
+      color: var(--teal);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
     }
 
     .logo-title {
-      font-family: 'Rajdhani', sans-serif;
+      font-family: var(--font-serif);
       font-size: 26px;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: 1.5px
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: .2px;
     }
 
     .logo-sub {
-      color: rgba(0, 162, 255, .5);
-      font-size: 12px;
-      margin-top: 3px
+      color: var(--ink-soft);
+      font-size: 13px;
+      margin-top: 4px;
     }
 
     .field {
-      margin-bottom: 15px
+      margin-bottom: 16px;
     }
 
     label {
       font-size: 11px;
       font-weight: 700;
-      color: rgba(0, 162, 255, .65);
+      color: var(--navy);
       display: block;
       margin-bottom: 6px;
-      letter-spacing: 1px;
-      text-transform: uppercase
+      letter-spacing: .6px;
+      text-transform: uppercase;
     }
 
     .iw {
       position: relative;
-      background: rgba(0, 0, 0, .4);
-      border: 1px solid rgba(0, 162, 255, .18);
+      background: var(--paper);
+      border: 1.5px solid var(--line);
       border-radius: 11px;
       display: flex;
       align-items: center;
-      transition: border-color .2s, box-shadow .2s
+      transition: border-color .2s, box-shadow .2s;
     }
 
     .iw:focus-within {
-      border-color: rgba(0, 162, 255, .45);
-      box-shadow: 0 0 0 3px rgba(0, 162, 255, .06)
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(32, 196, 198, .12);
     }
 
     .iw-icon {
       position: absolute;
       left: 13px;
-      color: rgba(0, 162, 255, .35)
+      color: var(--ink-soft);
+      flex-shrink: 0;
     }
 
     .iw input,
     .iw select {
       width: 100%;
-      padding: 13px 14px 13px 42px;
+      padding: 12px 14px 12px 42px;
       background: transparent;
       border: none;
       outline: none;
       font-size: 14px;
-      color: #fff;
-      font-family: 'DM Sans', sans-serif
+      color: var(--ink);
+      font-family: var(--font-sans);
     }
 
     .iw input::placeholder {
-      color: rgba(255, 255, 255, .18)
+      color: rgba(86, 92, 124, .45);
     }
 
     .iw select option {
-      background: #020510;
-      color: #fff
+      background: #FFFFFF;
+      color: var(--ink);
     }
 
     .msg {
@@ -156,82 +168,77 @@
       border-radius: 10px;
       font-size: 13px;
       font-weight: 500;
-      margin-bottom: 14px;
-      display: none
+      margin-bottom: 16px;
+      display: none;
     }
 
     .msg.error {
-      background: rgba(200, 0, 0, .2);
-      color: #ff6060;
-      border: 1px solid rgba(200, 0, 0, .3)
+      background: rgba(214, 80, 63, .1);
+      color: var(--red);
+      border: 1px solid rgba(214, 80, 63, .25);
     }
 
     .msg.success {
-      background: rgba(0, 114, 255, .15);
-      color: #00d2ff;
-      border: 1px solid rgba(0, 114, 255, .3)
+      background: var(--teal-tint);
+      color: var(--teal-dark);
+      border: 1px solid rgba(32, 196, 198, .3);
     }
 
     .btn {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(135deg, #001f3f, #004c99, #0072ff);
-      color: #00d2ff;
-      border: 1px solid rgba(0, 162, 255, .4);
-      border-radius: 13px;
-      font-size: 15px;
+      background: var(--navy);
+      color: #fff;
+      border: 1px solid var(--navy);
+      border-radius: 24px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
-      font-family: 'Rajdhani', sans-serif;
-      letter-spacing: 2px;
+      font-family: var(--font-sans);
+      letter-spacing: .5px;
       text-transform: uppercase;
-      box-shadow: 0 4px 20px rgba(0, 114, 255, .3), inset 0 1px 0 rgba(0, 162, 255, .2);
+      box-shadow: 0 4px 16px rgba(11, 11, 46, .18);
       transition: all .2s;
-      margin-top: 4px
+      margin-top: 10px;
     }
 
     .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(0, 114, 255, .45);
-      color: #fff
-    }
-
-    .btn:active {
-      transform: translateY(1px)
+      background: var(--teal-dark);
+      border-color: var(--teal-dark);
+      box-shadow: 0 6px 20px rgba(14, 139, 141, .25);
     }
 
     .btn:disabled {
       opacity: .5;
       cursor: default;
-      transform: none
+      transform: none;
     }
 
     .link {
       text-align: center;
       margin-top: 20px;
       font-size: 13px;
-      color: rgba(255, 255, 255, .3)
+      color: var(--ink-soft);
     }
 
     .link a {
-      color: rgba(0, 162, 255, .7);
+      color: var(--teal-dark);
       font-weight: 600;
-      text-decoration: none
+      text-decoration: none;
     }
 
     .link a:hover {
-      color: #00d2ff
+      text-decoration: underline;
     }
   </style>
 </head>
 
 <body>
-  <div class="bg-grid"></div>
   <div class="card">
     <div class="logo-wrap">
-      <div class="logo-icon">&#128737;</div>
-      <div class="logo-title">CRIAR CONTA</div>
-      <div class="logo-sub">Acesso à plataforma S Psicos</div>
+      <div class="logo-badge">&#128737; Mental &amp; Mais</div>
+      <div class="logo-title">Criar Conta</div>
+      <div class="logo-sub">Cadastro de acesso corporativo à plataforma</div>
     </div>
     <div class="msg" id="msg"></div>
     <form id="form">
@@ -279,7 +286,7 @@
           <input type="number" id="empresa_id" placeholder="Ex: 1" required min="1">
         </div>
       </div>
-      <button type="submit" class="btn" id="btn-cad">&#9889; CADASTRAR</button>
+      <button type="submit" class="btn" id="btn-cad">&#10003; CADASTRAR</button>
     </form>
     <p class="link">Já tem conta? <a href="/login">Fazer login</a></p>
   </div>
@@ -296,15 +303,15 @@
         const data = await res.json();
         msg.style.display = 'block';
         if (data.success) {
-          msg.className = 'msg success'; msg.textContent = '&#10003; ' + data.message;
+          msg.className = 'msg success'; msg.textContent = '✓ ' + data.message;
           setTimeout(() => window.location.href = '/login', 2000);
         } else {
-          msg.className = 'msg error'; msg.textContent = '&#10007; ' + (data.message || 'Erro.');
-          btn.textContent = '&#9889; CADASTRAR'; btn.disabled = false;
+          msg.className = 'msg error'; msg.textContent = '✗ ' + (data.message || 'Erro.');
+          btn.textContent = '✓ CADASTRAR'; btn.disabled = false;
         }
       } catch {
-        msg.className = 'msg error'; msg.style.display = 'block'; msg.textContent = '&#10007; Erro de conexão.';
-        btn.textContent = '&#9889; CADASTRAR'; btn.disabled = false;
+        msg.className = 'msg error'; msg.style.display = 'block'; msg.textContent = '✗ Erro de conexão.';
+        btn.textContent = '✓ CADASTRAR'; btn.disabled = false;
       }
     });
   </script>

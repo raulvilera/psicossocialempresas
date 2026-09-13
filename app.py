@@ -801,7 +801,61 @@ CREATE INDEX IF NOT EXISTS idx_drps_v2_setor   ON drps_respostas_v2(empresa_id, 
 """
     return {"sql": sql, "instrucoes": "Execute no SQL Editor do Supabase."}
 
+# ── API: Storage persistente (COPSOQ II, SOS, Afastamentos, Treinamentos, Ações) ───
+import json
+
+STORAGE_FILE = BASE_DIR / "storage_data.json"
+
+def _load_storage() -> dict:
+    if STORAGE_FILE.exists():
+        try:
+            with open(STORAGE_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+def _save_storage(data: dict):
+    try:
+        with open(STORAGE_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
+
+@app.get("/api/storage/get")
+async def storage_get(key: str):
+    data = _load_storage()
+    val = data.get(key)
+    return {"key": key, "value": val} if val is not None else None
+
+@app.post("/api/storage/set")
+async def storage_set(request: Request):
+    body = await request.json()
+    key = body.get("key")
+    val = body.get("value")
+    if key:
+        data = _load_storage()
+        data[key] = val
+        _save_storage(data)
+        return {"success": True, "key": key}
+    return {"success": False, "message": "Chave não informada"}
+
+@app.delete("/api/storage/delete")
+async def storage_delete(key: str):
+    data = _load_storage()
+    if key in data:
+        del data[key]
+        _save_storage(data)
+    return {"success": True}
+
+@app.get("/api/storage/list")
+async def storage_list(prefix: str = ""):
+    data = _load_storage()
+    keys = [k for k in data.keys() if k.startswith(prefix)]
+    return {"keys": keys}
+
 # ── entry point ────────────────────────────────────────────────────────────────
+
 
 if __name__ == "__main__":
     import uvicorn

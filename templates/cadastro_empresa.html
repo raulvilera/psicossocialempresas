@@ -4,59 +4,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Cadastrar Empresa — S Psicos</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap"
-    rel="stylesheet">
+  <title>Cadastrar Empresa — Mental & Mais · S Psicos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
       padding: 0;
-      box-sizing: border-box
+      box-sizing: border-box;
+    }
+
+    :root {
+      --navy: #0B0B2E;
+      --navy2: #151846;
+      --ink: #181A33;
+      --ink-soft: #565C7C;
+      --paper: #F3F5FA;
+      --surface: #FFFFFF;
+      --line: #DEE2EE;
+      --teal: #20C4C6;
+      --teal-dark: #0E8B8D;
+      --teal-tint: #E3FAFA;
+      --pink: #E85D75;
+      --pink-tint: #FDEBEF;
+      --green: #2FA97A;
+      --amber: #EDA23B;
+      --red: #D6503F;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --font-serif: 'Lora', 'Georgia', serif;
     }
 
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-sans);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #000000;
+      background: var(--paper);
+      background-image: radial-gradient(ellipse at 20% 30%, rgba(11, 11, 46, .05) 0%, transparent 55%),
+                        radial-gradient(ellipse at 80% 70%, rgba(32, 196, 198, .08) 0%, transparent 55%);
       overflow-y: auto;
       padding: 24px;
-      background-image: radial-gradient(ellipse at 75% 25%, rgba(0, 114, 255, .07) 0%, transparent 55%)
-    }
-
-    .bg-grid {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image: linear-gradient(rgba(0, 162, 255, .025) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 162, 255, .025) 1px, transparent 1px);
-      background-size: 44px 44px
     }
 
     .card {
       position: relative;
       z-index: 1;
-      background: linear-gradient(145deg, #050c1a, #0a1020);
-      border: 1px solid rgba(0, 162, 255, .15);
-      border-radius: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 20px;
       padding: 44px 40px;
       width: 100%;
-      max-width: 500px;
-      box-shadow: 0 0 60px rgba(0, 114, 255, .08), 0 30px 60px rgba(0, 0, 0, .6);
-      animation: up .45s ease both
+      max-width: 520px;
+      box-shadow: 0 8px 40px rgba(11, 11, 46, .08), 0 2px 8px rgba(11, 11, 46, .04);
+      animation: up .45s ease both;
     }
 
     @keyframes up {
       from {
         opacity: 0;
-        transform: translateY(20px)
+        transform: translateY(20px);
       }
-
       to {
         opacity: 1;
-        transform: translateY(0)
+        transform: translateY(0);
       }
     }
 
@@ -64,99 +74,99 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 30px
+      margin-bottom: 28px;
     }
 
-    .logo-icon {
-      width: 70px;
-      height: 70px;
-      background: linear-gradient(135deg, #0a1f2a, #0f2d3d);
-      border: 2px solid rgba(0, 180, 255, .3);
-      border-radius: 20px;
-      display: flex;
+    .logo-badge {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      margin-bottom: 14px;
-      box-shadow: 0 0 24px rgba(0, 150, 255, .12)
+      gap: 7px;
+      background: var(--navy);
+      color: var(--teal);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
     }
 
     .logo-title {
-      font-family: 'Rajdhani', sans-serif;
+      font-family: var(--font-serif);
       font-size: 26px;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: 1.5px
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: .2px;
     }
 
     .logo-sub {
-      color: rgba(0, 162, 255, .5);
-      font-size: 12px;
-      margin-top: 3px
+      color: var(--ink-soft);
+      font-size: 13px;
+      margin-top: 4px;
     }
 
     .grid2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px
+      gap: 14px;
+    }
+
+    @media (max-width: 500px) {
+      .grid2 { grid-template-columns: 1fr; }
     }
 
     .field {
-      margin-bottom: 0
-    }
-
-    .field.full {
-      grid-column: span 2
+      margin-bottom: 16px;
     }
 
     label {
       font-size: 11px;
       font-weight: 700;
-      color: rgba(0, 162, 255, .65);
+      color: var(--navy);
       display: block;
       margin-bottom: 6px;
-      letter-spacing: 1px;
-      text-transform: uppercase
+      letter-spacing: .6px;
+      text-transform: uppercase;
     }
 
     .iw {
       position: relative;
-      background: rgba(0, 0, 0, .4);
-      border: 1px solid rgba(0, 162, 255, .18);
+      background: var(--paper);
+      border: 1.5px solid var(--line);
       border-radius: 11px;
       display: flex;
       align-items: center;
       transition: border-color .2s, box-shadow .2s;
-      margin-bottom: 14px
     }
 
     .iw:focus-within {
-      border-color: rgba(0, 162, 255, .45);
-      box-shadow: 0 0 0 3px rgba(0, 162, 255, .06)
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(32, 196, 198, .12);
     }
 
     .iw-icon {
       position: absolute;
       left: 13px;
-      color: rgba(0, 162, 255, .35)
+      color: var(--ink-soft);
+      flex-shrink: 0;
     }
 
     .iw input,
     .iw textarea {
       width: 100%;
-      padding: 13px 14px 13px 42px;
+      padding: 12px 14px 12px 42px;
       background: transparent;
       border: none;
       outline: none;
       font-size: 14px;
-      color: #fff;
-      font-family: 'DM Sans', sans-serif;
-      resize: none
+      color: var(--ink);
+      font-family: var(--font-sans);
     }
 
     .iw input::placeholder,
     .iw textarea::placeholder {
-      color: rgba(255, 255, 255, .18)
+      color: rgba(86, 92, 124, .45);
     }
 
     .msg {
@@ -164,78 +174,77 @@
       border-radius: 10px;
       font-size: 13px;
       font-weight: 500;
-      margin-bottom: 14px;
-      display: none
+      margin-bottom: 16px;
+      display: none;
     }
 
     .msg.error {
-      background: rgba(200, 0, 0, .2);
-      color: #ff6060;
-      border: 1px solid rgba(200, 0, 0, .3)
+      background: rgba(214, 80, 63, .1);
+      color: var(--red);
+      border: 1px solid rgba(214, 80, 63, .25);
     }
 
     .msg.success {
-      background: rgba(0, 114, 255, .15);
-      color: #00d2ff;
-      border: 1px solid rgba(0, 114, 255, .3)
+      background: var(--teal-tint);
+      color: var(--teal-dark);
+      border: 1px solid rgba(32, 196, 198, .3);
     }
 
     .btn {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(135deg, #001f3f, #004c99, #0072ff);
-      color: #00d2ff;
-      border: 1px solid rgba(0, 162, 255, .4);
-      border-radius: 13px;
-      font-size: 15px;
+      background: var(--navy);
+      color: #fff;
+      border: 1px solid var(--navy);
+      border-radius: 24px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
-      font-family: 'Rajdhani', sans-serif;
-      letter-spacing: 2px;
+      font-family: var(--font-sans);
+      letter-spacing: .5px;
       text-transform: uppercase;
-      box-shadow: 0 4px 20px rgba(0, 114, 255, .3), inset 0 1px 0 rgba(0, 162, 255, .2);
+      box-shadow: 0 4px 16px rgba(11, 11, 46, .18);
       transition: all .2s;
-      margin-top: 4px
+      margin-top: 10px;
     }
 
     .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(0, 114, 255, .45);
-      color: #fff
-    }
-
-    .btn:active {
-      transform: translateY(1px)
+      background: var(--teal-dark);
+      border-color: var(--teal-dark);
+      box-shadow: 0 6px 20px rgba(14, 139, 141, .25);
     }
 
     .btn:disabled {
       opacity: .5;
       cursor: default;
-      transform: none
+      transform: none;
     }
 
     .link {
       text-align: center;
-      margin-top: 18px;
+      margin-top: 20px;
       font-size: 13px;
-      color: rgba(255, 255, 255, .3)
+      color: var(--ink-soft);
     }
 
     .link a {
-      color: rgba(0, 162, 255, .7);
+      color: var(--teal-dark);
       font-weight: 600;
-      text-decoration: none
+      text-decoration: none;
+    }
+
+    .link a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 
 <body>
-  <div class="bg-grid"></div>
   <div class="card">
     <div class="logo-wrap">
-      <div class="logo-icon">&#127970;</div>
-      <div class="logo-title">CADASTRAR EMPRESA</div>
-      <div class="logo-sub">Registre sua organização na plataforma</div>
+      <div class="logo-badge">&#127970; Mental &amp; Mais</div>
+      <div class="logo-title">Cadastrar Empresa</div>
+      <div class="logo-sub">Registre sua organização na plataforma de saúde psicossocial</div>
     </div>
     <div class="msg" id="msg"></div>
     <form id="form">
@@ -287,7 +296,7 @@
         </div>
       </div>
       <div class="field">
-        <label>Responsável SESMT</label>
+        <label>Responsável SESMT / RH</label>
         <div class="iw">
           <svg class="iw-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
             viewBox="0 0 24 24">
@@ -307,7 +316,7 @@
           <input type="text" id="setores" placeholder="Produção, Logística, Administrativo..." required>
         </div>
       </div>
-      <button type="submit" class="btn" id="btn">&#9889; CADASTRAR EMPRESA</button>
+      <button type="submit" class="btn" id="btn">&#10003; CADASTRAR EMPRESA</button>
     </form>
     <p class="link"><a href="/dashboard">&#8592; Voltar ao Dashboard</a> &nbsp;|&nbsp; <a href="/login">Login</a></p>
   </div>
@@ -324,15 +333,15 @@
         const data = await res.json();
         msg.style.display = 'block';
         if (data.success) {
-          msg.className = 'msg success'; msg.textContent = '&#10003; ' + data.message;
+          msg.className = 'msg success'; msg.textContent = '✓ ' + data.message;
           setTimeout(() => window.location.href = '/dashboard', 1500);
         } else {
-          msg.className = 'msg error'; msg.textContent = '&#10007; ' + (data.message || 'Erro.');
-          btn.textContent = '&#9889; CADASTRAR EMPRESA'; btn.disabled = false;
+          msg.className = 'msg error'; msg.textContent = '✗ ' + (data.message || 'Erro.');
+          btn.textContent = '✓ CADASTRAR EMPRESA'; btn.disabled = false;
         }
       } catch {
-        msg.className = 'msg error'; msg.style.display = 'block'; msg.textContent = '&#10007; Erro de conexão.';
-        btn.textContent = '&#9889; CADASTRAR EMPRESA'; btn.disabled = false;
+        msg.className = 'msg error'; msg.style.display = 'block'; msg.textContent = '✗ Erro de conexão.';
+        btn.textContent = '✓ CADASTRAR EMPRESA'; btn.disabled = false;
       }
     });
     // Máscara CNPJ
