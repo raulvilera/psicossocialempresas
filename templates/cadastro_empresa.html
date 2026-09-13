@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Cadastrar Empresa — S Psicos</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000000;
+      overflow-y: auto;
+      padding: 24px;
+      background-image: radial-gradient(ellipse at 75% 25%, rgba(0, 114, 255, .07) 0%, transparent 55%)
+    }
+
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(0, 162, 255, .025) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 162, 255, .025) 1px, transparent 1px);
+      background-size: 44px 44px
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(145deg, #050c1a, #0a1020);
+      border: 1px solid rgba(0, 162, 255, .15);
+      border-radius: 24px;
+      padding: 44px 40px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 0 60px rgba(0, 114, 255, .08), 0 30px 60px rgba(0, 0, 0, .6);
+      animation: up .45s ease both
+    }
+
+    @keyframes up {
+      from {
+        opacity: 0;
+        transform: translateY(20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .logo-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 30px
+    }
+
+    .logo-icon {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #0a1f2a, #0f2d3d);
+      border: 2px solid rgba(0, 180, 255, .3);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin-bottom: 14px;
+      box-shadow: 0 0 24px rgba(0, 150, 255, .12)
+    }
+
+    .logo-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1.5px
+    }
+
+    .logo-sub {
+      color: rgba(0, 162, 255, .5);
+      font-size: 12px;
+      margin-top: 3px
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px
+    }
+
+    .field {
+      margin-bottom: 0
+    }
+
+    .field.full {
+      grid-column: span 2
+    }
+
+    label {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(0, 162, 255, .65);
+      display: block;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+      text-transform: uppercase
+    }
+
+    .iw {
+      position: relative;
+      background: rgba(0, 0, 0, .4);
+      border: 1px solid rgba(0, 162, 255, .18);
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      transition: border-color .2s, box-shadow .2s;
+      margin-bottom: 14px
+    }
+
+    .iw:focus-within {
+      border-color: rgba(0, 162, 255, .45);
+      box-shadow: 0 0 0 3px rgba(0, 162, 255, .06)
+    }
+
+    .iw-icon {
+      position: absolute;
+      left: 13px;
+      color: rgba(0, 162, 255, .35)
+    }
+
+    .iw input,
+    .iw textarea {
+      width: 100%;
+      padding: 13px 14px 13px 42px;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      resize: none
+    }
+
+    .iw input::placeholder,
+    .iw textarea::placeholder {
+      color: rgba(255, 255, 255, .18)
+    }
+
+    .msg {
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 14px;
+      display: none
+    }
+
+    .msg.error {
+      background: rgba(200, 0, 0, .2);
+      color: #ff6060;
+      border: 1px solid rgba(200, 0, 0, .3)
+    }
+
+    .msg.success {
+      background: rgba(0, 114, 255, .15);
+      color: #00d2ff;
+      border: 1px solid rgba(0, 114, 255, .3)
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #001f3f, #004c99, #0072ff);
+      color: #00d2ff;
+      border: 1px solid rgba(0, 162, 255, .4);
+      border-radius: 13px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      box-shadow: 0 4px 20px rgba(0, 114, 255, .3), inset 0 1px 0 rgba(0, 162, 255, .2);
+      transition: all .2s;
+      margin-top: 4px
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 114, 255, .45);
+      color: #fff
+    }
+
+    .btn:active {
+      transform: translateY(1px)
+    }
+
+    .btn:disabled {
+      opacity: .5;
+      cursor: default;
+      transform: none
+    }
+
+    .link {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, .3)
+    }
+
+    .link a {
+      color: rgba(0, 162, 255, .7);
+      font-weight: 600;
+      text-decoration: none
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-grid"></div>
+  <div class="card">
+    <div class="logo-wrap">
+      <div class="logo-icon">&#127970;</div>
+      <div class="logo-title">CADASTRAR EMPRESA</div>
+      <div class="logo-sub">Registre sua organização na plataforma</div>
+    </div>
+    <div class="msg" id="msg"></div>
+    <form id="form">
+      <div class="field">
+        <label>CNPJ</label>
+        <div class="iw">
+          <svg class="iw-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <path d="M8 2v4M16 2v4M3 10h18" />
+          </svg>
+          <input type="text" id="cnpj" placeholder="00.000.000/0000-00" required maxlength="18">
+        </div>
+      </div>
+      <div class="field">
+        <label>Razão Social</label>
+        <div class="iw">
+          <svg class="iw-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <rect x="2" y="7" width="20" height="15" rx="2" />
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+          </svg>
+          <input type="text" id="nome" placeholder="Nome da empresa" required>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Telefone</label>
+          <div class="iw">
+            <svg class="iw-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.9 19.79 19.79 0 0 1 1.61 3.26 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.95-.95a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+            <input type="text" id="telefone" placeholder="(11) 99999-9999" required>
+          </div>
+        </div>
+        <div class="field">
+          <label>Nº Colaboradores</label>
+          <div class="iw">
+            <svg class="iw-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            <input type="number" id="colaboradores" placeholder="50" required min="1">
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Responsável SESMT</label>
+        <div class="iw">
+          <svg class="iw-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <circle cx="12" cy="7" r="4" />
+            <path d="M5.5 21a8.38 8.38 0 0 1 13 0" />
+          </svg>
+          <input type="text" id="responsavel" placeholder="Nome do responsável" required>
+        </div>
+      </div>
+      <div class="field">
+        <label>Setor(es) Principal(is)</label>
+        <div class="iw">
+          <svg class="iw-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          </svg>
+          <input type="text" id="setores" placeholder="Produção, Logística, Administrativo..." required>
+        </div>
+      </div>
+      <button type="submit" class="btn" id="btn">&#9889; CADASTRAR EMPRESA</button>
+    </form>
+    <p class="link"><a href="/dashboard">&#8592; Voltar ao Dashboard</a> &nbsp;|&nbsp; <a href="/login">Login</a></p>
+  </div>
+  <script>
+    document.getElementById('form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const btn = document.getElementById('btn');
+      const msg = document.getElementById('msg');
+      btn.textContent = 'PROCESSANDO...'; btn.disabled = true;
+      const fd = new FormData();
+      ['cnpj', 'nome', 'telefone', 'responsavel', 'colaboradores', 'setores'].forEach(id => fd.append(id, document.getElementById(id).value));
+      try {
+        const res = await fetch('/api/empresa/registrar', { method: 'POST', body: fd });
+        const data = await res.json();
+        msg.style.display = 'block';
+        if (data.success) {
+          msg.className = 'msg success'; msg.textContent = '&#10003; ' + data.message;
+          setTimeout(() => window.location.href = '/dashboard', 1500);
+        } else {
+          msg.className = 'msg error'; msg.textContent = '&#10007; ' + (data.message || 'Erro.');
+          btn.textContent = '&#9889; CADASTRAR EMPRESA'; btn.disabled = false;
+        }
+      } catch {
+        msg.className = 'msg error'; msg.style.display = 'block'; msg.textContent = '&#10007; Erro de conexão.';
+        btn.textContent = '&#9889; CADASTRAR EMPRESA'; btn.disabled = false;
+      }
+    });
+    // Máscara CNPJ
+    document.getElementById('cnpj').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').substring(0, 14);
+      v = v.replace(/(\d{2})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1/$2').replace(/(\d{4})(\d)/, '$1-$2');
+      this.value = v;
+    });
+  </script>
+</body>
+
+</html>

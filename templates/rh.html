@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Área RH — S Psicos</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    /* scrollbar azul premium */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, .3)
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 119, 255, 0.5);
+      border-radius: 4px;
+      border: 2px solid #000
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 204, 255, 0.8)
+    }
+
+    :root {
+      --acc: #00d2ff;
+      --acc2: #0072ff;
+      --bg: #000000;
+      --card: #050c1a;
+      --bdr: rgba(0, 162, 255, .16);
+      --txt: #ffffff;
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--txt);
+      display: flex;
+      height: 100vh
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: linear-gradient(180deg, #000000, #020510 50%, #000000);
+      border-right: 1px solid var(--bdr);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto
+    }
+
+    .sidebar-logo {
+      padding: 20px 16px 16px;
+      border-bottom: 1px solid var(--bdr);
+      background: linear-gradient(135deg, #000510, #000a20)
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #001f3f, #003366);
+      border: 1px solid rgba(0, 162, 255, .4);
+      color: #00d2ff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 7px;
+      margin-bottom: 8px;
+      letter-spacing: 1px
+    }
+
+    .sidebar h2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2
+    }
+
+    .sidebar h2 em {
+      color: var(--acc);
+      font-style: normal
+    }
+
+    .sidebar-sub {
+      font-size: 9px;
+      color: rgba(0, 162, 255, .3);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 3px
+    }
+
+    .empresa-box {
+      margin: 10px;
+      background: rgba(0, 0, 0, .35);
+      border: 1px solid var(--bdr);
+      border-radius: 10px;
+      padding: 10px
+    }
+
+    .empresa-label {
+      font-size: 10px;
+      color: rgba(0, 162, 255, .45);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 5px
+    }
+
+    .empresa-select {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      outline: none
+    }
+
+    .empresa-select option {
+      background: #050c1a;
+      color: #fff
+    }
+
+    .nav-section {
+      padding: 12px 14px 5px;
+      font-size: 9px;
+      color: rgba(0, 162, 255, .25);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 2px 8px;
+      padding: 10px 12px;
+      color: rgba(255, 255, 255, .45);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 9px;
+      border: 1px solid transparent;
+      background: linear-gradient(145deg, #050a1a, #020510);
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
+      transition: all .15s;
+      user-select: none
+    }
+
+    .nav-item:hover {
+      color: rgba(255, 255, 255, .8);
+      border-color: rgba(0, 162, 255, .2)
+    }
+
+    .nav-item.active {
+      color: var(--acc);
+      background: linear-gradient(135deg, #002d5f, #003a7a, #001f3f);
+      border-color: rgba(0, 162, 255, .4);
+      box-shadow: 0 0 14px rgba(0, 114, 255, .2);
+      font-weight: 600
+    }
+
+    .nav-item .icon {
+      font-size: 14px;
+      width: 16px;
+      text-align: center
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: rgba(0, 162, 255, .2);
+      color: #00d2ff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 162, 255, .3)
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 14px;
+      border-top: 1px solid var(--bdr)
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 9px;
+      border: 1px solid rgba(200, 0, 0, .2);
+      background: linear-gradient(145deg, #1a0505, #100303);
+      color: rgba(255, 120, 120, .6);
+      font-size: 13px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all .15s
+    }
+
+    .btn-logout:hover {
+      color: #ff6060;
+      border-color: rgba(200, 0, 0, .4)
+    }
+
+    /* MAIN */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 70% 10%, rgba(0, 114, 255, .07) 0%, transparent 50%), var(--bg)
+    }
+
+    /* TOPBAR */
+    .topbar {
+      background: linear-gradient(90deg, #000000, #02081a);
+      border-bottom: 1px solid var(--bdr);
+      padding: 11px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0
+    }
+
+    .topbar-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px;
+      flex: 1
+    }
+
+    .perfil-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 30, 80, .4);
+      border: 1px solid rgba(0, 162, 255, .25);
+      color: var(--acc);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px
+    }
+
+    .btn-topbar {
+      background: linear-gradient(135deg, #001020, #001f3f);
+      border: 1px solid rgba(0, 162, 255, .3);
+      color: var(--acc);
+      padding: 7px 14px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 1px;
+      transition: all .15s
+    }
+
+    .btn-topbar:hover {
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(0, 114, 255, .3)
+    }
+
+    .btn-add {
+      padding: 8px 14px;
+      background: linear-gradient(135deg, #001020, #001f3f);
+      border: 1px solid rgba(0, 162, 255, .3);
+      color: var(--acc);
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 1px;
+      transition: all .15s
+    }
+
+    .btn-add:hover {
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(0, 114, 255, .3)
+    }
+
+    /* CONTENT COM SCROLL VISÍVEL */
+    .content {
+      flex: 1;
+      padding: 22px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      min-height: 0;
+      height: 0
+    }
+
+    /* PAGE HEADERS */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px
+    }
+
+    .page-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px
+    }
+
+    .page-sub {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .45);
+      margin-top: 2px
+    }
+
+    /* KPIs */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px
+    }
+
+    .kpi-card {
+      background: linear-gradient(145deg, #050c1a, #020510);
+      border: 1px solid var(--bdr);
+      border-radius: 13px;
+      padding: 16px;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, .5);
+      position: relative;
+      overflow: hidden
+    }
+
+    .kpi-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 56px;
+      height: 56px;
+      background: radial-gradient(circle, rgba(0, 162, 255, .08), transparent 70%);
+      border-radius: 50%
+    }
+
+    .kpi-icon {
+      font-size: 20px;
+      margin-bottom: 8px
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .5);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px
+    }
+
+    .kpi-value {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      margin-top: 2px
+    }
+
+    .kpi-sub {
+      font-size: 11px;
+      margin-top: 5px;
+      color: rgba(255, 255, 255, .4)
+    }
+
+    .kpi-sub.up {
+      color: #00cc44
+    }
+
+    .kpi-sub.down {
+      color: #ff4444
+    }
+
+    .kpi-sub.warn {
+      color: #ffaa00
+    }
+
+    /* ALERT */
+    .alert-banner {
+      background: linear-gradient(135deg, rgba(200, 100, 0, .15), rgba(200, 80, 0, .1));
+      border: 1px solid rgba(200, 100, 0, .3);
+      border-radius: 11px;
+      padding: 12px 16px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .alert-text {
+      font-size: 13px;
+      color: #ffaa44;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .btn-alert {
+      padding: 6px 12px;
+      background: rgba(200, 100, 0, .3);
+      border: 1px solid rgba(200, 100, 0, .4);
+      color: #ffaa44;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      transition: all .15s
+    }
+
+    /* CHARTS */
+    .charts-row {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px
+    }
+
+    .cols-2 {
+      grid-template-columns: 1fr 1fr
+    }
+
+    .cols-3 {
+      grid-template-columns: 1fr 1fr 1fr
+    }
+
+    .chart-card {
+      background: linear-gradient(145deg, #050c1a, #020510);
+      border: 1px solid var(--bdr);
+      border-radius: 13px;
+      padding: 18px;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, .5)
+    }
+
+    .chart-card.span2 {
+      grid-column: span 2
+    }
+
+    .chart-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px
+    }
+
+    .chart-title .sub {
+      font-size: 10px;
+      color: rgba(255, 255, 255, .35);
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .h180 {
+      height: 180px
+    }
+
+    .h200 {
+      height: 200px
+    }
+
+    .h240 {
+      height: 240px
+    }
+
+    .donut-center {
+      position: absolute;
+      text-align: center;
+      pointer-events: none
+    }
+
+    .donut-center .val {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff
+    }
+
+    .donut-center .lbl {
+      font-size: 9px;
+      color: rgba(255, 255, 255, .4);
+      letter-spacing: 1px;
+      text-transform: uppercase
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px
+    }
+
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, .7)
+    }
+
+    .leg-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      flex-shrink: 0
+    }
+
+    /* TABELAS */
+    .table-card {
+      background: linear-gradient(145deg, #050c1a, #020510);
+      border: 1px solid var(--bdr);
+      border-radius: 13px;
+      overflow: hidden;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, .5);
+      margin-bottom: 16px
+    }
+
+    .table-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--bdr);
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .table-header h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: .8px
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px
+    }
+
+    th {
+      background: rgba(0, 0, 0, .3);
+      color: rgba(255, 255, 255, .45);
+      font-weight: 600;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 9px 14px;
+      text-align: left
+    }
+
+    td {
+      padding: 10px 14px;
+      color: #fff;
+      border-top: 1px solid rgba(0, 162, 255, .06)
+    }
+
+    tr:hover td {
+      background: rgba(0, 30, 80, .1)
+    }
+
+    .badge-pill {
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600
+    }
+
+    .b-red {
+      background: rgba(200, 0, 0, .2);
+      color: #ff6060;
+      border: 1px solid rgba(200, 0, 0, .3)
+    }
+
+    .b-green {
+      background: rgba(0, 150, 40, .2);
+      color: #00cc44;
+      border: 1px solid rgba(0, 150, 40, .3)
+    }
+
+    .b-yellow {
+      background: rgba(200, 150, 0, .2);
+      color: #ffcc00;
+      border: 1px solid rgba(200, 150, 0, .3)
+    }
+
+    .b-blue {
+      background: rgba(0, 100, 200, .2);
+      color: #66aaff;
+      border: 1px solid rgba(0, 100, 200, .3)
+    }
+
+    /* SECTIONS */
+    .section {
+      display: none
+    }
+
+    .section.active {
+      display: block
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      backdrop-filter: blur(4px)
+    }
+
+    .modal-overlay.open {
+      display: flex
+    }
+
+    .modal-box {
+      background: linear-gradient(145deg, #050c1a, #020510);
+      border: 1px solid rgba(0, 162, 255, .2);
+      border-radius: 18px;
+      padding: 28px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, .8)
+    }
+
+    .modal-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 18px;
+      letter-spacing: 1px
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px
+    }
+
+    .modal-input {
+      padding: 11px 13px;
+      background: rgba(0, 0, 0, .4);
+      border: 1px solid rgba(0, 162, 255, .18);
+      border-radius: 9px;
+      font-size: 13px;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color .2s;
+      width: 100%
+    }
+
+    .modal-input:focus {
+      border-color: rgba(0, 162, 255, .45)
+    }
+
+    .modal-input::placeholder {
+      color: rgba(255, 255, 255, .2)
+    }
+
+    .modal-input option {
+      background: #050c1a;
+      color: #fff
+    }
+
+    .modal-footer {
+      grid-column: span 2;
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 6px
+    }
+
+    .btn-cancel {
+      padding: 10px 18px;
+      background: rgba(0, 0, 0, .4);
+      border: 1px solid rgba(255, 255, 255, .1);
+      color: rgba(255, 255, 255, .4);
+      border-radius: 9px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all .15s
+    }
+
+    .btn-save {
+      padding: 10px 18px;
+      background: linear-gradient(135deg, #001020, #001f3f);
+      border: 1px solid rgba(0, 162, 255, .3);
+      color: #00d2ff;
+      border-radius: 9px;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      transition: all .15s
+    }
+
+    .btn-save:hover {
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(0, 114, 255, .3)
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-badge">&#127970; RH</div>
+      <h2>Área de<br><em>Recursos Humanos</em></h2>
+      <div class="sidebar-sub">Gestão de Pessoas</div>
+    </div>
+
+    <div class="empresa-box">
+      <div class="empresa-label">Empresa Ativa</div>
+      <select class="empresa-select" id="empresaSelect" onchange="onEmpresaChange()">
+        <option value="">Carregando...</option>
+      </select>
+    </div>
+
+    <div class="nav-section">Principal</div>
+    <div class="nav-item active" onclick="showSection('dashboard',this)">
+      <span class="icon">&#128202;</span> Dashboard RH
+    </div>
+
+    <div class="nav-section">Colaboradores</div>
+    <div class="nav-item" onclick="showSection('funcionarios',this)">
+      <span class="icon">&#128101;</span> Funcionários
+    </div>
+    <div class="nav-item" onclick="showSection('aso',this)">
+      <span class="icon">&#129657;</span> ASO & Exames
+      <span class="nav-badge" id="badge-aso">0</span>
+    </div>
+    <div class="nav-item" onclick="showSection('agendamentos',this)">
+      <span class="icon">&#128197;</span> Agendamentos
+    </div>
+    <div class="nav-item" onclick="showSection('treinamentos',this)">
+      <span class="icon">&#128218;</span> Treinamentos
+    </div>
+
+    <div class="nav-section">Segurança</div>
+    <div class="nav-item" onclick="showSection('epis',this)">
+      <span class="icon">&#129399;</span> EPIs & Estoque
+      <span class="nav-badge" id="badge-epi">0</span>
+    </div>
+    <div class="nav-item" onclick="showSection('cats',this)">
+      <span class="icon">&#9888;</span> Acidentes (CAT)
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="window.location.href='/login'">&#128682; Sair</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topTitle">DASHBOARD RH</div>
+      <div class="perfil-badge">&#127970; RH</div>
+      <button class="btn-topbar" onclick="window.location.href='/dashboard'">&#128202; Painel Completo</button>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD RH -->
+      <div id="sec-dashboard" class="section active">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Dashboard RH</div>
+            <div class="page-sub" id="sub-dash">Carregando dados...</div>
+          </div>
+          <button class="btn-add" onclick="loadDash()">&#8635; Atualizar</button>
+        </div>
+
+        <div id="alert-banner" class="alert-banner" style="display:none">
+          <div class="alert-text">&#128680; <span id="alert-text">Atenção requerida</span></div>
+          <button class="btn-alert" onclick="showSection('aso',null)">Ver ASOs &#8594;</button>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon">&#128101;</div>
+            <div class="kpi-label">Funcionários</div>
+            <div class="kpi-value" id="kpi-func">—</div>
+            <div class="kpi-sub up">&#9650; Total ativo</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">&#129657;</div>
+            <div class="kpi-label">ASOs Vencidos</div>
+            <div class="kpi-value" id="kpi-aso" style="color:#ff4444">—</div>
+            <div class="kpi-sub down">&#9660; Requer ação</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">&#128218;</div>
+            <div class="kpi-label">Treinamentos</div>
+            <div class="kpi-value" id="kpi-trein" style="color:#00d2ff">—</div>
+            <div class="kpi-sub up">&#9650; Total ativo</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">&#128737;</div>
+            <div class="kpi-label">Índice Seg.</div>
+            <div class="kpi-value" id="kpi-score" style="color:#00d2ff">—</div>
+            <div class="kpi-sub up">&#9650; Score IA</div>
+          </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="charts-row cols-3">
+          <div class="chart-card">
+            <div class="chart-title">&#128101; Distribuição de Risco</div>
+            <div class="chart-wrap h180">
+              <canvas id="chartRisco"></canvas>
+              <div class="donut-center">
+                <div class="val" id="dnt-risco">—</div>
+                <div class="lbl">Total</div>
+              </div>
+            </div>
+            <div class="chart-legend" id="leg-risco"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">&#129657; Status ASOs</div>
+            <div class="chart-wrap h180">
+              <canvas id="chartAso"></canvas>
+              <div class="donut-center">
+                <div class="val" id="dnt-aso">—</div>
+                <div class="lbl">Total</div>
+              </div>
+            </div>
+            <div class="chart-legend" id="leg-aso"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">&#128218; Treinamentos</div>
+            <div class="chart-wrap h180">
+              <canvas id="chartTrein"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-row cols-2">
+          <div class="chart-card">
+            <div class="chart-title">&#128101; Funcionários por Setor <span class="sub">3D vertical</span></div>
+            <div class="chart-wrap h200"><canvas id="chartSetores"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">&#9888; CATs por Gravidade <span class="sub">3D vertical</span></div>
+            <div class="chart-wrap h200"><canvas id="chartCats"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Tabela top risco -->
+        <div class="table-card">
+          <div class="table-header">
+            <h3>&#9888; Funcionários em Atenção</h3>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Cargo</th>
+                <th>Setor</th>
+                <th>Risco</th>
+                <th>Score IA</th>
+                <th>ASO</th>
+              </tr>
+            </thead>
+            <tbody id="tb-risco">
+              <tr>
+                <td colspan="6" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FUNCIONÁRIOS -->
+      <div id="sec-funcionarios" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Funcionários</div>
+            <div class="page-sub">Gerenciar colaboradores da empresa</div>
+          </div>
+          <button class="btn-add" onclick="document.getElementById('modal-func').classList.add('open')">+ Novo</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Cargo</th>
+                <th>Setor</th>
+                <th>Risco</th>
+                <th>Score IA</th>
+                <th>ASO</th>
+              </tr>
+            </thead>
+            <tbody id="tb-func">
+              <tr>
+                <td colspan="6" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ASO -->
+      <div id="sec-aso" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">ASO & Exames</div>
+            <div class="page-sub">Atestados de Saúde Ocupacional</div>
+          </div>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Funcionário</th>
+                <th>Cargo</th>
+                <th>Setor</th>
+                <th>Vencimento</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tb-aso">
+              <tr>
+                <td colspan="5" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AGENDAMENTOS -->
+      <div id="sec-agendamentos" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Agendamentos</div>
+            <div class="page-sub">Exames e consultas</div>
+          </div>
+          <button class="btn-add" onclick="document.getElementById('modal-agen').classList.add('open')">+ Novo</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Funcionário</th>
+                <th>Exame</th>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Médico</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tb-agen">
+              <tr>
+                <td colspan="6" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TREINAMENTOS -->
+      <div id="sec-treinamentos" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Treinamentos</div>
+            <div class="page-sub">Capacitações e NRs</div>
+          </div>
+          <button class="btn-add" onclick="document.getElementById('modal-trein').classList.add('open')">+ Novo</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>NR</th>
+                <th>Data</th>
+                <th>Validade</th>
+                <th>Participantes</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tb-trein">
+              <tr>
+                <td colspan="6" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EPIS -->
+      <div id="sec-epis" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">EPIs & Estoque</div>
+            <div class="page-sub">Equipamentos de proteção individual</div>
+          </div>
+          <button class="btn-add" onclick="document.getElementById('modal-epi').classList.add('open')">+ Novo</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>EPI</th>
+                <th>CA</th>
+                <th>Quantidade</th>
+                <th>Mínimo</th>
+                <th>Validade</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tb-epis">
+              <tr>
+                <td colspan="6" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CATS -->
+      <div id="sec-cats" class="section">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Acidentes (CAT)</div>
+            <div class="page-sub">Comunicações de Acidente</div>
+          </div>
+          <button class="btn-add" onclick="document.getElementById('modal-cat').classList.add('open')">+
+            Registrar</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Funcionário</th>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Parte do Corpo</th>
+                <th>Gravidade</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tb-cats">
+              <tr>
+                <td colspan="6" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Selecione uma empresa
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+
+  <!-- MODAIS -->
+  <div id="modal-func" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">NOVO FUNCIONÁRIO</div>
+      <form id="form-func" class="modal-grid">
+        <input class="modal-input" style="grid-column:span 2" name="nome" placeholder="Nome completo" required>
+        <input class="modal-input" name="cargo" placeholder="Cargo" required>
+        <input class="modal-input" name="setor" placeholder="Setor" required>
+        <select class="modal-input" name="risco" required>
+          <option value="">Nível de Risco</option>
+          <option>Alto</option>
+          <option>Medio</option>
+          <option>Baixo</option>
+        </select>
+        <input class="modal-input" name="cpf" placeholder="CPF">
+        <input class="modal-input" type="date" name="admissao" required>
+        <input class="modal-input" type="date" name="aso_vencimento" required>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel"
+            onclick="document.getElementById('modal-func').classList.remove('open')">Cancelar</button>
+          <button type="submit" class="btn-save">SALVAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-cat" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">REGISTRAR CAT</div>
+      <form id="form-cat" class="modal-grid">
+        <input class="modal-input" style="grid-column:span 2" name="funcionario_nome" placeholder="Nome do Funcionário"
+          required>
+        <input class="modal-input" type="date" name="data_acidente" required>
+        <select class="modal-input" name="tipo" required>
+          <option value="">Tipo</option>
+          <option>Típico</option>
+          <option>Trajeto</option>
+          <option>Doença Ocupacional</option>
+        </select>
+        <input class="modal-input" name="parte_corpo" placeholder="Parte do Corpo" required>
+        <select class="modal-input" name="gravidade" required>
+          <option value="">Gravidade</option>
+          <option>Leve</option>
+          <option>Moderado</option>
+          <option>Grave</option>
+          <option>Fatal</option>
+        </select>
+        <input class="modal-input" style="grid-column:span 2" name="causa_raiz" placeholder="Causa Raiz">
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel"
+            onclick="document.getElementById('modal-cat').classList.remove('open')">Cancelar</button>
+          <button type="submit" class="btn-save">REGISTRAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-trein" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">NOVO TREINAMENTO</div>
+      <form id="form-trein" class="modal-grid">
+        <input class="modal-input" style="grid-column:span 2" name="nome" placeholder="Nome do Treinamento" required>
+        <input class="modal-input" name="nr_referencia" placeholder="NR Referência">
+        <select class="modal-input" name="modalidade">
+          <option>Presencial</option>
+          <option>Online</option>
+          <option>Híbrido</option>
+        </select>
+        <input class="modal-input" type="date" name="data_realizacao" required>
+        <input class="modal-input" type="date" name="data_validade" required>
+        <input class="modal-input" type="number" name="participantes" placeholder="Participantes">
+        <input class="modal-input" name="responsavel" placeholder="Responsável">
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel"
+            onclick="document.getElementById('modal-trein').classList.remove('open')">Cancelar</button>
+          <button type="submit" class="btn-save">SALVAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-agen" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">NOVO AGENDAMENTO</div>
+      <form id="form-agen" class="modal-grid">
+        <input class="modal-input" style="grid-column:span 2" name="funcionario_nome" placeholder="Funcionário"
+          required>
+        <select class="modal-input" name="tipo_exame" required>
+          <option value="">Tipo de Exame</option>
+          <option>Admissional</option>
+          <option>Periódico</option>
+          <option>Demissional</option>
+          <option>Retorno</option>
+        </select>
+        <input class="modal-input" name="medico" placeholder="Médico">
+        <input class="modal-input" type="date" name="data_agendamento" required>
+        <input class="modal-input" type="time" name="hora" required>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel"
+            onclick="document.getElementById('modal-agen').classList.remove('open')">Cancelar</button>
+          <button type="submit" class="btn-save">AGENDAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-epi" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">NOVO EPI</div>
+      <form id="form-epi" class="modal-grid">
+        <input class="modal-input" style="grid-column:span 2" name="nome" placeholder="Nome do EPI" required>
+        <input class="modal-input" name="ca" placeholder="Número CA">
+        <input class="modal-input" type="date" name="validade">
+        <input class="modal-input" type="number" name="quantidade" placeholder="Quantidade" required>
+        <input class="modal-input" type="number" name="estoque_minimo" placeholder="Estoque Mínimo" value="5">
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel"
+            onclick="document.getElementById('modal-epi').classList.remove('open')">Cancelar</button>
+          <button type="submit" class="btn-save">SALVAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ── ESTADO ────────────────────────────────────────────────────────────────────
+    let empresaId = null;
+    let charts = {};
+
+    Chart.defaults.color = 'rgba(255,255,255,0.6)';
+    Chart.defaults.borderColor = 'rgba(0,162,255,0.07)';
+
+    // ── PALETA ────────────────────────────────────────────────────────────────────
+    const PAL = ['rgba(0,114,255,.85)', 'rgba(0,162,255,.85)', 'rgba(0,210,255,.85)', 'rgba(120,90,255,.85)', 'rgba(80,180,255,.85)', 'rgba(0,210,200,.85)'];
+    const pal = i => PAL[i % PAL.length];
+
+    // ── HELPERS ───────────────────────────────────────────────────────────────────
+    function ctxOf(id) { if (charts[id]) charts[id].destroy(); return document.getElementById(id)?.getContext('2d'); }
+    function legend(cid, labels, colors) {
+      const el = document.getElementById(cid); if (!el) return;
+      el.innerHTML = labels.map((l, i) => `<div class="leg-item"><div class="leg-dot" style="background:${colors[i]}"></div>${l}</div>`).join('');
+    }
+    const noData = cols => `<tr><td colspan="${cols}" style="text-align:center;padding:20px;color:rgba(255,255,255,.2)">Nenhum registro</td></tr>`;
+
+    // ── ROSCA ─────────────────────────────────────────────────────────────────────
+    function makeDonut(id, labels, data, colors) {
+      const c = ctxOf(id); if (!c) return;
+      charts[id] = new Chart(c, { type: 'doughnut', data: { labels, datasets: [{ data, backgroundColor: colors, borderColor: '#050c1a', borderWidth: 3, hoverOffset: 8 }] }, options: { cutout: '70%', plugins: { legend: { display: false } }, animation: { duration: 900 } } });
+    }
+
+    // ── BARRAS 3D VERTICAIS ───────────────────────────────────────────────────────
+    function makeBar3D(id, labels, data, colors) {
+      const c = ctxOf(id); if (!c) return;
+      const dark = colors.map(col => col.replace(/[\d.]+\)$/, '0.40)'));
+      const light = colors.map(col => col.replace(/[\d.]+\)$/, '0.95)'));
+      const p3d = {
+        id: 'p3d_' + id, afterDatasetsDraw(chart) {
+          const { ctx: c2 } = chart; const dep = 9;
+          chart.data.datasets.forEach((_, di) => {
+            const meta = chart.getDatasetMeta(di); if (!meta.visible) return;
+            meta.data.forEach((bar, i) => {
+              if (!bar) return;
+              const { x, y, width, base } = bar.getProps(['x', 'y', 'width', 'base'], true);
+              const w = width * .85, l = x - w / 2, r = x + w / 2;
+              c2.save();
+              c2.beginPath(); c2.moveTo(l, y); c2.lineTo(l + dep, y - dep * .5); c2.lineTo(r + dep, y - dep * .5); c2.lineTo(r, y); c2.closePath();
+              c2.fillStyle = light[i] || colors[i]; c2.globalAlpha = .9; c2.fill();
+              c2.beginPath(); c2.moveTo(r, y); c2.lineTo(r + dep, y - dep * .5); c2.lineTo(r + dep, base - dep * .5); c2.lineTo(r, base); c2.closePath();
+              c2.fillStyle = dark[i] || colors[i]; c2.globalAlpha = 1; c2.fill();
+              c2.restore();
+            });
+          });
+        }
+      };
+      charts[id] = new Chart(c, { type: 'bar', data: { labels, datasets: [{ data, backgroundColor: colors, borderRadius: { topLeft: 4, topRight: 4 }, borderSkipped: false, barPercentage: .7, categoryPercentage: .72 }] }, options: { indexAxis: 'x', plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(0,162,255,.05)' }, ticks: { color: '#fff', font: { size: 11, weight: '600' } } }, y: { grid: { color: 'rgba(0,162,255,.06)' }, ticks: { color: 'rgba(255,255,255,.6)', font: { size: 10 } }, beginAtZero: true } }, animation: { duration: 900 } }, plugins: [p3d] });
+    }
+
+    // ── BARRAS NORMAIS ────────────────────────────────────────────────────────────
+    function makeBar(id, labels, data, colors) {
+      const c = ctxOf(id); if (!c) return;
+      charts[id] = new Chart(c, { type: 'bar', data: { labels, datasets: [{ data, backgroundColor: colors, borderRadius: 6, borderSkipped: false }] }, options: { indexAxis: 'x', plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(0,162,255,.05)' }, ticks: { color: '#fff', font: { size: 11 } } }, y: { grid: { color: 'rgba(0,162,255,.06)' }, ticks: { color: 'rgba(255,255,255,.6)', font: { size: 10 } }, beginAtZero: true } }, animation: { duration: 800 } } });
+    }
+
+    // ── INIT ──────────────────────────────────────────────────────────────────────
+    async function init() {
+      const emps = await fetch('/api/empresas').then(r => r.json()).catch(() => []);
+      const sel = document.getElementById('empresaSelect');
+      sel.innerHTML = '';
+      if (!emps.length) { sel.innerHTML = '<option value="">Nenhuma empresa</option>'; return; }
+      emps.forEach(e => { const o = document.createElement('option'); o.value = e.id; o.textContent = e.nome; sel.appendChild(o); });
+      empresaId = emps[0].id;
+      loadDash();
+    }
+
+    function onEmpresaChange() {
+      empresaId = document.getElementById('empresaSelect').value;
+      const active = document.querySelector('.section.active');
+      if (!active) return;
+      const nm = active.id.replace('sec-', '');
+      if (nm === 'dashboard') loadDash();
+      if (nm === 'funcionarios') loadFuncionarios();
+      if (nm === 'aso') loadAso();
+      if (nm === 'agendamentos') loadAgens();
+      if (nm === 'treinamentos') loadTreinamentos();
+      if (nm === 'epis') loadEpis();
+      if (nm === 'cats') loadCats();
+    }
+
+    // ── DASHBOARD ─────────────────────────────────────────────────────────────────
+    async function loadDash() {
+      if (!empresaId) return;
+      const d = await fetch('/api/dashboard/' + empresaId).then(r => r.json()).catch(() => ({ kpis: {}, setores: {}, cats_recentes: [], top_risco: [], alertas: [] }));
+
+      document.getElementById('sub-dash').textContent = (d.empresa?.nome || '') + ' · ' + (d.kpis.total_funcionarios || 0) + ' colaboradores';
+      document.getElementById('kpi-func').textContent = d.kpis.total_funcionarios || 0;
+      document.getElementById('kpi-aso').textContent = d.kpis.aso_vencidos || 0;
+      document.getElementById('kpi-trein').textContent = d.kpis.treinamentos || 0;
+      document.getElementById('kpi-score').textContent = (d.kpis.score_seguranca || 0) + '%';
+      document.getElementById('badge-aso').textContent = d.kpis.aso_vencidos || 0;
+      document.getElementById('badge-epi').textContent = d.kpis.epis_criticos || 0;
+      document.getElementById('dnt-risco').textContent = d.kpis.total_funcionarios || 0;
+      document.getElementById('dnt-aso').textContent = d.kpis.total_funcionarios || 0;
+
+      if ((d.kpis.aso_vencidos || 0) > 0) {
+        document.getElementById('alert-banner').style.display = 'flex';
+        document.getElementById('alert-text').textContent = (d.kpis.aso_vencidos || 0) + ' ASO(s) vencido(s). Renovar urgente.';
+      }
+
+      const total = d.kpis.total_funcionarios || 1, alto = d.kpis.alto_risco || 0;
+      const medio = Math.max(0, Math.round(total * .4)), baixo = Math.max(0, total - alto - medio);
+      const valido = Math.max(0, total - (d.kpis.aso_vencidos || 0) - (d.kpis.aso_vencer || 0));
+
+      const cR = ['rgba(255,60,60,.85)', 'rgba(255,170,0,.85)', 'rgba(0,200,60,.85)'];
+      makeDonut('chartRisco', ['Alto', 'Médio', 'Baixo'], [alto, medio, baixo], cR);
+      legend('leg-risco', ['Alto', 'Médio', 'Baixo'], cR);
+
+      const cA = ['rgba(0,200,60,.85)', 'rgba(255,170,0,.85)', 'rgba(255,60,60,.85)'];
+      makeDonut('chartAso', ['Válido', 'A Vencer', 'Vencido'], [valido, d.kpis.aso_vencer || 0, d.kpis.aso_vencidos || 0], cA);
+      legend('leg-aso', ['Válido', 'A Vencer', 'Vencido'], cA);
+
+      const concl = d.kpis.trein_concluidos || 0, agend = Math.max(0, (d.kpis.treinamentos || 0) - concl);
+      makeBar('chartTrein', ['Concluídos', 'Agendados', 'Total'], [concl, agend, d.kpis.treinamentos || 0], ['rgba(0,200,80,.85)', 'rgba(0,140,255,.85)', 'rgba(0,200,200,.85)']);
+
+      const setores = d.setores || {};
+      makeBar3D('chartSetores', Object.keys(setores), Object.values(setores), Object.keys(setores).map((_, i) => pal(i)));
+
+      const cats = d.cats_recentes || [];
+      const gravs = { Leve: 0, Moderado: 0, Grave: 0, Fatal: 0 };
+      cats.forEach(c => { if (gravs[c.gravidade] !== undefined) gravs[c.gravidade]++; });
+      makeBar3D('chartCats', Object.keys(gravs), Object.values(gravs), ['rgba(0,200,60,.85)', 'rgba(255,170,0,.85)', 'rgba(255,80,0,.85)', 'rgba(200,0,0,.85)']);
+
+      document.getElementById('tb-risco').innerHTML = (d.top_risco || []).map(f =>
+        `<tr><td style="font-weight:600;color:#fff">${f.nome}</td><td>${f.cargo}</td><td>${f.setor}</td>
+     <td><span class="badge-pill ${f.risco === 'Alto' ? 'b-red' : f.risco === 'Medio' ? 'b-yellow' : 'b-green'}">${f.risco}</span></td>
+     <td style="font-weight:700;color:#00d2ff">${f.score_risco}</td>
+     <td><span class="badge-pill ${f.aso_status === 'valido' ? 'b-green' : f.aso_status === 'vencido' ? 'b-red' : 'b-yellow'}">${f.aso_status}</span></td></tr>`
+      ).join('') || noData(6);
+    }
+
+    // ── SEÇÕES ────────────────────────────────────────────────────────────────────
+    function showSection(name, el) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById('sec-' + name).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if (el) el.classList.add('active');
+      const T = { dashboard: 'DASHBOARD RH', funcionarios: 'FUNCIONÁRIOS', aso: 'ASO & EXAMES', agendamentos: 'AGENDAMENTOS', treinamentos: 'TREINAMENTOS', epis: 'EPIs & ESTOQUE', cats: 'ACIDENTES (CAT)' };
+      document.getElementById('topTitle').textContent = T[name] || name;
+      if (name === 'funcionarios') loadFuncionarios();
+      if (name === 'aso') loadAso();
+      if (name === 'agendamentos') loadAgens();
+      if (name === 'treinamentos') loadTreinamentos();
+      if (name === 'epis') loadEpis();
+      if (name === 'cats') loadCats();
+    }
+
+    // ── LOADERS ───────────────────────────────────────────────────────────────────
+    async function loadFuncionarios() {
+      if (!empresaId) return;
+      const d = await fetch('/api/funcionarios/' + empresaId).then(r => r.json()).catch(() => []);
+      document.getElementById('tb-func').innerHTML = d.map(f =>
+        `<tr><td style="font-weight:600;color:#fff">${f.nome}</td><td>${f.cargo}</td><td>${f.setor}</td>
+     <td><span class="badge-pill ${f.risco === 'Alto' ? 'b-red' : f.risco === 'Medio' ? 'b-yellow' : 'b-green'}">${f.risco}</span></td>
+     <td style="font-weight:700;color:#00d2ff">${f.score_risco}</td>
+     <td><span class="badge-pill ${f.aso_status === 'valido' ? 'b-green' : f.aso_status === 'vencido' ? 'b-red' : 'b-yellow'}">${f.aso_status}</span></td></tr>`
+      ).join('') || noData(6);
+    }
+    async function loadAso() {
+      if (!empresaId) return;
+      const d = await fetch('/api/funcionarios/' + empresaId).then(r => r.json()).catch(() => []);
+      document.getElementById('tb-aso').innerHTML = d.map(f =>
+        `<tr><td style="font-weight:600;color:#fff">${f.nome}</td><td>${f.cargo}</td><td>${f.setor}</td>
+     <td>${f.aso_vencimento || '—'}</td>
+     <td><span class="badge-pill ${f.aso_status === 'valido' ? 'b-green' : f.aso_status === 'vencido' ? 'b-red' : 'b-yellow'}">${f.aso_status}</span></td></tr>`
+      ).join('') || noData(5);
+    }
+    async function loadAgens() {
+      if (!empresaId) return;
+      const d = await fetch('/api/agendamentos/' + empresaId).then(r => r.json()).catch(() => []);
+      document.getElementById('tb-agen').innerHTML = d.map(a =>
+        `<tr><td style="font-weight:600;color:#fff">${a.funcionario_nome}</td><td>${a.tipo_exame}</td>
+     <td>${a.data_agendamento}</td><td>${a.hora}</td><td>${a.medico || '—'}</td>
+     <td><span class="badge-pill ${a.status === 'Confirmado' ? 'b-green' : 'b-yellow'}">${a.status}</span></td></tr>`
+      ).join('') || noData(6);
+    }
+    async function loadTreinamentos() {
+      if (!empresaId) return;
+      const d = await fetch('/api/treinamentos/' + empresaId).then(r => r.json()).catch(() => []);
+      document.getElementById('tb-trein').innerHTML = d.map(t =>
+        `<tr><td style="font-weight:600;color:#fff">${t.nome}</td><td>${t.nr_referencia || '—'}</td>
+     <td>${t.data_realizacao}</td><td>${t.data_validade}</td><td>${t.participantes}</td>
+     <td><span class="badge-pill ${t.status === 'Concluído' ? 'b-green' : 'b-blue'}">${t.status}</span></td></tr>`
+      ).join('') || noData(6);
+    }
+    async function loadEpis() {
+      if (!empresaId) return;
+      const d = await fetch('/api/epis/' + empresaId).then(r => r.json()).catch(() => []);
+      document.getElementById('tb-epis').innerHTML = d.map(e =>
+        `<tr><td style="font-weight:600;color:#fff">${e.nome}</td><td>${e.ca || '—'}</td>
+     <td style="font-weight:700">${e.quantidade}</td><td>${e.estoque_minimo}</td><td>${e.validade || '—'}</td>
+     <td><span class="badge-pill ${e.quantidade < e.estoque_minimo ? 'b-red' : 'b-green'}">${e.quantidade < e.estoque_minimo ? 'Crítico' : 'OK'}</span></td></tr>`
+      ).join('') || noData(6);
+    }
+    async function loadCats() {
+      if (!empresaId) return;
+      const d = await fetch('/api/cats/' + empresaId).then(r => r.json()).catch(() => []);
+      document.getElementById('tb-cats').innerHTML = d.map(c =>
+        `<tr><td style="font-weight:600;color:#fff">${c.funcionario_nome}</td><td>${c.data_acidente}</td>
+     <td>${c.tipo}</td><td>${c.parte_corpo}</td>
+     <td><span class="badge-pill ${c.gravidade === 'Fatal' || c.gravidade === 'Grave' ? 'b-red' : c.gravidade === 'Moderado' ? 'b-yellow' : 'b-green'}">${c.gravidade}</span></td>
+     <td>${c.status}</td></tr>`
+      ).join('') || noData(6);
+    }
+
+    // ── FORMS ─────────────────────────────────────────────────────────────────────
+    function bindForm(formId, url, modalId, reload) {
+      document.getElementById(formId).addEventListener('submit', async e => {
+        e.preventDefault();
+        const fd = new FormData(e.target); fd.append('empresa_id', empresaId);
+        await fetch(url, { method: 'POST', body: fd });
+        document.getElementById(modalId).classList.remove('open');
+        e.target.reset(); reload(); loadDash();
+      });
+    }
+    bindForm('form-func', '/api/funcionarios', 'modal-func', loadFuncionarios);
+    bindForm('form-cat', '/api/cats', 'modal-cat', loadCats);
+    bindForm('form-trein', '/api/treinamentos', 'modal-trein', loadTreinamentos);
+    bindForm('form-agen', '/api/agendamentos', 'modal-agen', loadAgens);
+    bindForm('form-epi', '/api/epis', 'modal-epi', loadEpis);
+
+    init();
+  </script>
+</body>
+
+</html>
