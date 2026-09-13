@@ -37,63 +37,64 @@
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: #02060a;
-      color: #e0f0ff;
+      background: #0B0B2E;
+      color: #ffffff;
       display: flex;
-      min-height: 100vh
+      min-height: 100vh;
     }
 
     .sidebar {
       width: 240px;
-      background: linear-gradient(180deg, #02080f, #040a14);
-      border-right: 1px solid rgba(0, 120, 255, 0.1);
+      background: #0B0B2E;
+      border-right: 1px solid rgba(32, 196, 198, 0.2);
       display: flex;
       flex-direction: column;
       padding: 0;
       flex-shrink: 0;
       height: 100vh;
       overflow-y: auto;
-      overflow-x: hidden
+      overflow-x: hidden;
     }
 
     .sidebar-logo {
       padding: 24px 20px 20px;
-      border-bottom: 1px solid rgba(0, 120, 255, 0.1)
+      border-bottom: 1px solid rgba(32, 196, 198, 0.2);
     }
 
     .logo-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: linear-gradient(135deg, #001a33, #002a55);
-      border: 1px solid rgba(0, 120, 255, 0.3);
-      color: #00ccff;
+      background: rgba(32, 196, 198, 0.15);
+      border: 1px solid #20C4C6;
+      color: #20C4C6;
       font-size: 12px;
       font-weight: 700;
       padding: 5px 12px;
       border-radius: 8px;
       margin-bottom: 10px;
-      letter-spacing: 1px
+      letter-spacing: 1px;
     }
 
     .sidebar h2 {
       font-family: 'Rajdhani', sans-serif;
       font-size: 20px;
       font-weight: 700;
-      color: #fff
+      color: #fff;
     }
 
     .sidebar h2 em {
-      color: #00ccff;
-      font-style: normal
+      color: #20C4C6;
+      font-style: normal;
     }
 
     .sidebar-sub {
       font-size: 10px;
-      color: rgba(0, 120, 255, 0.3);
+      color: rgba(255, 255, 255, 0.6);
       letter-spacing: 2px;
       text-transform: uppercase;
-      margin-top: 4px
+      margin-top: 4px;
+      font-weight: 700;
     }
 
     .nav-item {
@@ -102,33 +103,27 @@
       gap: 10px;
       margin: 3px 10px;
       padding: 11px 14px;
-      color: rgba(255, 255, 255, 0.45);
+      color: rgba(255, 255, 255, 0.7);
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 700;
       cursor: pointer;
       border-radius: 10px;
       border: 1px solid transparent;
-      background: linear-gradient(145deg, #040c16, #02080f);
-      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
-      transition: all .15s
+      background: rgba(255, 255, 255, 0.05);
+      transition: all .15s;
     }
 
     .nav-item.active {
-      color: #00ccff;
-      background: linear-gradient(135deg, #001a33, #002a55, #001a33);
-      border-color: rgba(0, 120, 255, 0.3);
-      box-shadow: 0 0 15px rgba(0, 120, 255, 0.2)
-    }
-
-    .nav-item:active {
-      transform: translateY(1px);
-      box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.8)
+      color: #fff;
+      background: rgba(32, 196, 198, 0.25);
+      border-color: #20C4C6;
+      box-shadow: 0 0 15px rgba(32, 196, 198, 0.3);
     }
 
     .sidebar-footer {
       margin-top: auto;
       padding: 16px;
-      border-top: 1px solid rgba(0, 120, 255, 0.08)
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .btn-logout {
@@ -138,19 +133,14 @@
       width: 100%;
       padding: 10px 14px;
       border-radius: 10px;
-      border: 1px solid rgba(200, 0, 0, 0.2);
-      background: linear-gradient(145deg, #1a0505, #100303);
-      color: rgba(255, 100, 100, 0.6);
+      border: 1px solid rgba(200, 0, 0, 0.4);
+      background: rgba(200, 0, 0, 0.15);
+      color: #ff9999;
       font-size: 13px;
+      font-weight: 700;
       cursor: pointer;
       font-family: 'DM Sans', sans-serif;
-      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
-      transition: all .15s
-    }
-
-    .btn-logout:active {
-      transform: translateY(1px);
-      box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.7)
+      transition: all .15s;
     }
 
     .main {
@@ -159,16 +149,16 @@
       flex-direction: column;
       overflow: hidden;
       height: 100vh;
-      background: radial-gradient(ellipse at 30% 20%, rgba(0, 120, 255, 0.05) 0%, transparent 50%), #02080f
+      background: #0B0B2E;
     }
 
     .topbar {
-      background: linear-gradient(90deg, #040c16, #060e1a);
-      border-bottom: 1px solid rgba(0, 120, 255, 0.1);
+      background: #0B0B2E;
+      border-bottom: 1px solid rgba(32, 196, 198, 0.2);
       padding: 12px 24px;
       display: flex;
       align-items: center;
-      gap: 16px
+      gap: 16px;
     }
 
     .topbar h1 {
@@ -177,14 +167,15 @@
       font-weight: 700;
       color: #fff;
       letter-spacing: 1px;
-      flex: 1
+      flex: 1;
     }
 
     .content {
       flex: 1;
       padding: 28px;
       overflow-y: auto;
-      overflow-x: hidden
+      overflow-x: hidden;
+      background: #0B0B2E;
     }
 
     .page-title {
@@ -193,92 +184,90 @@
       font-weight: 700;
       color: #fff;
       letter-spacing: 1px;
-      margin-bottom: 20px
+      margin-bottom: 20px;
+    }
+
+    /* CARDS AZUL CLARO / PRETO E TEXTO BRANCO EM NEGRITO */
+    .kpi-card, .table-card {
+      background: linear-gradient(145deg, #07091d, #02030a) !important;
+      border: 1.5px solid #20C4C6 !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.65), 0 0 14px rgba(32, 196, 198, 0.18) !important;
+      border-radius: 14px;
+    }
+
+    .kpi-card *, .table-card * {
+      color: #ffffff !important;
+      font-weight: 700 !important;
     }
 
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
-      margin-bottom: 24px
+      margin-bottom: 24px;
     }
 
     .kpi-card {
-      background: linear-gradient(145deg, #040c16, #02080f);
-      border: 1px solid rgba(0, 120, 255, 0.12);
-      border-radius: 14px;
       padding: 20px;
       text-align: center;
-      box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5)
     }
 
     .kpi-icon {
       font-size: 28px;
-      margin-bottom: 10px
+      margin-bottom: 10px;
     }
 
     .kpi-label {
       font-size: 11px;
-      color: rgba(0, 120, 255, 0.4);
-      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 1px
+      letter-spacing: 1px;
     }
 
     .kpi-value {
       font-family: 'Rajdhani', sans-serif;
       font-size: 38px;
-      font-weight: 700;
-      color: #fff;
-      margin-top: 4px
+      margin-top: 4px;
     }
 
     .table-card {
-      background: linear-gradient(145deg, #040c16, #02080f);
-      border: 1px solid rgba(0, 120, 255, 0.1);
-      border-radius: 14px;
       overflow: hidden;
-      box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5)
     }
 
     .table-header {
       padding: 16px 18px;
-      border-bottom: 1px solid rgba(0, 120, 255, 0.08)
+      border-bottom: 1px solid rgba(32, 196, 198, 0.3);
+      background: rgba(32, 196, 198, 0.1);
     }
 
     .table-header h3 {
       font-size: 13px;
-      font-weight: 600;
-      color: rgba(0, 120, 255, 0.6);
       text-transform: uppercase;
-      letter-spacing: 1px
+      letter-spacing: 1px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 13px
+      font-size: 13px;
     }
 
     th {
-      background: rgba(0, 0, 0, 0.3);
-      color: rgba(0, 120, 255, 0.35);
-      font-weight: 600;
+      background: rgba(32, 196, 198, 0.15);
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 1px;
-      padding: 9px 14px;
-      text-align: left
+      padding: 11px 14px;
+      text-align: left;
+      border-bottom: 1.5px solid rgba(32, 196, 198, 0.3);
     }
 
     td {
       padding: 12px 14px;
-      color: rgba(255, 255, 255, 0.6);
-      border-top: 1px solid rgba(0, 120, 255, 0.05)
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     tr:hover td {
-      background: rgba(0, 120, 255, 0.1)
+      background: rgba(32, 196, 198, 0.1);
     }
   </style>
 </head>
