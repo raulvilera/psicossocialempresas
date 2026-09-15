@@ -111,6 +111,17 @@
     .cols-3{grid-template-columns:1fr 1fr 1fr}
     .cols-2{grid-template-columns:1fr 1fr}
     .chart-card{padding:18px}
+
+    /* ===== EXPANDIR GRÁFICO EM TELA CHEIA ===== */
+    .chart-card{position:relative;cursor:zoom-in}
+    .chart-expand-btn{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:8px;background:rgba(32,196,198,.15);border:1px solid rgba(32,196,198,.4);color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;z-index:2;pointer-events:none}
+    .chart-card.chart-expanded{position:fixed;inset:0;z-index:500;margin:0;border-radius:0;display:flex;flex-direction:column;padding:28px;background:var(--navy);cursor:zoom-out;overflow:auto}
+    .chart-card.chart-expanded .chart-wrap{flex:1;height:auto!important;min-height:0}
+    .chart-card.chart-expanded .chart-title{font-size:19px;margin-bottom:6px}
+    body.chart-modal-open{overflow:hidden}
+    @media (max-width:560px){
+      .chart-card.chart-expanded{padding:18px}
+    }
     .chart-title{font-size:13px !important;font-weight:700 !important;color:#ffffff !important;text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
     .chart-title .sub{font-size:10px !important;color:rgba(255,255,255,.7) !important;text-transform:none;letter-spacing:0;font-weight:600 !important}
     .chart-wrap{position:relative;width:100%;display:flex;align-items:center;justify-content:center}
@@ -851,6 +862,44 @@
       item.addEventListener('click', () => {
         if (window.innerWidth <= 900) toggleSidebar();
       });
+    });
+
+    // ─── EXPANDIR GRÁFICO EM TELA CHEIA (clique novamente para voltar) ──────────
+    function collapseChart(card){
+      card.classList.remove('chart-expanded');
+      document.body.classList.remove('chart-modal-open');
+      const btn = card.querySelector('.chart-expand-btn'); if (btn) btn.textContent = '⤢';
+      const canvas = card.querySelector('canvas');
+      const chart = canvas && charts[canvas.id];
+      if (chart) requestAnimationFrame(() => chart.resize());
+    }
+    document.querySelectorAll('.chart-card').forEach((card) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chart-expand-btn';
+      btn.setAttribute('aria-label', 'Expandir gráfico');
+      btn.textContent = '⤢';
+      card.appendChild(btn);
+
+      card.addEventListener('click', () => {
+        const wasExpanded = card.classList.contains('chart-expanded');
+        document.querySelectorAll('.chart-card.chart-expanded').forEach((c) => { if (c !== card) collapseChart(c); });
+        if (wasExpanded) {
+          collapseChart(card);
+        } else {
+          card.classList.add('chart-expanded');
+          document.body.classList.add('chart-modal-open');
+          btn.textContent = '✕';
+          const canvas = card.querySelector('canvas');
+          const chart = canvas && charts[canvas.id];
+          requestAnimationFrame(() => { if (chart) chart.resize(); });
+        }
+      });
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.chart-card.chart-expanded').forEach(collapseChart);
+      }
     });
   </script>
 

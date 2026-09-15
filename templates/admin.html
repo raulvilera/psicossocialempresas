@@ -428,6 +428,29 @@
       grid-column: span 1;
     }
 
+    /* ===== EXPANDIR GRÁFICO EM TELA CHEIA ===== */
+    .chart-card {
+      position: relative;
+      cursor: zoom-in;
+    }
+    .chart-expand-btn {
+      position: absolute; top: 12px; right: 12px; width: 28px; height: 28px;
+      border-radius: 8px; background: rgba(32,196,198,.15); border: 1px solid rgba(32,196,198,.4);
+      color: #fff; font-size: 13px; display: flex; align-items: center; justify-content: center;
+      z-index: 2; pointer-events: none;
+    }
+    .chart-card.chart-expanded {
+      position: fixed; inset: 0; z-index: 500; margin: 0; border-radius: 0;
+      display: flex; flex-direction: column; padding: 28px; background: var(--navy);
+      cursor: zoom-out; overflow: auto;
+    }
+    .chart-card.chart-expanded .chart-wrap { flex: 1; height: auto !important; min-height: 0; }
+    .chart-card.chart-expanded .chart-title { font-size: 19px; margin-bottom: 6px; }
+    body.chart-modal-open { overflow: hidden; }
+    @media (max-width:560px){
+      .chart-card.chart-expanded{padding:18px}
+    }
+
     .chart-title {
       font-size: 13px;
       text-transform: uppercase;
@@ -888,7 +911,7 @@
 
   <script>
     // ── ESTADO & PALETA MENTAL & MAIS ──
-    let renderers = {}, scenes = {}, animIds = {};
+    let renderers = {}, scenes = {}, animIds = {}, cameras = {};
     let allEmpresas = [], allDash = [];
     const PAL = ['#20C4C6', '#0E8B8D', '#E85D75', '#2FA97A', '#EDA23B', '#151846'];
     const pal = i => PAL[i % PAL.length];
@@ -903,6 +926,16 @@
       while (el.firstChild) el.removeChild(el.firstChild);
       if (renderers[id]) { renderers[id].dispose(); delete renderers[id]; }
     }
+
+    // Redimensiona um gráfico 3D já existente (usado ao expandir/recolher o card)
+    function resize3D(id) {
+      const cont = document.getElementById(id), ren = renderers[id], cam = cameras[id];
+      if (!cont || !ren || !cam) return;
+      const W = cont.offsetWidth || 300, H = cont.offsetHeight || 200;
+      ren.setSize(W, H);
+      cam.aspect = W / H;
+      cam.updateProjectionMatrix();
+    }
     const pc = c => new THREE.Color(c);
 
     // DONUT 3D
@@ -916,7 +949,7 @@
       const ren = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       ren.setSize(W, H); ren.setPixelRatio(window.devicePixelRatio);
       cont.appendChild(ren.domElement);
-      renderers[id] = ren; scenes[id] = scene;
+      renderers[id] = ren; scenes[id] = scene; cameras[id] = cam;
 
       scene.add(new THREE.AmbientLight(0xffffff, 0.75));
       const dl = new THREE.DirectionalLight(0xffffff, 0.9); dl.position.set(3, 5, 2); scene.add(dl);
@@ -955,7 +988,7 @@
       const ren = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       ren.setSize(W, H); ren.setPixelRatio(window.devicePixelRatio);
       cont.appendChild(ren.domElement);
-      renderers[id] = ren; scenes[id] = scene;
+      renderers[id] = ren; scenes[id] = scene; cameras[id] = cam;
 
       scene.add(new THREE.AmbientLight(0xffffff, 0.8));
       const dl = new THREE.DirectionalLight(0xffffff, 0.95); dl.position.set(5, 7, 5); scene.add(dl);
@@ -1080,6 +1113,42 @@
       item.addEventListener('click', () => {
         if (window.innerWidth <= 900) toggleSidebar();
       });
+    });
+
+    // ─── EXPANDIR GRÁFICO EM TELA CHEIA (clique novamente para voltar) ──────────
+    function collapseChart(card){
+      card.classList.remove('chart-expanded');
+      document.body.classList.remove('chart-modal-open');
+      const btn = card.querySelector('.chart-expand-btn'); if (btn) btn.textContent = '⤢';
+      const canvas = card.querySelector('canvas');
+      if (canvas) requestAnimationFrame(() => resize3D(canvas.id));
+    }
+    document.querySelectorAll('.chart-card').forEach((card) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chart-expand-btn';
+      btn.setAttribute('aria-label', 'Expandir gráfico');
+      btn.textContent = '⤢';
+      card.appendChild(btn);
+
+      card.addEventListener('click', () => {
+        const wasExpanded = card.classList.contains('chart-expanded');
+        document.querySelectorAll('.chart-card.chart-expanded').forEach((c) => { if (c !== card) collapseChart(c); });
+        if (wasExpanded) {
+          collapseChart(card);
+        } else {
+          card.classList.add('chart-expanded');
+          document.body.classList.add('chart-modal-open');
+          btn.textContent = '✕';
+          const canvas = card.querySelector('canvas');
+          requestAnimationFrame(() => { if (canvas) resize3D(canvas.id); });
+        }
+      });
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.chart-card.chart-expanded').forEach(collapseChart);
+      }
     });
   </script>
 
