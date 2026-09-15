@@ -1,7 +1,7 @@
 {
     "id": "psicos-platform-v2",
-    "name": "S Psicos - Segurança Inteligente",
-    "short_name": "S Psicos",
+    "name": "Mental Mais",
+    "short_name": "Mental Mais",
     "description": "Plataforma Inteligente de Segurança do Trabalho e Psicossocial",
     "start_url": "/login",
     "scope": "/",

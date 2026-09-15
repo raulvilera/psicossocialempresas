@@ -20,7 +20,7 @@ from fastapi.templating        import Jinja2Templates
 
 # ── aplicação ──────────────────────────────────────────────────────────────────
 
-app       = FastAPI(title="S Psicos", version="3.3.0")
+app       = FastAPI(title="Mental Mais", version="3.3.0")
 BASE_DIR  = Path(__file__).parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
@@ -879,7 +879,7 @@ async def storage_list(prefix: str = ""):
 if __name__ == "__main__":
     import uvicorn
     print("\n" + "=" * 55)
-    print("  🧠 S Psicos v3.3 — DRPS Standalone Edition")
+    print("  🧠 Mental Mais v3.3 — DRPS Standalone Edition")
     print("  🗄️  Banco : Supabase (PostgreSQL em nuvem)")
     print("  🌐 Acesse: http://localhost:8000")
     print("=" * 55 + "\n")
