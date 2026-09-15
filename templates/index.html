@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0077ff">
+  <link rel="icon" href="/static/app_icon.png">
+  <link rel="apple-touch-icon" href="/static/app_icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="S Psicos">
+  <meta name="mobile-web-app-capable" content="yes">
 <title>Dashboard — Mental & Mais · S Psicos</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
@@ -121,6 +129,31 @@ body{font-family:var(--font-sans);background:var(--navy);color:#ffffff;display:f
 .donut-center .lbl{font-size:9px !important;color:#ffffff !important;letter-spacing:1px;text-transform:uppercase;font-weight:700 !important}
 .bar3d-wrap{filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
 .chart-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+
+/* ===== RESPONSIVO (mobile / app instalado) ===== */
+.hamburger{display:none;background:#030511;border:1.5px solid rgba(32,196,198,.4);color:#fff;width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:16px;align-items:center;justify-content:center;flex-shrink:0}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(2,3,10,.6);z-index:99;backdrop-filter:blur(2px)}
+@media (max-width:900px){
+  .hamburger{display:flex}
+  .sidebar{position:fixed;top:0;left:0;z-index:100;width:250px;transform:translateX(-100%);transition:transform .25s ease;box-shadow:0 0 30px rgba(0,0,0,.6)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .search-box{display:none}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .cols-3{grid-template-columns:1fr}
+  .cols-2{grid-template-columns:1fr}
+  .chart-card.span2{grid-column:span 1}
+}
+@media (max-width:560px){
+  .kpi-grid{grid-template-columns:1fr}
+  .topbar{padding:10px 12px;gap:8px}
+  .topbar-title{font-size:15px}
+  .content{padding:14px}
+  .modal-grid{grid-template-columns:1fr}
+  .modal-grid .modal-footer{grid-column:span 1}
+  .modal-box{padding:20px;max-height:88vh;overflow-y:auto}
+  .ia-badge{display:none}
+}
 .leg-item{display:flex;align-items:center;gap:5px;font-size:11px !important;color:#ffffff !important;font-weight:700 !important}
 .leg-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
 
@@ -202,10 +235,12 @@ tr:hover td{background:rgba(32,196,198,.15) !important}
     <button class="btn-logout" onclick="window.location.href='/login'">🚪 Sair do Sistema</button>
   </div>
 </aside>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
 <!-- MAIN -->
 <div class="main">
   <div class="topbar">
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
     <div class="topbar-title" id="topbarTitle">Dashboard SESMT</div>
     <div class="search-box">
       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -769,6 +804,25 @@ submitForm('form-epi',  '/api/epis',         'modal-epi',  loadEpis);
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 carregarEmpresas();
+
+// ─── RESPONSIVO: menu lateral em telas pequenas ─────────────────────────────────
+function toggleSidebar(){
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+document.querySelectorAll('.nav-item').forEach((item) => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth <= 900) toggleSidebar();
+  });
+});
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
 </script>
 </body>
 </html>

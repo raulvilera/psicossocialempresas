@@ -14,7 +14,8 @@ from typing   import Optional
 import httpx
 from fastapi                   import FastAPI, Request, Form
 from fastapi.middleware.cors   import CORSMiddleware
-from fastapi.responses         import HTMLResponse, RedirectResponse
+from fastapi.responses         import HTMLResponse, RedirectResponse, FileResponse
+from fastapi.staticfiles       import StaticFiles
 from fastapi.templating        import Jinja2Templates
 
 # ── aplicação ──────────────────────────────────────────────────────────────────
@@ -22,6 +23,26 @@ from fastapi.templating        import Jinja2Templates
 app       = FastAPI(title="S Psicos", version="3.3.0")
 BASE_DIR  = Path(__file__).parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+
+# ── arquivos estáticos & PWA ─────────────────────────────────────────────────────
+# Serve /static (ícones, etc.) e expõe manifest.json / sw.js na raiz para que o
+# navegador reconheça o app como instalável (PWA) em qualquer dispositivo.
+
+app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+
+
+@app.get("/manifest.json", include_in_schema=False)
+async def pwa_manifest():
+    return FileResponse(BASE_DIR / "manifest.json", media_type="application/manifest+json")
+
+
+@app.get("/sw.js", include_in_schema=False)
+async def pwa_service_worker():
+    return FileResponse(
+        BASE_DIR / "sw.js",
+        media_type="application/javascript",
+        headers={"Service-Worker-Allowed": "/"},
+    )
 
 # ── CORS ───────────────────────────────────────────────────────────────────────
 # Permite que o questionário (em qualquer domínio) envie dados para a API.
