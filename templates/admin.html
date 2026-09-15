@@ -503,6 +503,8 @@
       .cols-3{grid-template-columns:1fr}
       .cols-2{grid-template-columns:1fr}
       .chart-card.span2{grid-column:span 1}
+      .table-card table{min-width:640px}
+      .table-card th,.table-card td{white-space:nowrap}
     }
     @media (max-width:560px){
       .kpi-grid{grid-template-columns:1fr}
@@ -535,7 +537,8 @@
 
     /* TABELAS */
     .table-card {
-      overflow: hidden;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       margin-bottom: 20px;
     }
 

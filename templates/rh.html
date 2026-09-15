@@ -134,6 +134,8 @@
       .cols-3{grid-template-columns:1fr}
       .cols-2{grid-template-columns:1fr}
       .chart-card.span2{grid-column:span 1}
+      .table-card table{min-width:640px}
+      .table-card th,.table-card td{white-space:nowrap}
     }
     @media (max-width:560px){
       .kpi-grid{grid-template-columns:1fr}
@@ -153,7 +155,7 @@
     .leg-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
 
     /* TABLE */
-    .table-card{overflow:hidden;margin-bottom:16px}
+    .table-card{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:16px}
     .table-header{padding:14px 18px;border-bottom:1.5px solid #20C4C6;display:flex;justify-content:space-between;align-items:center;background:rgba(32,196,198,.08)}
     .table-header h3{font-size:13px !important;font-weight:800 !important;color:#ffffff !important;text-transform:uppercase;letter-spacing:.8px}
     table{width:100%;border-collapse:collapse;font-size:13px}
