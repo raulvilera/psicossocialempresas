@@ -506,8 +506,12 @@
     }
     @media (max-width:560px){
       .kpi-grid{grid-template-columns:1fr}
-      .topbar{padding:10px 12px;gap:8px}
-      .topbar-title{font-size:15px}
+      .topbar{padding:10px 12px;gap:8px;flex-wrap:wrap}
+      .perfil-badge{font-size:11px;padding:5px 10px}
+      .btn-topbar{font-size:11px;padding:6px 10px;white-space:nowrap}
+      .topbar-title{font-size:15px;min-width:0;flex:1 1 auto}
+      .perfil-badge{order:2}
+      .btn-topbar{order:3}
       .content{padding:14px}
       .modal-grid{grid-template-columns:1fr}
       .modal-grid .modal-footer{grid-column:span 1}
