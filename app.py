@@ -423,7 +423,23 @@ async def registrar_empresa(
     colaboradores: int = Form(...),
     setores:       str = Form(...),
 ):
-    return {"success": True, "message": "Dados da empresa salvos com sucesso!"}
+    try:
+        existentes = await sb_get("empresas", {"select": "id", "cnpj": f"eq.{cnpj}"})
+        if existentes:
+            return {"success": False, "message": "Já existe uma empresa cadastrada com este CNPJ."}
+
+        empresa = await sb_post("empresas", {
+            "cnpj": cnpj,
+            "nome": nome,
+            "telefone": telefone,
+            "responsavel": responsavel,
+            "colaboradores": colaboradores,
+            "setores": setores,
+            "ativo": True,
+        })
+        return {"success": True, "message": "Empresa cadastrada com sucesso!", "empresa": empresa}
+    except Exception as e:
+        return {"success": False, "message": f"Erro ao cadastrar empresa: {e}"}
 
 # ── API: dashboard ─────────────────────────────────────────────────────────────
 
