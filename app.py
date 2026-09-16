@@ -796,16 +796,22 @@ async def drps_status(empresa_id: int):
 
 
 @app.get("/api/drps/link/{empresa_id}")
-async def drps_link(empresa_id: int, request: Request):
+async def drps_link(empresa_id: int, request: Request, setor: Optional[str] = None):
     """
     Gera a URL pública do questionário para a empresa informada.
+    Se 'setor' for informado, o link já vem pré-direcionado para aquele setor
+    (usado no cadastro de empresa, que gera um link por setor selecionado).
     O dashboard usa este endpoint para exibir e copiar o link de distribuição.
     """
     base = str(request.base_url).rstrip("/")
+    url = f"{base}/questionario?empresa_id={empresa_id}"
+    if setor:
+        url += f"&setor={setor}"
     return {
         "empresa_id": empresa_id,
-        "url":        f"{base}/questionario?emp={empresa_id}",
-        "qr_hint":    f"Distribua este link para os funcionários responderem anonimamente.",
+        "setor":      setor,
+        "url":        url,
+        "qr_hint":    "Distribua este link para os funcionários responderem anonimamente.",
     }
 
 
